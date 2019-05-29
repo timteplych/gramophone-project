@@ -24,21 +24,9 @@ public class SystemUser {
     private String matchingPassword;
 
     @NotNull(message = "is required")
-    @Size(min = 2, message = "is required")
-    private String firstName;
-
-    @NotNull(message = "is required")
-    @Size(min = 2, message = "is required")
-    private String lastName;
-
-    @NotNull(message = "is required")
     @Size(min = 4, message = "is required")
     @Email
     private String email;
-
-    @NotNull(message = "is required")
-    @Size(min = 1, message = "is required")
-    private String phone;
 
     public SystemUser() {
     }

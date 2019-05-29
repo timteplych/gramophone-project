@@ -54,11 +54,12 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setUsername(systemUser.getUsername());
         user.setPassword(passwordEncoder.encode(systemUser.getPassword()));
-        user.setFirstName(systemUser.getFirstName());
-        user.setLastName(systemUser.getLastName());
+        user.setFirstName("noFirstName");
+        user.setLastName("noLastName");
         user.setEmail(systemUser.getEmail());
-        user.setPhone(systemUser.getPhone());
-        user.setRoles(Arrays.asList(roleRepository.findOneByName("ROLE_EMPLOYEE")));
+        user.setPhone("noPhone");
+        user.setSinger(false);
+        user.setRoles(Arrays.asList(roleRepository.findOneByName("ROLE_USER")));
         // todo check username is exists
         userRepository.save(user);
         return true;
