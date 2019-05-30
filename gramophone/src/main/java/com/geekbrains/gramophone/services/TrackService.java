@@ -9,5 +9,4 @@ import java.util.List;
 public interface TrackService {
     List<Track> findAll();
     boolean save(Track track);
-    Page<Track> getProductsWithPagingAndFiltering(int pageNumber, int pageSize, Specification<Track> productSpecification);
 }

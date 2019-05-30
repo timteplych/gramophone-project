@@ -31,9 +31,4 @@ public class TrackServiceImpl implements TrackService {
         trackRepository.save(track);
         return true;
     }
-
-    public Page<Track> getProductsWithPagingAndFiltering(int pageNumber, int pageSize, Specification<Track> productSpecification) {
-        Sort sort = Sort.by(Sort.Order.desc("id"));
-        return trackRepository.findAll(productSpecification, PageRequest.of(pageNumber, pageSize, sort));
-    }
 }

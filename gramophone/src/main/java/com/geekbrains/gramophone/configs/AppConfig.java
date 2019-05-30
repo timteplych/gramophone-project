@@ -26,9 +26,6 @@ public class AppConfig implements WebMvcConfigurer {
 
         registry.addResourceHandler("/uploads/**")
                 .addResourceLocations("file:uploads/");
-
-        registry.addResourceHandler("/static/**")
-                .addResourceLocations("classpath:/static/");
     }
 
 //    @Bean
@@ -50,13 +47,4 @@ public class AppConfig implements WebMvcConfigurer {
 //        registry.addInterceptor(localeChangeInterceptor());
 //    }
 
-    // TODO ??? нужно ли, вроде и без настройки этого бина работает ???
-//    @Bean
-//    public MultipartConfigElement multipartConfigElement() {
-//        MultipartConfigFactory factory = new MultipartConfigFactory();
-//        DataSize size = DataSize.ofMegabytes(10);
-//        factory.setMaxFileSize(size);
-//        factory.setMaxRequestSize(size);
-//        return factory.createMultipartConfig();
-//    }
 }

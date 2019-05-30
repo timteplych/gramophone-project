@@ -104,7 +104,11 @@ CREATE TABLE comments
 (
     id      INT(11)     NOT NULL AUTO_INCREMENT,
     content VARCHAR(50) NOT NULL,
-    PRIMARY KEY (id)
+    user_id INT(11),
+    PRIMARY KEY (id),
+    CONSTRAINT FK_USER_COMMENT FOREIGN KEY (user_id)
+        REFERENCES users (id)
+        ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 1
   DEFAULT CHARSET = utf8;
