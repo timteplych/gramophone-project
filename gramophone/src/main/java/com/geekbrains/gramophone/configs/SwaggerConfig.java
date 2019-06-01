@@ -32,7 +32,7 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo() {
 
-        Contact contact = new Contact("Anton", "", "atoty@mail.ru");
+        Contact contact = new Contact("Имя", "", "почта");
         Collection<VendorExtension> vendorExtensions = Collections.emptyList();
 
         return new ApiInfo(
