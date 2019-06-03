@@ -9,4 +9,5 @@ import java.util.List;
 public interface TrackService {
     List<Track> findAll();
     boolean save(Track track);
+    Page<Track> getTracksWithPagingAndFiltering(int pageNumber, int pageSize, Specification<Track> trackSpecification);
 }
