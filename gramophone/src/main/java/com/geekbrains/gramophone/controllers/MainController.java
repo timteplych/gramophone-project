@@ -65,5 +65,4 @@ public class MainController {
         model.addAttribute("title", title);
         return "index";
     }
-
 }

@@ -18,7 +18,7 @@
 
 <body>
 
-<div th:replace="~{navigation :: navi(Shop)}"/>
+<div th:replace="~{navigation :: navi(Home)}"/>
 
 <div class="container">
     <br>
@@ -70,7 +70,6 @@
 
     <a th:href="@{/upload-track}" sec:authorize="isAuthenticated()">загрузить трек</a>
 </div>
-
 
 </body>
 </html>

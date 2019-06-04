@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,6 +44,11 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public User findByUsername(String username) {
         return userRepository.findOneByUsername(username);
+    }
+
+    @Override
+    public Optional<User> findById(Long id) {
+        return userRepository.findById(id);
     }
 
     @Override
