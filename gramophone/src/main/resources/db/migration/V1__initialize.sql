@@ -1,10 +1,8 @@
-SET FOREIGN_KEY_CHECKS = 0;
-
 DROP TABLE IF EXISTS users;
 
 CREATE TABLE users
 (
-    id         INT(11)     NOT NULL AUTO_INCREMENT,
+    id         SERIAL,
     username   VARCHAR(50) NOT NULL,
     password   CHAR(80)    NOT NULL,
     first_name VARCHAR(50) NOT NULL,
@@ -14,27 +12,23 @@ CREATE TABLE users
     phone      VARCHAR(15) NOT NULL,
     avatar     VARCHAR(50),
     PRIMARY KEY (id)
-) ENGINE = InnoDB
-  AUTO_INCREMENT = 1
-  DEFAULT CHARSET = utf8;
+);
 
 DROP TABLE IF EXISTS roles;
 
 CREATE TABLE roles
 (
-    id   INT(11) NOT NULL AUTO_INCREMENT,
+    id   SERIAL,
     name VARCHAR(50) DEFAULT NULL,
     PRIMARY KEY (id)
-) ENGINE = InnoDB
-  AUTO_INCREMENT = 1
-  DEFAULT CHARSET = utf8;
+);
 
 DROP TABLE IF EXISTS users_roles;
 
 CREATE TABLE users_roles
 (
-    user_id INT(11) NOT NULL,
-    role_id INT(11) NOT NULL,
+    user_id INTEGER NOT NULL,
+    role_id INTEGER NOT NULL,
 
     PRIMARY KEY (user_id, role_id),
 
@@ -47,8 +41,7 @@ CREATE TABLE users_roles
     CONSTRAINT FK_ROLE_ID FOREIGN KEY (role_id)
         REFERENCES roles (id)
         ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8;
+);
 
 INSERT INTO roles (name)
 VALUES ('ROLE_USER'),
@@ -65,18 +58,30 @@ VALUES (1, 1),
        (1, 2),
        (1, 3);
 
+CREATE TABLE genres
+(
+    id    SERIAL,
+    title VARCHAR(50) NOT NULL,
+    PRIMARY KEY (id)
+);
+
+INSERT INTO genres (title)
+VALUES ('Попса'),
+    ('Реп'),
+    ('Шансон'),
+    ('Рок');
 
 CREATE TABLE tracks
 (
-    id                 INT(11)      NOT NULL AUTO_INCREMENT,
+    id                 SERIAL,
     title              VARCHAR(50)  NOT NULL,
     word_author        VARCHAR(100) NOT NULL,
     music_author       VARCHAR(100) NOT NULL,
     location_on_server VARCHAR(100) NOT NULL,
-    genre_id           INT(11)      NOT NULL,
+    genre_id           INTEGER      NOT NULL,
     create_at          DATE         NOT NULL,
-    listening_amount   INT(11),
-    user_id            INT(11)      NOT NULL,
+    listening_amount   INTEGER,
+    user_id            INTEGER      NOT NULL,
     cover              VARCHAR(50),
     PRIMARY KEY (id),
     CONSTRAINT FK_GENRE_ID FOREIGN KEY (genre_id)
@@ -85,39 +90,24 @@ CREATE TABLE tracks
     CONSTRAINT FK_USER_ID FOREIGN KEY (user_id)
         REFERENCES users (id)
         ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE = InnoDB
-  AUTO_INCREMENT = 1
-  DEFAULT CHARSET = utf8;
-
-
-CREATE TABLE genres
-(
-    id    INT(11)     NOT NULL AUTO_INCREMENT,
-    title VARCHAR(50) NOT NULL,
-    PRIMARY KEY (id)
-) ENGINE = InnoDB
-  AUTO_INCREMENT = 1
-  DEFAULT CHARSET = utf8;
-
+);
 
 CREATE TABLE comments
 (
-    id      INT(11)     NOT NULL AUTO_INCREMENT,
+    id      SERIAL,
     content VARCHAR(50) NOT NULL,
-    user_id INT(11),
+    user_id INTEGER,
     PRIMARY KEY (id),
     CONSTRAINT FK_USER_COMMENT FOREIGN KEY (user_id)
         REFERENCES users (id)
         ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE = InnoDB
-  AUTO_INCREMENT = 1
-  DEFAULT CHARSET = utf8;
+);
 
 
 CREATE TABLE tracks_comments
 (
-    track_id   INT(11) NOT NULL,
-    comment_id INT(11) NOT NULL,
+    track_id   INTEGER NOT NULL,
+    comment_id INTEGER NOT NULL,
     PRIMARY KEY (track_id, comment_id),
     CONSTRAINT FK_TRACK_ID_TRACK_COMMENT FOREIGN KEY (track_id)
         REFERENCES tracks (id)
@@ -125,14 +115,13 @@ CREATE TABLE tracks_comments
     CONSTRAINT FK_COMMENT_ID_TRACK_COMMENT FOREIGN KEY (comment_id)
         REFERENCES comments (id)
         ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8;
+);
 
 
 CREATE TABLE tracks_likes
 (
-    track_id INT(11) NOT NULL,
-    user_id  INT(11) NOT NULL,
+    track_id INTEGER NOT NULL,
+    user_id  INTEGER NOT NULL,
     PRIMARY KEY (track_id, user_id),
     CONSTRAINT FK_TRACK_ID_FOR_TRACK FOREIGN KEY (track_id)
         REFERENCES tracks (id)
@@ -140,14 +129,13 @@ CREATE TABLE tracks_likes
     CONSTRAINT FK_USER_ID_FOR_TRACK FOREIGN KEY (user_id)
         REFERENCES users (id)
         ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8;
+);
 
 
 CREATE TABLE comments_likes
 (
-    comment_id INT(11) NOT NULL,
-    user_id    INT(11) NOT NULL,
+    comment_id INTEGER NOT NULL,
+    user_id    INTEGER NOT NULL,
     PRIMARY KEY (comment_id, user_id),
     CONSTRAINT FK_COMMENT_ID_FOR_COMMENT FOREIGN KEY (comment_id)
         REFERENCES comments (id)
@@ -155,14 +143,13 @@ CREATE TABLE comments_likes
     CONSTRAINT FK_USER_ID_FOR_COMMENT FOREIGN KEY (user_id)
         REFERENCES users (id)
         ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8;
+);
 
 
 CREATE TABLE playlist
 (
-    track_id INT(11) NOT NULL,
-    user_id  INT(11) NOT NULL,
+    track_id INTEGER NOT NULL,
+    user_id  INTEGER NOT NULL,
     PRIMARY KEY (track_id, user_id),
     CONSTRAINT FK_TRACK_ID_PLAYLIST FOREIGN KEY (track_id)
         REFERENCES tracks (id)
@@ -170,12 +157,4 @@ CREATE TABLE playlist
     CONSTRAINT FK_USER_ID_PLAYLIST FOREIGN KEY (user_id)
         REFERENCES users (id)
         ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8;
-
-
-INSERT INTO genres (title)
-VALUES ('Попса'),
-       ('Реп'),
-       ('Шансон'),
-       ('Рок');
+);

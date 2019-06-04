@@ -31,4 +31,8 @@ public class TrackServiceImpl implements TrackService {
         trackRepository.save(track);
         return true;
     }
+
+    public Page<Track> getTracksWithPagingAndFiltering(int pageNumber, int pageSize, Specification<Track> trackSpecification) {
+        return trackRepository.findAll(trackSpecification, PageRequest.of(pageNumber, pageSize));
+    }
 }
