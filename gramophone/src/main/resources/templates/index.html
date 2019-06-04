@@ -18,11 +18,58 @@
 
 <body>
 
-<h1>Gramophone</h1>
-<p>Добро пожаловать на нашу музыкальную площадку</p>
-<a th:href="@{/login}">авторизоваться</a>
-<br>
-<a th:href="@{/upload-track}" sec:authorize="isAuthenticated()">загрузить трек</a>
+<div th:replace="~{navigation :: navi(Home)}"/>
+
+<div class="container">
+    <br>
+
+    <h1 th:text="Фильтры" />
+
+    <form th:action="@{/tracklist}" method="get">
+        <input hidden th:value="${page}" th:name="page">
+        <input th:value="${title != null} ? ${title}" th:name="trackName" type="text" placeholder="Название трека">
+        <input th:value="${wordAuthor != null} ? ${wordAuthor}" th:name="author" type="text" placeholder="Автор слов">
+        <input th:value="${musicAuthor != null} ? ${musicAuthor}" th:name="album" type="text" placeholder="Автор музыки">
+        <button type="submit" class="btn btn-primary">Фильтровать</button>
+    </form>
+
+    <br>
+
+    <h1 th:text="#{tracks.list}" />
+
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Трек</th>
+            <th>Автор слов</th>
+            <th>Автор музыки</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="track : ${tracks}">
+            <td th:text="${track.id}"/>
+            <td >
+                <a th:text="${track.title}" th:href="@{'/gramophon/track_info/' + ${track.id}}" />
+            </td>
+            <td th:text="${track.wordAuthor}"/>
+            <td th:text="${track.musicAuthor}"/>
+        </tr>
+        </tbody>
+    </table>
+
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <!--<li class="page-item"><a class="page-link" href="#">Previous</a></li>-->
+            <li th:each="i : ${#numbers.sequence(1, totalPage, 1)}">
+                <a th:class="page-link" th:text="${i}" th:classappend="${page == i ? 'active' : ''}" th:href="@{'/tracklist/?page=' + ${i} + ${filters}}"></a>
+            </li>
+            <!--<li class="page-item"><a class="page-link" href="#">Next</a></li>-->
+        </ul>
+    </nav>
+
+    <a th:href="@{/upload-track}" sec:authorize="isAuthenticated()">загрузить трек</a>
+</div>
 
 </body>
 </html>
