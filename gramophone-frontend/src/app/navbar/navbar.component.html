@@ -1,0 +1,20 @@
+<div class="ui text menu">
+  <div class="ui category search item">
+    <div class="ui transparent icon input">
+      <input class="prompt" type="text">
+      <fa-icon [icon]="['fas', 'search']"></fa-icon>
+    </div>
+    <div class="results"></div>
+  </div>
+  <div class="right menu">
+    <a class="ui item" [hidden]="false">
+      <button class="btn round" (click)="onClick()">Войти</button>
+    </a>
+    <a class="ui item" [hidden]="true">
+      <fa-icon [icon]="['fas', 'bell']"></fa-icon>
+    </a>
+    <a class="ui item" [hidden]="true">
+      <fa-icon [icon]="['fas', 'user-circle']"></fa-icon>
+    </a>
+  </div>
+</div>
