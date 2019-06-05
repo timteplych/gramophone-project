@@ -1,5 +1,7 @@
 package com.geekbrains.gramophone.controllers;
 
+import com.geekbrains.gramophone.components.Playlist;
+import com.geekbrains.gramophone.components.PlaylistComponent;
 import com.geekbrains.gramophone.entities.User;
 import com.geekbrains.gramophone.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +26,10 @@ public class AccountController {
             Model model
     ) {
         User user = userService.findById(id).get();
+        Playlist playlist = new PlaylistComponent(user);
+
         model.addAttribute("user", user);
+        model.addAttribute("playlist", playlist);
 
         if(user.getSinger()){
             return "singer-page";

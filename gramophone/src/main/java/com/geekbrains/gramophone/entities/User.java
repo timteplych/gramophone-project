@@ -4,7 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.util.Collection;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -49,7 +49,7 @@ public class User {
     @JoinTable(name = "playlist",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "track_id"))
-    private Set<Track> playlist;
+    private List<Track> playlist;
 
     public User() {
     }

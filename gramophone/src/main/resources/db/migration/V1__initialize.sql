@@ -4,7 +4,7 @@ CREATE TABLE users
 (
     id         SERIAL,
     username   VARCHAR(50) NOT NULL,
-    password   VARCHAR(80)    NOT NULL,
+    password   VARCHAR(80) NOT NULL,
     first_name VARCHAR(50) NOT NULL,
     last_name  VARCHAR(50) NOT NULL,
     singer     BOOL        NOT NULL,
@@ -67,9 +67,9 @@ CREATE TABLE genres
 
 INSERT INTO genres (title)
 VALUES ('Попса'),
-    ('Реп'),
-    ('Шансон'),
-    ('Рок');
+       ('Реп'),
+       ('Шансон'),
+       ('Рок');
 
 CREATE TABLE tracks
 (
