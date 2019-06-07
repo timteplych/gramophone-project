@@ -23,19 +23,20 @@
 <div class="container">
     <br>
 
-    <h1 th:text="Фильтры" />
+    <h1 th:text="Фильтры"/>
 
     <form th:action="@{/tracklist}" method="get">
         <input hidden th:value="${page}" th:name="page">
         <input th:value="${title != null} ? ${title}" th:name="trackName" type="text" placeholder="Название трека">
         <input th:value="${wordAuthor != null} ? ${wordAuthor}" th:name="author" type="text" placeholder="Автор слов">
-        <input th:value="${musicAuthor != null} ? ${musicAuthor}" th:name="album" type="text" placeholder="Автор музыки">
+        <input th:value="${musicAuthor != null} ? ${musicAuthor}" th:name="album" type="text"
+               placeholder="Автор музыки">
         <button type="submit" class="btn btn-primary">Фильтровать</button>
     </form>
 
     <br>
 
-    <h1 th:text="#{tracks.list}" />
+    <h1 th:text="#{tracks.list}"/>
 
     <table class="table table-hover">
         <thead>
@@ -44,16 +45,22 @@
             <th>Трек</th>
             <th>Автор слов</th>
             <th>Автор музыки</th>
+            <th sec:authorize="isAuthenticated()">Добавить в плейлист</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="track : ${tracks}">
             <td th:text="${track.id}"/>
-            <td >
-                <a th:text="${track.title}" th:href="@{'/gramophon/track_info/' + ${track.id}}" />
+            <td>
+                <a th:text="${track.title}" th:href="@{'/gramophon/track_info/' + ${track.id}}"/>
             </td>
             <td th:text="${track.wordAuthor}"/>
             <td th:text="${track.musicAuthor}"/>
+            <td sec:authorize="isAuthenticated()">
+                <a th:href="@{/add-track-to-playlist(trackId=${track.id})}">
+                    <i class="fa fa-plus" style="display: inline"></i>
+                </a>
+            </td>
         </tr>
         </tbody>
     </table>
@@ -62,13 +69,15 @@
         <ul class="pagination">
             <!--<li class="page-item"><a class="page-link" href="#">Previous</a></li>-->
             <li th:each="i : ${#numbers.sequence(1, totalPage, 1)}">
-                <a th:class="page-link" th:text="${i}" th:classappend="${page == i ? 'active' : ''}" th:href="@{'/tracklist/?page=' + ${i} + ${filters}}"></a>
+                <a th:class="page-link" th:text="${i}" th:classappend="${page == i ? 'active' : ''}"
+                   th:href="@{'/?page=' + ${i} + ${filters}}"></a>
             </li>
             <!--<li class="page-item"><a class="page-link" href="#">Next</a></li>-->
         </ul>
     </nav>
 
     <a th:href="@{/upload-track}" sec:authorize="isAuthenticated()">загрузить трек</a>
+    <a th:href="@{/playlist-page}" sec:authorize="isAuthenticated()">плейлист</a>
 </div>
 
 </body>

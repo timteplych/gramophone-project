@@ -19,7 +19,7 @@ import java.util.Optional;
 public class MainController {
 
     private static final int INITIAL_PAGE = 0;
-    private static final int PAGE_SIZE = 2;
+    private static final int PAGE_SIZE = 5;
 
     private TrackService trackService;
 

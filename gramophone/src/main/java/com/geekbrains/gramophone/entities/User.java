@@ -4,7 +4,6 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.util.Collection;
-import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -45,11 +44,9 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Collection<Role> roles;
 
-    @OneToMany
-    @JoinTable(name = "playlist",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "track_id"))
-    private List<Track> playlist;
+    @OneToOne
+    @JoinColumn(name = "playlist_id")
+    private Playlist playlist;
 
     public User() {
     }

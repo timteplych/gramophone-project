@@ -25,8 +25,8 @@ public class UploadTrackService {
         this.genreService = genreService;
     }
 
-    public boolean upload(String username, MultipartFile file) {
-        String path = "uploads/" + username;
+    public boolean upload(String username, MultipartFile file, String pathPartDestination) {
+        String path = pathPartDestination + username;
         File uploadFile = new File(path);
 
         if (!uploadFile.exists()) {
@@ -49,11 +49,11 @@ public class UploadTrackService {
         return true;
     }
 
-    public Track buildTrack(Track trackFromForm, User user, String fileName) {
-        trackFromForm.setUser(user);
+    public Track buildTrack(Track trackFromForm, User user, String fileName, Long genreId) {
+        trackFromForm.setPerformer(user.getUsername());
         trackFromForm.setCreateAt(new Date());
         trackFromForm.setListeningAmount(0L);
-        trackFromForm.setGenre(genreService.findByTitle("Попса")); // TODO пока всё сохраняется как Попса, не получается добавить поле выбора жанра на фронтенд
+        trackFromForm.setGenre(genreService.findById(genreId));
         trackFromForm.setLocationOnServer("uploads/" + user.getUsername() + "/" + fileName);
         return trackFromForm;
     }

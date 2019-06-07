@@ -24,7 +24,16 @@
     <div class="row">
         <div class="col-4 mt-3">
             <div>
-                <img th:src="@{/images/ava.png}" class="img-thumbnail" width="200">
+                <img th:src="@{${user.avatar != null ? '/' + user.avatar : '/images/ava.png'}}" class="img-thumbnail" width="200">
+            </div>
+            <div>
+                <form th:action="@{/download-avatar}" method="post" enctype="multipart/form-data">
+                    <input type="file" style="width: 100%;" class="btn btn-outline-primary" id="file"
+                           name="file"
+                           accept="image/*">
+
+                    <button type="submit" class="btn btn-primary" style="height: 100%">Загрузить аватар</button>
+                </form>
             </div>
             <div>
                 <a href="#" class="btn btn-primary">Стать исполнителем</a>
@@ -34,7 +43,7 @@
             </div>
             <div>
                 <ul class="list-group">
-                    <li class="list-group-item active" th:text="${'Плейлист: ' + playlist.name}"></li>
+                    <li class="list-group-item active" th:text="${'Плейлист:'}"></li>
                     <li class="list-group-item">Dapibus ac facilisis in</li>
                     <li class="list-group-item">Morbi leo risus</li>
                     <li class="list-group-item">Porta ac consectetur ac</li>

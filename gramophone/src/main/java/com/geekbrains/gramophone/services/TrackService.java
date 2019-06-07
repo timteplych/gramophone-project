@@ -13,5 +13,6 @@ public interface TrackService {
     List<Track> findByTitle(String title);
     List<Track> findByAuthor(String author);
     List<Track> findByGenreTitle(String title);
-    List<Track> findByGenreId(long id);
+    List<Track> findByGenreId(Long id);
+    Track findTrackById(Long id);
 }

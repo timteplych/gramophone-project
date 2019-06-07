@@ -2,15 +2,16 @@ DROP TABLE IF EXISTS users;
 
 CREATE TABLE users
 (
-    id         SERIAL,
-    username   VARCHAR(50) NOT NULL,
-    password   VARCHAR(80) NOT NULL,
-    first_name VARCHAR(50) NOT NULL,
-    last_name  VARCHAR(50) NOT NULL,
-    singer     BOOL        NOT NULL,
-    email      VARCHAR(50) NOT NULL,
-    phone      VARCHAR(15) NOT NULL,
-    avatar     VARCHAR(50),
+    id          SERIAL,
+    username    VARCHAR(50) NOT NULL,
+    password    VARCHAR(80) NOT NULL,
+    first_name  VARCHAR(50),
+    last_name   VARCHAR(50),
+    singer      BOOL        NOT NULL,
+    email       VARCHAR(50) NOT NULL,
+    phone       VARCHAR(15),
+    avatar      VARCHAR(100),
+    playlist_id INTEGER,
     PRIMARY KEY (id)
 );
 
@@ -81,39 +82,26 @@ CREATE TABLE tracks
     genre_id           INTEGER      NOT NULL,
     create_at          DATE         NOT NULL,
     listening_amount   INTEGER,
-    user_id            INTEGER      NOT NULL,
-    cover              VARCHAR(50),
+    performer          VARCHAR(50)  NOT NULL,
+    cover              VARCHAR(100),
     PRIMARY KEY (id),
     CONSTRAINT FK_GENRE_ID FOREIGN KEY (genre_id)
         REFERENCES genres (id)
-        ON DELETE NO ACTION ON UPDATE NO ACTION,
-    CONSTRAINT FK_USER_ID FOREIGN KEY (user_id)
-        REFERENCES users (id)
         ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
 CREATE TABLE comments
 (
-    id      SERIAL,
-    content VARCHAR(50) NOT NULL,
-    user_id INTEGER,
+    id       SERIAL,
+    content  VARCHAR(5000) NOT NULL,
+    user_id  INTEGER,
+    track_id INTEGER,
     PRIMARY KEY (id),
     CONSTRAINT FK_USER_COMMENT FOREIGN KEY (user_id)
         REFERENCES users (id)
-        ON DELETE NO ACTION ON UPDATE NO ACTION
-);
-
-
-CREATE TABLE tracks_comments
-(
-    track_id   INTEGER NOT NULL,
-    comment_id INTEGER NOT NULL,
-    PRIMARY KEY (track_id, comment_id),
-    CONSTRAINT FK_TRACK_ID_TRACK_COMMENT FOREIGN KEY (track_id)
-        REFERENCES tracks (id)
         ON DELETE NO ACTION ON UPDATE NO ACTION,
-    CONSTRAINT FK_COMMENT_ID_TRACK_COMMENT FOREIGN KEY (comment_id)
-        REFERENCES comments (id)
+    CONSTRAINT FK_TRACK_COMMENT FOREIGN KEY (track_id)
+        REFERENCES tracks (id)
         ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
@@ -148,13 +136,20 @@ CREATE TABLE comments_likes
 
 CREATE TABLE playlist
 (
-    track_id INTEGER NOT NULL,
-    user_id  INTEGER NOT NULL,
-    PRIMARY KEY (track_id, user_id),
-    CONSTRAINT FK_TRACK_ID_PLAYLIST FOREIGN KEY (track_id)
-        REFERENCES tracks (id)
+    id   SERIAL,
+    name VARCHAR(50) NOT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE playlist_tracks
+(
+    playlist_id INTEGER NOT NULL,
+    track_id    INTEGER NOT NULL,
+    PRIMARY KEY (playlist_id, track_id),
+    CONSTRAINT FK_PLAYLIST_ID_TRACKS FOREIGN KEY (playlist_id)
+        REFERENCES playlist (id)
         ON DELETE NO ACTION ON UPDATE NO ACTION,
-    CONSTRAINT FK_USER_ID_PLAYLIST FOREIGN KEY (user_id)
-        REFERENCES users (id)
+    CONSTRAINT FK_TRACK_ID_TRACKS FOREIGN KEY (track_id)
+        REFERENCES tracks (id)
         ON DELETE NO ACTION ON UPDATE NO ACTION
 );

@@ -76,11 +76,16 @@ public class TrackServiceImpl implements TrackService {
     }
 
     @Override
-    public List<Track> findByGenreId(long id) {
+    public List<Track> findByGenreId(Long id) {
         Genre genre = genreRepository.findById(id).orElse(null);
         if(genre == null){
             return Collections.emptyList();
         }
         return trackRepository.findAllByGenre(genre);
+    }
+
+    @Override
+    public Track findTrackById(Long id) {
+        return trackRepository.findById(id).orElse(null);
     }
 }
