@@ -1,3 +1,44 @@
 h1 {
     color: crimson;
 }
+
+.track-info {
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+.liked {
+    color: red;
+}
+
+.not-liked {
+    color: black;
+}
+
+.track-info {
+    border: black;
+    border-bottom-width: thin;
+}
+
+.word-author {
+    position: relative;
+    float: left;
+}
+
+.music-author {
+    position: relative;
+    float: right;
+}
+
+.like-button {
+    border: none;
+    background: none;
+}
+
+.like-track-form {
+    display: inline;
+}
+
+.add-comment-button {
+    margin: 10px;
+}

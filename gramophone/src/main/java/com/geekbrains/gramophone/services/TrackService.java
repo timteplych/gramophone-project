@@ -1,6 +1,8 @@
 package com.geekbrains.gramophone.services;
 
+import com.geekbrains.gramophone.entities.Comment;
 import com.geekbrains.gramophone.entities.Track;
+import com.geekbrains.gramophone.entities.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -15,4 +17,10 @@ public interface TrackService {
     List<Track> findByGenreTitle(String title);
     List<Track> findByGenreId(Long id);
     Track findTrackById(Long id);
+    void changeLike(Long id, User user);
+    void setLike(Long id, User user);
+    void removeLike(Long id, User user);
+    void addComment(Long id, Comment comment);
+    void removeComment(Long id, Comment comment);
+
 }

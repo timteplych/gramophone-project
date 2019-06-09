@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS users CASCADE;
 
 CREATE TABLE users
 (
@@ -15,7 +15,7 @@ CREATE TABLE users
     PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS roles;
+DROP TABLE IF EXISTS roles CASCADE;
 
 CREATE TABLE roles
 (
@@ -24,7 +24,7 @@ CREATE TABLE roles
     PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS users_roles;
+DROP TABLE IF EXISTS users_roles CASCADE;
 
 CREATE TABLE users_roles
 (
@@ -59,6 +59,8 @@ VALUES (1, 1),
        (1, 2),
        (1, 3);
 
+DROP TABLE IF EXISTS genres CASCADE;
+
 CREATE TABLE genres
 (
     id    SERIAL,
@@ -71,6 +73,8 @@ VALUES ('Попса'),
        ('Реп'),
        ('Шансон'),
        ('Рок');
+
+DROP TABLE IF EXISTS tracks CASCADE;
 
 CREATE TABLE tracks
 (
@@ -90,6 +94,8 @@ CREATE TABLE tracks
         ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
+DROP TABLE IF EXISTS comments CASCADE;
+
 CREATE TABLE comments
 (
     id       SERIAL,
@@ -105,6 +111,7 @@ CREATE TABLE comments
         ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
+DROP TABLE IF EXISTS tracks_likes CASCADE;
 
 CREATE TABLE tracks_likes
 (
@@ -119,6 +126,7 @@ CREATE TABLE tracks_likes
         ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
+DROP TABLE IF EXISTS comments_likes CASCADE;
 
 CREATE TABLE comments_likes
 (
@@ -133,6 +141,7 @@ CREATE TABLE comments_likes
         ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
+DROP TABLE IF EXISTS playlist CASCADE;
 
 CREATE TABLE playlist
 (
@@ -140,6 +149,8 @@ CREATE TABLE playlist
     name VARCHAR(50) NOT NULL,
     PRIMARY KEY (id)
 );
+
+DROP TABLE IF EXISTS playlist_tracks CASCADE;
 
 CREATE TABLE playlist_tracks
 (
