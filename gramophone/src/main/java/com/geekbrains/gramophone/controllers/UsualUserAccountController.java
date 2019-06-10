@@ -27,6 +27,7 @@ public class UsualUserAccountController {
         this.uploadTrackService = uploadTrackService;
     }
 
+    //перенести в отдельный общий метод, чтобы с любого аккаунта можно было загружать аватар
     @RequestMapping("/user-page/{id}")
     public String showUserPage(
             @PathVariable("id") Long id,

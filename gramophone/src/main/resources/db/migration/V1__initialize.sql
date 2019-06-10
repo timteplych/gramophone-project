@@ -1,5 +1,4 @@
 DROP TABLE IF EXISTS users;
-
 CREATE TABLE users
 (
     id          SERIAL,
@@ -16,7 +15,6 @@ CREATE TABLE users
 );
 
 DROP TABLE IF EXISTS roles;
-
 CREATE TABLE roles
 (
     id   SERIAL,
@@ -25,7 +23,6 @@ CREATE TABLE roles
 );
 
 DROP TABLE IF EXISTS users_roles;
-
 CREATE TABLE users_roles
 (
     user_id INTEGER NOT NULL,
@@ -54,11 +51,23 @@ INSERT INTO users (username, password, first_name, last_name, singer, email, pho
 VALUES ('admin', '$2a$04$Fx/SX9.BAvtPlMyIIqqFx.hLY2Xp8nnhpzvEEVINvVpwIPbA3v/.i', 'Admin', 'Admin', true,
         'admin@gmail.com', '+79881111111');
 
+INSERT INTO users (username, password, first_name, last_name, singer, email, phone)
+VALUES ('singer', '$2a$04$Fx/SX9.BAvtPlMyIIqqFx.hLY2Xp8nnhpzvEEVINvVpwIPbA3v/.i', 'Singer', 'Singer', true,
+        'singer@gmail.com', '+79881111111');
+
+INSERT INTO users (username, password, first_name, last_name, singer, email, phone)
+VALUES ('user', '$2a$04$Fx/SX9.BAvtPlMyIIqqFx.hLY2Xp8nnhpzvEEVINvVpwIPbA3v/.i', 'User', 'User', false,
+        'user@gmail.com', '+79881111111');
+
 INSERT INTO users_roles (user_id, role_id)
 VALUES (1, 1),
        (1, 2),
-       (1, 3);
+       (1, 3),
+       (2, 1),
+       (2, 2),
+       (3, 1);
 
+DROP TABLE IF EXISTS genres;
 CREATE TABLE genres
 (
     id    SERIAL,
@@ -72,6 +81,7 @@ VALUES ('Попса'),
        ('Шансон'),
        ('Рок');
 
+DROP TABLE IF EXISTS tracks;
 CREATE TABLE tracks
 (
     id                 SERIAL,
@@ -90,6 +100,7 @@ CREATE TABLE tracks
         ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
+DROP TABLE IF EXISTS comments;
 CREATE TABLE comments
 (
     id       SERIAL,
@@ -105,7 +116,7 @@ CREATE TABLE comments
         ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
-
+DROP TABLE IF EXISTS tracks_likes;
 CREATE TABLE tracks_likes
 (
     track_id INTEGER NOT NULL,
@@ -119,7 +130,7 @@ CREATE TABLE tracks_likes
         ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
-
+DROP TABLE IF EXISTS comments_likes;
 CREATE TABLE comments_likes
 (
     comment_id INTEGER NOT NULL,
@@ -133,7 +144,7 @@ CREATE TABLE comments_likes
         ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
-
+DROP TABLE IF EXISTS playlist;
 CREATE TABLE playlist
 (
     id   SERIAL,
@@ -141,6 +152,7 @@ CREATE TABLE playlist
     PRIMARY KEY (id)
 );
 
+DROP TABLE IF EXISTS playlist_tracks;
 CREATE TABLE playlist_tracks
 (
     playlist_id INTEGER NOT NULL,

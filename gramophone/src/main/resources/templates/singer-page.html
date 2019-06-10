@@ -20,44 +20,62 @@
 
 
 <div th:replace="~{navigation :: navi(UserPage)}"/>
+<br>
+<h2 th:text="${user.username}"></h2>
+<br>
+<!--<div class="container" th:if="${!isCurrentUser}">-->
+<!--    <div class="row">-->
+<!--        <a class="btn btn-primary" th:href="@{/subscribe/{userId}(userId = ${user.id})}"-->
+<!--           th:if="${!isSubscriber}">Подписаться</a>-->
+
+<!--        <a class="btn btn-primary" th:href="@{/unsubscribe/{userId}(userId = ${user.id})}"-->
+<!--           th:if="${isSubscriber}">Отписаться</a>-->
+<!--    </div>-->
+<!--</div>-->
 
 <div class="container">
     <div class="row">
         <div class="col-4 mt-3">
             <div>
-                <img th:src="@{/images/ava.png}" class="img-thumbnail" width="200">
+                <img th:src="@{${user.avatar != null ? '/' + user.avatar : '/images/ava.png'}}" class="img-thumbnail"
+                     width="200">
             </div>
+            <br>
             <div>
-                <a href="#" >Мои треки</a>
-            </div>
-            <div>
-                <a href="#" >Мои подписки</a>
-            </div>
-            <div>
-                <a href="#" >Мои подписчики</a>
-            </div>
-            <div>
-                <ul class="list-group">
-                    <li class="list-group-item active" th:text="${'Плейлист: ' + playlist.name}"></li>
-                    <li class="list-group-item">Dapibus ac facilisis in</li>
-                    <li class="list-group-item">Morbi leo risus</li>
-                    <li class="list-group-item">Porta ac consectetur ac</li>
-                    <li class="list-group-item">Vestibulum at eros</li>
-                </ul>
+                <form th:action="@{/download-avatar}" method="post" enctype="multipart/form-data">
+                    <input type="file" style="width: 100%;" class="btn btn-outline-primary" id="file"
+                           name="file"
+                           accept="image/*">
+                    <button type="submit" class="btn btn-primary" style="height: 100%">Загрузить аватар</button>
+                </form>
             </div>
         </div>
-        <div class="col-8 mt-3">
-            <div>
-                <ul class="list-group">
-                    <li class="list-group-item active">Лента с новыми песнями, тех исполнителей на кого подписан</li>
-                    <li class="list-group-item">Dapibus ac facilisis in</li>
-                    <li class="list-group-item">Morbi leo risus</li>
-                    <li class="list-group-item">Porta ac consectetur ac</li>
-                    <li class="list-group-item">Vestibulum at eros</li>
-                    <li class="list-group-item">Vestibulum at eros</li>
-                    <li class="list-group-item">Vestibulum at eros</li>
-                    <li class="list-group-item">Vestibulum at eros</li>
-                </ul>
+    </div>
+</div>
+
+<br>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-title">Мои подписки</div>
+                    <div class="card-text">
+<!--                        <a th:href="@{/subscriptions/{userId}/userList(userId = ${user.id})}"-->
+<!--                           th:text="${user.getSubscriptions().size()}"></a>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-title">Мои подписчики</div>
+                    <div class="card-text">
+<!--                        <a th:href="@{/subscribers/{userId}/userList(userId = ${user.id})}"-->
+<!--                           th:text="${user.getSubscribers().size()}"></a>-->
+                    </div>
+                </div>
             </div>
         </div>
     </div>

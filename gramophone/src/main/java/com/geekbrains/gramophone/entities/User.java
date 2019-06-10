@@ -4,6 +4,8 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -47,6 +49,24 @@ public class User {
     @OneToOne
     @JoinColumn(name = "playlist_id")
     private Playlist playlist;
+
+    // подписчики
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "user_subscriptions",
+            joinColumns = {@JoinColumn(name = "singer_id")}, //я певец
+            inverseJoinColumns = {@JoinColumn(name = "subscriber_id")} //на меня подписаны
+    )
+    private Set<User> subscribers = new HashSet<>();
+
+    // собственные подписки пользователя
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "user_subscriptions",
+            joinColumns = {@JoinColumn(name = "subscriber_id")}, //я подписан
+            inverseJoinColumns = {@JoinColumn(name = "singer_id")} //на вот этих певцов
+    )
+    private Set<User> subscriptions = new HashSet<>();
 
     public User() {
     }
