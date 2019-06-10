@@ -12,4 +12,7 @@ public interface UserService extends UserDetailsService {
     boolean save(SystemUser systemUser);
     void save(User user);
 
+    void subscribeOnUser(User currentUser, Long subscribeUserId);
+    void unsubscribeOnUser(User currentUser, Long subscribeUserId);
+
 }

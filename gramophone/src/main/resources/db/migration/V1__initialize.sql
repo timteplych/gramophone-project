@@ -1,5 +1,4 @@
 DROP TABLE IF EXISTS users CASCADE;
-
 CREATE TABLE users
 (
     id          SERIAL,
@@ -16,7 +15,6 @@ CREATE TABLE users
 );
 
 DROP TABLE IF EXISTS roles CASCADE;
-
 CREATE TABLE roles
 (
     id   SERIAL,
@@ -25,7 +23,6 @@ CREATE TABLE roles
 );
 
 DROP TABLE IF EXISTS users_roles CASCADE;
-
 CREATE TABLE users_roles
 (
     user_id INTEGER NOT NULL,
@@ -44,23 +41,7 @@ CREATE TABLE users_roles
         ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
-INSERT INTO roles (name)
-VALUES ('ROLE_USER'),
-       ('ROLE_MUSICIAN'),
-       ('ROLE_ADMIN');
-
-
-INSERT INTO users (username, password, first_name, last_name, singer, email, phone)
-VALUES ('admin', '$2a$04$Fx/SX9.BAvtPlMyIIqqFx.hLY2Xp8nnhpzvEEVINvVpwIPbA3v/.i', 'Admin', 'Admin', true,
-        'admin@gmail.com', '+79881111111');
-
-INSERT INTO users_roles (user_id, role_id)
-VALUES (1, 1),
-       (1, 2),
-       (1, 3);
-
 DROP TABLE IF EXISTS genres CASCADE;
-
 CREATE TABLE genres
 (
     id    SERIAL,
@@ -68,14 +49,7 @@ CREATE TABLE genres
     PRIMARY KEY (id)
 );
 
-INSERT INTO genres (title)
-VALUES ('Попса'),
-       ('Реп'),
-       ('Шансон'),
-       ('Рок');
-
 DROP TABLE IF EXISTS tracks CASCADE;
-
 CREATE TABLE tracks
 (
     id                 SERIAL,
@@ -86,16 +60,18 @@ CREATE TABLE tracks
     genre_id           INTEGER      NOT NULL,
     create_at          DATE         NOT NULL,
     listening_amount   INTEGER,
-    performer          VARCHAR(50)  NOT NULL,
+    user_id            INTEGER      NOT NULL,
     cover              VARCHAR(100),
     PRIMARY KEY (id),
     CONSTRAINT FK_GENRE_ID FOREIGN KEY (genre_id)
         REFERENCES genres (id)
+        ON DELETE NO ACTION ON UPDATE NO ACTION,
+    CONSTRAINT FK_PERFORMER_ID FOREIGN KEY (user_id)
+        REFERENCES users (id)
         ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
 DROP TABLE IF EXISTS comments CASCADE;
-
 CREATE TABLE comments
 (
     id       SERIAL,
@@ -112,7 +88,6 @@ CREATE TABLE comments
 );
 
 DROP TABLE IF EXISTS tracks_likes CASCADE;
-
 CREATE TABLE tracks_likes
 (
     track_id INTEGER NOT NULL,
@@ -127,7 +102,6 @@ CREATE TABLE tracks_likes
 );
 
 DROP TABLE IF EXISTS comments_likes CASCADE;
-
 CREATE TABLE comments_likes
 (
     comment_id INTEGER NOT NULL,
@@ -142,7 +116,6 @@ CREATE TABLE comments_likes
 );
 
 DROP TABLE IF EXISTS playlist CASCADE;
-
 CREATE TABLE playlist
 (
     id   SERIAL,
@@ -151,7 +124,6 @@ CREATE TABLE playlist
 );
 
 DROP TABLE IF EXISTS playlist_tracks CASCADE;
-
 CREATE TABLE playlist_tracks
 (
     playlist_id INTEGER NOT NULL,
@@ -164,3 +136,44 @@ CREATE TABLE playlist_tracks
         REFERENCES tracks (id)
         ON DELETE NO ACTION ON UPDATE NO ACTION
 );
+
+INSERT INTO roles (name)
+VALUES ('ROLE_USER'),
+       ('ROLE_MUSICIAN'),
+       ('ROLE_ADMIN');
+
+
+INSERT INTO playlist(name)
+VALUES ('default');
+
+INSERT INTO users (username, password, first_name, last_name, singer, email, phone, playlist_id)
+VALUES ('admin', '$2a$04$Fx/SX9.BAvtPlMyIIqqFx.hLY2Xp8nnhpzvEEVINvVpwIPbA3v/.i', 'Admin', 'Admin', true,
+        'admin@gmail.com', '+79881111111', 1);
+
+INSERT INTO playlist(name)
+VALUES ('default');
+
+INSERT INTO users (username, password, first_name, last_name, singer, email, phone, playlist_id)
+VALUES ('singer', '$2a$04$Fx/SX9.BAvtPlMyIIqqFx.hLY2Xp8nnhpzvEEVINvVpwIPbA3v/.i', 'Singer', 'Singer', true,
+        'singer@gmail.com', '+79881111111', 2);
+
+INSERT INTO playlist(name)
+VALUES ('default');
+
+INSERT INTO users (username, password, first_name, last_name, singer, email, phone, playlist_id)
+VALUES ('user', '$2a$04$Fx/SX9.BAvtPlMyIIqqFx.hLY2Xp8nnhpzvEEVINvVpwIPbA3v/.i', 'User', 'User', false,
+        'user@gmail.com', '+79881111111', 3);
+
+INSERT INTO users_roles (user_id, role_id)
+VALUES (1, 1),
+       (1, 2),
+       (1, 3),
+       (2, 1),
+       (2, 2),
+       (3, 1);
+
+INSERT INTO genres (title)
+VALUES ('Попса'),
+       ('Реп'),
+       ('Шансон'),
+       ('Рок');

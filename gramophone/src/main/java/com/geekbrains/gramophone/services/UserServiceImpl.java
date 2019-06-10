@@ -93,6 +93,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void subscribeOnUser(User currentUser, Long subscribeOnUserId) {
+        User user = userRepository.findById(subscribeOnUserId).get();
+        user.getSubscribers().add(currentUser);
+        userRepository.save(user);
+    }
+
+    @Override
+    public void unsubscribeOnUser(User currentUser, Long unsubscribeOnUserId) {
+        User user = userRepository.findById(unsubscribeOnUserId).get();
+        user.getSubscribers().remove(currentUser);
+        userRepository.save(user);
+    }
+
+    @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findOneByUsername(username);

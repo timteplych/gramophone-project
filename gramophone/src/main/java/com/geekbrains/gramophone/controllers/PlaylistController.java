@@ -1,6 +1,5 @@
 package com.geekbrains.gramophone.controllers;
 
-import com.geekbrains.gramophone.entities.Playlist;
 import com.geekbrains.gramophone.entities.Track;
 import com.geekbrains.gramophone.entities.User;
 import com.geekbrains.gramophone.services.PlaylistService;
@@ -9,12 +8,11 @@ import com.geekbrains.gramophone.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
-import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -58,12 +56,15 @@ public class PlaylistController {
     @RequestMapping("/add-track-to-playlist")
     public String addTrackInPlaylist(
             @RequestParam("trackId") Long trackId,
-            Principal principal
+            Principal principal,
+            HttpServletRequest request
     ) {
         User user = userService.findByUsername(principal.getName());
 
         Track track = trackService.findTrackById(trackId);
         playlistService.addTrack(user, track);
+
+        //String referer = request.getHeader("referer");
 
         return "redirect:/playlist-page"; // переделать возврат на ту страницу с которой был добавлен трек
     }
@@ -78,7 +79,7 @@ public class PlaylistController {
         Track track = trackService.findTrackById(trackId);
         playlistService.removeTrack(user, track);
 
-        return "redirect:/playlist-page"; // переделать возврат на ту страницу с которой был добавлен трек
+        return "redirect:/playlist-page";
     }
 
 }
