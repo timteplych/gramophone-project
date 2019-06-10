@@ -38,7 +38,7 @@ public class SingerAccountController {
         User currentUser = userService.findByUsername(principal.getName());
 
         model.addAttribute("user", user);
-        //model.addAttribute("isSubscriber", user.getSubscribers().contains(currentUser));
+        model.addAttribute("isSubscriber", user.getSubscribers().contains(currentUser));
         model.addAttribute("isCurrentUser", currentUser.getId().equals(user.getId()));
 
         return "singer-page";

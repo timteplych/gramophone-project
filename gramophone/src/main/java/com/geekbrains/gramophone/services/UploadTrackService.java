@@ -50,7 +50,7 @@ public class UploadTrackService {
     }
 
     public Track buildTrack(Track trackFromForm, User user, String fileName, Long genreId) {
-        trackFromForm.setPerformer(user.getUsername());
+        trackFromForm.setPerformer(user);
         trackFromForm.setCreateAt(new Date());
         trackFromForm.setListeningAmount(0L);
         trackFromForm.setGenre(genreService.findById(genreId));

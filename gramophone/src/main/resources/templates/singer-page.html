@@ -23,15 +23,15 @@
 <br>
 <h2 th:text="${user.username}"></h2>
 <br>
-<!--<div class="container" th:if="${!isCurrentUser}">-->
-<!--    <div class="row">-->
-<!--        <a class="btn btn-primary" th:href="@{/subscribe/{userId}(userId = ${user.id})}"-->
-<!--           th:if="${!isSubscriber}">Подписаться</a>-->
+<div class="container" th:if="${!isCurrentUser}">
+    <div class="row">
+        <a class="btn btn-primary" th:href="@{/subscribe/{userId}(userId = ${user.id})}"
+           th:if="${!isSubscriber}">Подписаться</a>
 
-<!--        <a class="btn btn-primary" th:href="@{/unsubscribe/{userId}(userId = ${user.id})}"-->
-<!--           th:if="${isSubscriber}">Отписаться</a>-->
-<!--    </div>-->
-<!--</div>-->
+        <a class="btn btn-primary" th:href="@{/unsubscribe/{userId}(userId = ${user.id})}"
+           th:if="${isSubscriber}">Отписаться</a>
+    </div>
+</div>
 
 <div class="container">
     <div class="row">
@@ -61,8 +61,8 @@
                 <div class="card-body">
                     <div class="card-title">Мои подписки</div>
                     <div class="card-text">
-<!--                        <a th:href="@{/subscriptions/{userId}/userList(userId = ${user.id})}"-->
-<!--                           th:text="${user.getSubscriptions().size()}"></a>-->
+                        <a th:href="@{/subscriptions/{userId}/userList(userId = ${user.id})}"
+                           th:text="${user.getSubscriptions().size()}"></a>
                     </div>
                 </div>
             </div>
@@ -72,8 +72,8 @@
                 <div class="card-body">
                     <div class="card-title">Мои подписчики</div>
                     <div class="card-text">
-<!--                        <a th:href="@{/subscribers/{userId}/userList(userId = ${user.id})}"-->
-<!--                           th:text="${user.getSubscribers().size()}"></a>-->
+                        <a th:href="@{/subscribers/{userId}/userList(userId = ${user.id})}"
+                           th:text="${user.getSubscribers().size()}"></a>
                     </div>
                 </div>
             </div>

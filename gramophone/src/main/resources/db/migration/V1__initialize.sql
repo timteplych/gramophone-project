@@ -60,11 +60,14 @@ CREATE TABLE tracks
     genre_id           INTEGER      NOT NULL,
     create_at          DATE         NOT NULL,
     listening_amount   INTEGER,
-    performer          VARCHAR(50)  NOT NULL,
+    user_id            INTEGER      NOT NULL,
     cover              VARCHAR(100),
     PRIMARY KEY (id),
     CONSTRAINT FK_GENRE_ID FOREIGN KEY (genre_id)
         REFERENCES genres (id)
+        ON DELETE NO ACTION ON UPDATE NO ACTION,
+    CONSTRAINT FK_PERFORMER_ID FOREIGN KEY (user_id)
+        REFERENCES users (id)
         ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
