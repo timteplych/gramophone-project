@@ -41,32 +41,6 @@ CREATE TABLE users_roles
         ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
-INSERT INTO roles (name)
-VALUES ('ROLE_USER'),
-       ('ROLE_MUSICIAN'),
-       ('ROLE_ADMIN');
-
-
-INSERT INTO users (username, password, first_name, last_name, singer, email, phone)
-VALUES ('admin', '$2a$04$Fx/SX9.BAvtPlMyIIqqFx.hLY2Xp8nnhpzvEEVINvVpwIPbA3v/.i', 'Admin', 'Admin', true,
-        'admin@gmail.com', '+79881111111');
-
-INSERT INTO users (username, password, first_name, last_name, singer, email, phone)
-VALUES ('singer', '$2a$04$Fx/SX9.BAvtPlMyIIqqFx.hLY2Xp8nnhpzvEEVINvVpwIPbA3v/.i', 'Singer', 'Singer', true,
-        'singer@gmail.com', '+79881111111');
-
-INSERT INTO users (username, password, first_name, last_name, singer, email, phone)
-VALUES ('user', '$2a$04$Fx/SX9.BAvtPlMyIIqqFx.hLY2Xp8nnhpzvEEVINvVpwIPbA3v/.i', 'User', 'User', false,
-        'user@gmail.com', '+79881111111');
-
-INSERT INTO users_roles (user_id, role_id)
-VALUES (1, 1),
-       (1, 2),
-       (1, 3),
-       (2, 1),
-       (2, 2),
-       (3, 1);
-
 DROP TABLE IF EXISTS genres;
 CREATE TABLE genres
 (
@@ -74,12 +48,6 @@ CREATE TABLE genres
     title VARCHAR(50) NOT NULL,
     PRIMARY KEY (id)
 );
-
-INSERT INTO genres (title)
-VALUES ('Попса'),
-       ('Реп'),
-       ('Шансон'),
-       ('Рок');
 
 DROP TABLE IF EXISTS tracks;
 CREATE TABLE tracks
@@ -165,3 +133,44 @@ CREATE TABLE playlist_tracks
         REFERENCES tracks (id)
         ON DELETE NO ACTION ON UPDATE NO ACTION
 );
+
+INSERT INTO roles (name)
+VALUES ('ROLE_USER'),
+       ('ROLE_MUSICIAN'),
+       ('ROLE_ADMIN');
+
+
+INSERT INTO playlist(name)
+VALUES ('default');
+
+INSERT INTO users (username, password, first_name, last_name, singer, email, phone, playlist_id)
+VALUES ('admin', '$2a$04$Fx/SX9.BAvtPlMyIIqqFx.hLY2Xp8nnhpzvEEVINvVpwIPbA3v/.i', 'Admin', 'Admin', true,
+        'admin@gmail.com', '+79881111111', 1);
+
+INSERT INTO playlist(name)
+VALUES ('default');
+
+INSERT INTO users (username, password, first_name, last_name, singer, email, phone, playlist_id)
+VALUES ('singer', '$2a$04$Fx/SX9.BAvtPlMyIIqqFx.hLY2Xp8nnhpzvEEVINvVpwIPbA3v/.i', 'Singer', 'Singer', true,
+        'singer@gmail.com', '+79881111111', 2);
+
+INSERT INTO playlist(name)
+VALUES ('default');
+
+INSERT INTO users (username, password, first_name, last_name, singer, email, phone, playlist_id)
+VALUES ('user', '$2a$04$Fx/SX9.BAvtPlMyIIqqFx.hLY2Xp8nnhpzvEEVINvVpwIPbA3v/.i', 'User', 'User', false,
+        'user@gmail.com', '+79881111111', 3);
+
+INSERT INTO users_roles (user_id, role_id)
+VALUES (1, 1),
+       (1, 2),
+       (1, 3),
+       (2, 1),
+       (2, 2),
+       (3, 1);
+
+INSERT INTO genres (title)
+VALUES ('Попса'),
+       ('Реп'),
+       ('Шансон'),
+       ('Рок');
