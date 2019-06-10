@@ -48,12 +48,13 @@
                        th:field="*{musicAuthor}"
                        th:value="${user.firstName + ' ' + user.lastName}">
 
-<!--                <label for="genre">Жанр песни</label>-->
-<!--                <select class="form-control" id="genre" name="genre">-->
-<!--                    <option th:each="genre : ${genres}"-->
-<!--                            th:text="${genre.title}">-->
-<!--                    </option>-->
-<!--                </select>-->
+                <label for="genre">Жанр песни</label>
+                <select class="form-control" id="genre" name="genre">
+                    <option th:each="genre : ${genres}"
+                            th:value="${genre.id}"
+                            th:text="${genre.title}">
+                    </option>
+                </select>
 
                 <input type="file" style="width: 100%;" class="btn btn-outline-primary" id="file"
                        name="file"

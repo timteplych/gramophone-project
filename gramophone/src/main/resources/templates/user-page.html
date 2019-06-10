@@ -18,14 +18,35 @@
 
 <body>
 
-Страничка для тех кто не испольнитель:
-Аватар
-Плейлист
-Форма - стать исполнителем
-Список подписок
-Лента с новыми песнями, тех исполнителей на кого подписан
-Рекомендации
-История проуслушивания
+<div th:replace="~{navigation :: navi(UserPage)}"/>
+
+<div class="container">
+    <div class="row">
+        <div class="col-4 mt-3">
+            <div>
+                <img th:src="@{${user.avatar != null ? '/' + user.avatar : '/images/ava.png'}}" class="img-thumbnail" width="200">
+            </div>
+            <br>
+            <div>
+                <form th:action="@{/download-avatar}" method="post" enctype="multipart/form-data">
+                    <input type="file" style="width: 100%;" class="btn btn-outline-primary" id="file"
+                           name="file"
+                           accept="image/*">
+                    <button type="submit" class="btn btn-primary" style="height: 100%">Загрузить аватар</button>
+                </form>
+            </div>
+            <br>
+            <div>
+                <a href="#" class="btn btn-primary">Стать исполнителем</a>
+            </div>
+            <br>
+            <div>
+                <a href="#" >Мои подписки</a>
+            </div>
+            <br>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>

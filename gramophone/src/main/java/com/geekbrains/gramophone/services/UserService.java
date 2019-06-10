@@ -10,4 +10,9 @@ public interface UserService extends UserDetailsService {
     User findByUsername(String username);
     Optional<User> findById(Long id);
     boolean save(SystemUser systemUser);
+    void save(User user);
+
+    void subscribeOnUser(User currentUser, Long subscribeUserId);
+    void unsubscribeOnUser(User currentUser, Long subscribeUserId);
+
 }

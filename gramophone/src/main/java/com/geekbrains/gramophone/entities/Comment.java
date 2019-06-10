@@ -28,4 +28,8 @@ public class Comment {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "track_id")
+    private Track track;
+
 }

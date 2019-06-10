@@ -61,18 +61,20 @@ public class UploadTrackController {
     public String uploadProcessing(
             @ModelAttribute("track") Track trackFromForm,
             @RequestParam("file") MultipartFile file,
+            @RequestParam("genre") Long genreId,
             Principal principal
     ) {
 
         Track track = uploadTrackService.buildTrack(
                 trackFromForm,
                 userService.findByUsername(principal.getName()),
-                file.getOriginalFilename()
+                file.getOriginalFilename(),
+                genreId
         );
 
         if (!file.isEmpty()) {
 
-            if (uploadTrackService.upload(principal.getName(), file)) {
+            if (uploadTrackService.upload(principal.getName(), file, "uploads/")) {
                 trackService.save(track);
                 return "upload-success";
             } else {

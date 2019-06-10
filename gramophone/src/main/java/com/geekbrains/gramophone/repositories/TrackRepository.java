@@ -15,4 +15,5 @@ public interface TrackRepository extends PagingAndSortingRepository<Track, Long>
     List<Track> findAllByMusicAuthorContaining(String author);
 
     List<Track> findAllByGenre(Genre genre);
+
 }

@@ -1,5 +1,6 @@
 package com.geekbrains.gramophone.services;
 
+import com.geekbrains.gramophone.entities.Playlist;
 import com.geekbrains.gramophone.entities.Role;
 import com.geekbrains.gramophone.entities.SystemUser;
 import com.geekbrains.gramophone.entities.User;
@@ -24,6 +25,13 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     private RoleRepository roleRepository;
     private BCryptPasswordEncoder passwordEncoder;
+
+    private PlaylistService playlistService;
+
+    @Autowired
+    public void setPlaylistService(PlaylistService playlistService) {
+        this.playlistService = playlistService;
+    }
 
     @Autowired
     public void setUserRepository(UserRepository userRepository) {
@@ -60,15 +68,42 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setUsername(systemUser.getUsername());
         user.setPassword(passwordEncoder.encode(systemUser.getPassword()));
-        user.setFirstName("noFirstName");
-        user.setLastName("noLastName");
+        //performer.setFirstName("noFirstName");
+        //performer.setLastName("noLastName");
         user.setEmail(systemUser.getEmail());
-        user.setPhone("noPhone");
+        //performer.setPhone("noPhone");
         user.setSinger(false);
         user.setRoles(Arrays.asList(roleRepository.findOneByName("ROLE_USER")));
         // todo check username is exists
+        createPlaylist(user);
         userRepository.save(user);
+
         return true;
+    }
+
+    private void createPlaylist(User user) {
+        Playlist playlist = new Playlist();
+        playlistService.savePlaylist(playlist);
+        user.setPlaylist(playlist);
+    }
+
+    @Override
+    public void save(User user) {
+        userRepository.save(user);
+    }
+
+    @Override
+    public void subscribeOnUser(User currentUser, Long subscribeOnUserId) {
+        User user = userRepository.findById(subscribeOnUserId).get();
+        user.getSubscribers().add(currentUser);
+        userRepository.save(user);
+    }
+
+    @Override
+    public void unsubscribeOnUser(User currentUser, Long unsubscribeOnUserId) {
+        User user = userRepository.findById(unsubscribeOnUserId).get();
+        user.getSubscribers().remove(currentUser);
+        userRepository.save(user);
     }
 
     @Override

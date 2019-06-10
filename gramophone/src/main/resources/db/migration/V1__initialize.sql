@@ -1,21 +1,20 @@
 DROP TABLE IF EXISTS users;
-
 CREATE TABLE users
 (
-    id         SERIAL,
-    username   VARCHAR(50) NOT NULL,
-    password   VARCHAR(80)    NOT NULL,
-    first_name VARCHAR(50) NOT NULL,
-    last_name  VARCHAR(50) NOT NULL,
-    singer     BOOL        NOT NULL,
-    email      VARCHAR(50) NOT NULL,
-    phone      VARCHAR(15) NOT NULL,
-    avatar     VARCHAR(50),
+    id          SERIAL,
+    username    VARCHAR(50) NOT NULL,
+    password    VARCHAR(80) NOT NULL,
+    first_name  VARCHAR(50),
+    last_name   VARCHAR(50),
+    singer      BOOL        NOT NULL,
+    email       VARCHAR(50) NOT NULL,
+    phone       VARCHAR(15),
+    avatar      VARCHAR(100),
+    playlist_id INTEGER,
     PRIMARY KEY (id)
 );
 
 DROP TABLE IF EXISTS roles;
-
 CREATE TABLE roles
 (
     id   SERIAL,
@@ -24,7 +23,6 @@ CREATE TABLE roles
 );
 
 DROP TABLE IF EXISTS users_roles;
-
 CREATE TABLE users_roles
 (
     user_id INTEGER NOT NULL,
@@ -43,21 +41,7 @@ CREATE TABLE users_roles
         ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
-INSERT INTO roles (name)
-VALUES ('ROLE_USER'),
-       ('ROLE_MUSICIAN'),
-       ('ROLE_ADMIN');
-
-
-INSERT INTO users (username, password, first_name, last_name, singer, email, phone)
-VALUES ('admin', '$2a$04$Fx/SX9.BAvtPlMyIIqqFx.hLY2Xp8nnhpzvEEVINvVpwIPbA3v/.i', 'Admin', 'Admin', true,
-        'admin@gmail.com', '+79881111111');
-
-INSERT INTO users_roles (user_id, role_id)
-VALUES (1, 1),
-       (1, 2),
-       (1, 3);
-
+DROP TABLE IF EXISTS genres;
 CREATE TABLE genres
 (
     id    SERIAL,
@@ -65,12 +49,7 @@ CREATE TABLE genres
     PRIMARY KEY (id)
 );
 
-INSERT INTO genres (title)
-VALUES ('Попса'),
-    ('Реп'),
-    ('Шансон'),
-    ('Рок');
-
+DROP TABLE IF EXISTS tracks;
 CREATE TABLE tracks
 (
     id                 SERIAL,
@@ -81,43 +60,31 @@ CREATE TABLE tracks
     genre_id           INTEGER      NOT NULL,
     create_at          DATE         NOT NULL,
     listening_amount   INTEGER,
-    user_id            INTEGER      NOT NULL,
-    cover              VARCHAR(50),
+    performer          VARCHAR(50)  NOT NULL,
+    cover              VARCHAR(100),
     PRIMARY KEY (id),
     CONSTRAINT FK_GENRE_ID FOREIGN KEY (genre_id)
         REFERENCES genres (id)
-        ON DELETE NO ACTION ON UPDATE NO ACTION,
-    CONSTRAINT FK_USER_ID FOREIGN KEY (user_id)
-        REFERENCES users (id)
         ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
+DROP TABLE IF EXISTS comments;
 CREATE TABLE comments
 (
-    id      SERIAL,
-    content VARCHAR(50) NOT NULL,
-    user_id INTEGER,
+    id       SERIAL,
+    content  VARCHAR(5000) NOT NULL,
+    user_id  INTEGER,
+    track_id INTEGER,
     PRIMARY KEY (id),
     CONSTRAINT FK_USER_COMMENT FOREIGN KEY (user_id)
         REFERENCES users (id)
-        ON DELETE NO ACTION ON UPDATE NO ACTION
-);
-
-
-CREATE TABLE tracks_comments
-(
-    track_id   INTEGER NOT NULL,
-    comment_id INTEGER NOT NULL,
-    PRIMARY KEY (track_id, comment_id),
-    CONSTRAINT FK_TRACK_ID_TRACK_COMMENT FOREIGN KEY (track_id)
-        REFERENCES tracks (id)
         ON DELETE NO ACTION ON UPDATE NO ACTION,
-    CONSTRAINT FK_COMMENT_ID_TRACK_COMMENT FOREIGN KEY (comment_id)
-        REFERENCES comments (id)
+    CONSTRAINT FK_TRACK_COMMENT FOREIGN KEY (track_id)
+        REFERENCES tracks (id)
         ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
-
+DROP TABLE IF EXISTS tracks_likes;
 CREATE TABLE tracks_likes
 (
     track_id INTEGER NOT NULL,
@@ -131,7 +98,7 @@ CREATE TABLE tracks_likes
         ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
-
+DROP TABLE IF EXISTS comments_likes;
 CREATE TABLE comments_likes
 (
     comment_id INTEGER NOT NULL,
@@ -145,16 +112,65 @@ CREATE TABLE comments_likes
         ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
-
+DROP TABLE IF EXISTS playlist;
 CREATE TABLE playlist
 (
-    track_id INTEGER NOT NULL,
-    user_id  INTEGER NOT NULL,
-    PRIMARY KEY (track_id, user_id),
-    CONSTRAINT FK_TRACK_ID_PLAYLIST FOREIGN KEY (track_id)
-        REFERENCES tracks (id)
+    id   SERIAL,
+    name VARCHAR(50) NOT NULL,
+    PRIMARY KEY (id)
+);
+
+DROP TABLE IF EXISTS playlist_tracks;
+CREATE TABLE playlist_tracks
+(
+    playlist_id INTEGER NOT NULL,
+    track_id    INTEGER NOT NULL,
+    PRIMARY KEY (playlist_id, track_id),
+    CONSTRAINT FK_PLAYLIST_ID_TRACKS FOREIGN KEY (playlist_id)
+        REFERENCES playlist (id)
         ON DELETE NO ACTION ON UPDATE NO ACTION,
-    CONSTRAINT FK_USER_ID_PLAYLIST FOREIGN KEY (user_id)
-        REFERENCES users (id)
+    CONSTRAINT FK_TRACK_ID_TRACKS FOREIGN KEY (track_id)
+        REFERENCES tracks (id)
         ON DELETE NO ACTION ON UPDATE NO ACTION
 );
+
+INSERT INTO roles (name)
+VALUES ('ROLE_USER'),
+       ('ROLE_MUSICIAN'),
+       ('ROLE_ADMIN');
+
+
+INSERT INTO playlist(name)
+VALUES ('default');
+
+INSERT INTO users (username, password, first_name, last_name, singer, email, phone, playlist_id)
+VALUES ('admin', '$2a$04$Fx/SX9.BAvtPlMyIIqqFx.hLY2Xp8nnhpzvEEVINvVpwIPbA3v/.i', 'Admin', 'Admin', true,
+        'admin@gmail.com', '+79881111111', 1);
+
+INSERT INTO playlist(name)
+VALUES ('default');
+
+INSERT INTO users (username, password, first_name, last_name, singer, email, phone, playlist_id)
+VALUES ('singer', '$2a$04$Fx/SX9.BAvtPlMyIIqqFx.hLY2Xp8nnhpzvEEVINvVpwIPbA3v/.i', 'Singer', 'Singer', true,
+        'singer@gmail.com', '+79881111111', 2);
+
+INSERT INTO playlist(name)
+VALUES ('default');
+
+INSERT INTO users (username, password, first_name, last_name, singer, email, phone, playlist_id)
+VALUES ('user', '$2a$04$Fx/SX9.BAvtPlMyIIqqFx.hLY2Xp8nnhpzvEEVINvVpwIPbA3v/.i', 'User', 'User', false,
+        'user@gmail.com', '+79881111111', 3);
+
+INSERT INTO users_roles (user_id, role_id)
+VALUES (1, 1),
+       (1, 2),
+       (1, 3),
+       (2, 1),
+       (2, 2),
+       (3, 1);
+
+INSERT INTO genres (title)
+VALUES ('Попса'),
+       ('Реп'),
+       ('Шансон'),
+       ('Рок');
