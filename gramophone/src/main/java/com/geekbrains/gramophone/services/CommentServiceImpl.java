@@ -47,4 +47,32 @@ public class CommentServiceImpl implements CommentService {
     public List<Comment> findByTrack(Track track) {
         return commentRepository.findByTrack(track);
     }
+
+    public void changeLike(Long id, User user) {
+        Comment comment = findCommentById(id);
+        if (comment.getLikes().contains(user))
+            removeLike(id, user);
+        else
+            setLike(id, user);
+    }
+
+    public Comment findCommentById(Long id) {
+        return commentRepository.findById(id).orElse(null);
+    }
+
+    public void setLike(Long id, User user) {
+        Comment comment = findCommentById(id);
+        comment.getLikes().add(user);
+        commentRepository.save(comment);
+    }
+
+    public void removeLike(Long id, User user) {
+        Comment comment = findCommentById(id);
+        comment.getLikes().remove(user);
+        commentRepository.save(comment);
+    }
+
+    public void remove(Comment comment) {
+        commentRepository.delete(comment);
+    }
 }

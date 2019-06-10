@@ -41,28 +41,63 @@
             </div>
             <div class="row">
                 <span class="col-1">
-                        <form class="like-track-form" sec:authorize="isAuthenticated()" th:action="@{'/like-track/'+${track.id}}"
-                              method="post">
+                    <form class="like-form" sec:authorize="isAuthenticated()" th:action="@{'/like-track/'+${track.id}}"
+                          method="get">
+                        <button class="like-button" type="submit">
+                            <i th:class="${track.getLikes().contains(user)}? 'fas fa-heart liked': 'far fa-heart not-liked'"></i>
+                        </button>
+                    </form>
+                    <i th:unless="${user}" class="far fa-heart not-liked"></i>
+                    <span th:text="${track.getLikes().size()}"></span>
+                </span>
+                <span class="col-1">
+                    <i class="far fa-comment"></i>
+                    <span th:text="${comments.size()}"></span>
+                </span>
+            </div>
+
+
+            <form class="row" sec:authorize="isAuthenticated()" th:if="${allowComment}" th:action="@{'/add-comment'}"
+                  th:object="${comment}" method="post">
+                <input hidden th:field="*{user}" th:value="${user}" th:name="user">
+                <input hidden th:field="*{track}" th:value="${track}" th:name="track">
+                <div class="form-group col-12">
+                    <textarea class="form-control" rows="5" th:field="*{content}"/>
+                </div>
+                <div class="form-group col-1">
+                    <input class="btn btn-primary" type="submit" value="Add comment"/>
+                </div>
+            </form>
+
+            <div class="card mb-1 mt-1" th:each="comment : ${comments}" th:object="${comment}">
+                <div class="card-header">
+                    <h5 class="d-inline" th:text="*{user.username}"></h5>
+                    <form class="like-form" sec:authorize="isAuthenticated()"
+                          th:action="@{'/remove-comment/'+${comment.id}}"
+                          method="get">
+                        <button type="submit" class="close" aria-label="Remove">
+                            <div aria-hidden="true">&times;</div>
+                        </button>
+                    </form>
+                </div>
+                <div class="card-body">
+                    <p class="card-text" th:text="*{content}"></p>
+                </div>
+                <div class="card-footer">
+                    <span class="col-1">
+                        <form class="like-form" sec:authorize="isAuthenticated()"
+                              th:action="@{'/like-comment/'+${comment.id}}"
+                              method="get">
                             <button class="like-button" type="submit">
-                                <i th:class="${track.getLikes().contains(user)}? 'fas fa-heart liked': 'far fa-heart not-liked'"></i>
+                                <i th:class="${comment.getLikes().contains(user)}? 'fas fa-heart liked': 'far fa-heart not-liked'"></i>
                             </button>
                         </form>
                         <i th:unless="${user}" class="far fa-heart not-liked"></i>
-                    <span th:text="${track.getLikes().size()}"></span>
-                </span>
-                    <span class="col-1">
-                    <i class="far fa-comment"></i>
-                    <span th:text="${commentCount}"></span>
-                </span>
+                        <span th:text="${comment.getLikes().size()}"></span>
+                    </span>
+                </div>
             </div>
-            <div class="row" sec:authorize="isAuthenticated()" th:if="${allowComment}">
-                <form th:action="@{'/add-comment'}" th:object="${comment}" method="post">
-                    <input hidden th:field="*{user}" th:value="${user}" th:name="user">
-                    <input hidden th:field="*{track}" th:value="${track}" th:name="track">
-                    <p><textarea rows="10" cols="45" th:field="*{content}" /></p>
-                    <p><input class="button" type="submit" value="Submit" /></p>
-                </form>
-            </div>
+
         </div>
     </div>
 </main>

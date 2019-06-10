@@ -13,4 +13,9 @@ public interface CommentService {
     Page<Comment> getCommentsWithPagingAndFiltering(int pageNumber, int pageSize); //TODO добавить критерии отбора
     List<Comment> findByUserAndTrack(User user, Track track);
     List<Comment> findByTrack(Track track);
+    Comment findCommentById(Long id);
+    void changeLike(Long id, User user);
+    void setLike(Long id, User user);
+    void removeLike(Long id, User user);
+    void remove(Comment comment);
 }

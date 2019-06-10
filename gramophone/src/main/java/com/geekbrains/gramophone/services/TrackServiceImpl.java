@@ -112,15 +112,4 @@ public class TrackServiceImpl implements TrackService {
         trackRepository.save(track);
     }
 
-    public void addComment(Long id, Comment comment) {
-        Track track = findTrackById(id);
-        track.getComments().add(comment);
-        trackRepository.save(track);
-    }
-
-    public void removeComment(Long id, Comment comment) {
-        Track track = findTrackById(id);
-        track.getComments().remove(comment);
-        trackRepository.save(track);
-    }
 }

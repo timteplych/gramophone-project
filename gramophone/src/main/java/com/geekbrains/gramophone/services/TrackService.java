@@ -20,7 +20,5 @@ public interface TrackService {
     void changeLike(Long id, User user);
     void setLike(Long id, User user);
     void removeLike(Long id, User user);
-    void addComment(Long id, Comment comment);
-    void removeComment(Long id, Comment comment);
 
 }
