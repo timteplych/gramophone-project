@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Gramophone</title>
+    <link rel="icon" type="image/png" th:href="@{/favicon.ico}"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+
+    <link rel="stylesheet" type="text/css" th:href="@{/main.css}">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+
+<div th:replace="~{navigation :: navi(UserPage)}"/>
+<br>
+<h2 th:text="${user.username}"></h2>
+<br>
+<div class="container" th:if="${!isCurrentUser}">
+    <div class="row">
+        <a class="btn btn-primary" th:href="@{/subscribe/{userId}(userId = ${user.id})}"
+           th:if="${!isSubscriber}">Подписаться</a>
+
+        <a class="btn btn-primary" th:href="@{/unsubscribe/{userId}(userId = ${user.id})}"
+           th:if="${isSubscriber}">Отписаться</a>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-4 mt-3">
+            <div>
+                <img th:src="@{${user.avatar != null ? '/' + user.avatar : '/images/ava.png'}}" class="img-thumbnail"
+                     width="200">
+            </div>
+            <br>
+            <div th:if="${isCurrentUser}">
+                <form th:action="@{/download-avatar}" method="post" enctype="multipart/form-data">
+                    <input type="file" style="width: 100%;" class="btn btn-outline-primary" id="file"
+                           name="file"
+                           accept="image/*">
+                    <button type="submit" class="btn btn-primary" style="height: 100%">Загрузить аватар</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <a th:href="@{/upload-track}" th:if="${isCurrentUser}">загрузить трек</a>
+    <br>
+    <a th:href="@{/playlist-page/user/{userId}(userId=${user.id})}">плейлист</a>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-title">Мои подписки</div>
+                    <div class="card-text">
+                        <a th:href="@{/subscriptions/{userId}/userList(userId = ${user.id})}"
+                           th:text="${user.getSubscriptions().size()}"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-title">Мои подписчики</div>
+                    <div class="card-text">
+                        <a th:href="@{/subscribers/{userId}/userList(userId = ${user.id})}"
+                           th:text="${user.getSubscribers().size()}"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

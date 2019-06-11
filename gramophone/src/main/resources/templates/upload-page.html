@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <title>Gramophone</title>
+    <link rel="icon" type="image/png" th:href="@{/favicon.ico}"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+
+    <link rel="stylesheet" type="text/css" th:href="@{/main.css}">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+<div class="container mt-2">
+    <div class="row">
+        <div sec:authorize="isAuthenticated()" class="mb-3">
+            <h2>Загрузить трек</h2>
+            <p>Размер загружаемого файла не должен превышать 10 мегабайт</p>
+            <form th:action="@{/upload-process}"
+                  method="post"
+                  enctype="multipart/form-data"
+                  th:object="${track}">
+
+                <label for="wordAuthor">Название</label>
+                <input class="form-control"
+                       type="text"
+                       id="title"
+                       th:field="*{title}">
+
+                <label for="wordAuthor">Автор слов</label>
+                <input class="form-control"
+                       type="text"
+                       id="wordAuthor"
+                       th:field="*{wordAuthor}"
+                       th:value="${user.firstName + ' ' + user.lastName}">
+
+                <label for="musicAuthor">Автор музыки</label>
+                <input class="form-control"
+                       type="text"
+                       id="musicAuthor"
+                       th:field="*{musicAuthor}"
+                       th:value="${user.firstName + ' ' + user.lastName}">
+
+                <label for="genre">Жанр песни</label>
+                <select class="form-control" id="genre" name="genre">
+                    <option th:each="genre : ${genres}"
+                            th:value="${genre.id}"
+                            th:text="${genre.title}">
+                    </option>
+                </select>
+
+                <input type="file" style="width: 100%;" class="btn btn-outline-primary" id="file"
+                       name="file"
+                       accept="audio/*">
+
+                <button type="submit" class="btn btn-primary" style="height: 100%">Разместить трек на GRAMOPHONE</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
