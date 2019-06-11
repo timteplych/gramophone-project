@@ -41,7 +41,7 @@
                      width="200">
             </div>
             <br>
-            <div>
+            <div th:if="${isCurrentUser}">
                 <form th:action="@{/download-avatar}" method="post" enctype="multipart/form-data">
                     <input type="file" style="width: 100%;" class="btn btn-outline-primary" id="file"
                            name="file"
@@ -53,7 +53,12 @@
     </div>
 </div>
 
-<br>
+<div class="container">
+    <a th:href="@{/upload-track}" th:if="${isCurrentUser}">загрузить трек</a>
+    <br>
+    <a th:href="@{/playlist-page}" th:if="${isCurrentUser}">плейлист</a>
+</div>
+
 <div class="container">
     <div class="row">
         <div class="col">

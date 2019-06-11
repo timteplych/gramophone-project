@@ -76,8 +76,7 @@
         </ul>
     </nav>
 
-    <a th:href="@{/upload-track}" sec:authorize="isAuthenticated()">загрузить трек</a>
-    <a th:href="@{/playlist-page}" sec:authorize="isAuthenticated()">плейлист</a>
+    <a th:href="@{/my-page/{userId}(userId = ${currentUser.id})}" sec:authorize="isAuthenticated()">моя страничка</a>
 </div>
 
 </body>
