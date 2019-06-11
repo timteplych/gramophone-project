@@ -32,14 +32,14 @@ export class MusicPlayerComponent implements OnInit {
     this.audio.src = this.currentTrack;
     this.audio.load();
     this.source = timer(this.audio.duration, 1000);
-    this.audio.addEventListener('timeupdate', (currentTime) => {
+    this.audio.addEventListener('timeupdate', (event) => {
       this.trackTime = this.audio.currentTime;
     });
   }
 
   // Activate the playback
   play() {
-    if (!this.isPlaying || this.audio.paused) {
+    if (!this.isPlaying) {
       this.durationTime = Math.round(this.audio.duration);
       this.audio.play();
       this.isPlaying = true;
@@ -122,7 +122,6 @@ export class MusicPlayerComponent implements OnInit {
   // Sets the dots on the timeline with which the track starts
   setTime() {
     this.stop();
-    // this.subscribe.unsubscribe();
     this.audio.currentTime = this.trackTime;
     this.trackDuration = moment.duration(this.audio.duration, 'seconds').subtract(this.trackTime, 'seconds');
     this.audio.play();
