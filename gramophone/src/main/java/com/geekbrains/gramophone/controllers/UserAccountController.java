@@ -28,6 +28,13 @@ public class UserAccountController {
         this.uploadTrackService = uploadTrackService;
     }
 
+    @GetMapping("/users-list")
+    public String showAllUserPage(Model model){
+        model.addAttribute("users", userService.findAll());
+        return "all-users";
+    }
+
+
     @RequestMapping("/my-page/{id}")
     public String showUserPage(
             Principal principal,

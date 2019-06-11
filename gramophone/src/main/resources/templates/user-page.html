@@ -50,7 +50,7 @@
 </div>
 
 <div class="container">
-    <a th:href="@{/playlist-page}" th:if="${isCurrentUser}">плейлист</a>
+    <a th:href="@{/playlist-page/user/{userId}(userId=${user.id})}">плейлист</a>
 </div>
 
 <div class="container">
