@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import * as moment from 'moment';
 import {Duration} from 'moment';
-import {timer} from 'rxjs';
+import {Observable, timer} from 'rxjs';
 
 
 @Component({
@@ -19,7 +19,7 @@ export class MusicPlayerComponent implements OnInit {
   value;
   cachedVolumn;
   trackTime;
-  subscribe;
+  subscribe = null;
   source;
   audioList;
   currentTrack = '../../assets/1.mp3';
@@ -32,7 +32,7 @@ export class MusicPlayerComponent implements OnInit {
     this.audio.src = this.currentTrack;
     this.audio.load();
     this.source = timer(this.audio.duration, 1000);
-    this.audio.addEventListener('timeupdate', (event) => {
+    this.audio.addEventListener('timeupdate', event => {
       this.trackTime = this.audio.currentTime;
     });
   }
@@ -40,24 +40,31 @@ export class MusicPlayerComponent implements OnInit {
   // Activate the playback
   play() {
     if (!this.isPlaying) {
+      this.isPlaying = true;
       this.durationTime = Math.round(this.audio.duration);
       this.audio.play();
-      this.isPlaying = true;
-      this.subscribe = this.source.subscribe(() => {
-        if (this.trackDuration.milliseconds() !== 0) {
-          if (this.audio.ended || this.trackDuration.seconds() === 0 && this.trackDuration.minutes() === 0) {
-            this.subscribe.unsubscribe();
-            this.isPlaying = false;
-            this.audio.load();
-            this.trackDuration = moment.duration(0, 'seconds');
+      if (this.subscribe === null || this.subscribe.closed) {
+        this.subscribe = this.source.subscribe(() => {
+          if (this.trackDuration.milliseconds() !== 0) {
+            if (this.audio.ended || this.trackDuration.seconds() === 0 && this.trackDuration.minutes() === 0) {
+              this.subscribe.unsubscribe();
+              this.isPlaying = false;
+              this.audio.load();
+              this.trackDuration = moment.duration(0, 'seconds');
+            } else {
+              if (this.audio.paused) {
+                this.isPlaying = false;
+                this.trackDuration = moment.duration(this.trackDuration, 'seconds');
+              } else {
+                this.isPlaying = true;
+                this.trackDuration = moment.duration(this.trackDuration, 'seconds').subtract(1, 'seconds');
+              }
+            }
           } else {
-            this.trackDuration = moment.duration(this.trackDuration, 'seconds').subtract(1, 'seconds');
+            this.trackDuration = moment.duration(this.audio.duration, 'seconds');
           }
-          this.isPlaying = !this.audio.paused;
-        } else {
-          this.trackDuration = moment.duration(this.audio.duration, 'seconds');
-        }
-      });
+        });
+      }
     } else {
       this.subscribe.unsubscribe();
       this.audio.pause();
