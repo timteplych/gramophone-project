@@ -52,7 +52,7 @@
         <tr th:each="track : ${tracks}">
             <td th:text="${track.id}"/>
             <td>
-                <a th:text="${track.title}" th:href="@{'/gramophon/track_info/' + ${track.id}}"/>
+                <a th:text="${track.title}" th:href="@{'/track-info/' + ${track.id}}"/>
             </td>
             <td th:text="${track.wordAuthor}"/>
             <td th:text="${track.musicAuthor}"/>
