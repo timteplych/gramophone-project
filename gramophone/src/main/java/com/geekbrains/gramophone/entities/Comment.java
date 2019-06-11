@@ -32,4 +32,11 @@ public class Comment {
     @JoinColumn(name = "track_id")
     private Track track;
 
+    public Comment() {}
+
+    public Comment(User user, Track track) {
+        this.user = user;
+        this.track = track;
+    }
+
 }
