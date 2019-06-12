@@ -2,22 +2,25 @@
   <div class="logo">
     <img src="../../assets/images/logo.png" alt="">
   </div>
-  <form class="ui form">
-    <div class="field">
-      <label>Email</label>
-      <input type="text" name="email">
-    </div>
-    <div class="field">
-      <label>Пароль</label>
-      <input type="text" name="password">
-    </div>
-    <div class="text-right field">
-      <a href="">Зарегистрироваться?</a>
-    </div>
-    <div class="text-right field">
-      <a href="">Нужна помощь?</a>
-    </div>
-    <button class="ui button" type="submit">Войти</button>
-  </form>
+    <form class="ui form" [formGroup]="loginForm">
+      <div class="field">
+        <label>Email</label>
+        <input type="text" formControlName="email" name="email">
+      </div>
+      <div class="field">
+        <label>Пароль</label>
+        <input type="text" formControlName="password" name="password">
+      </div>
+      <div class="text-right field">
+        <a href="#" [ngx-scroll-to]="destinationRef" [ngx-scroll-to-easing]="'easeOutQuart'" [ngx-scroll-to-duration]="3000">Зарегистрироваться?</a>
+      </div>
+      <div class="text-right field">
+        <a href="">Нужна помощь?</a>
+      </div>
+      <button class="ui button" type="submit" >Войти</button>
+    </form>
+  <div #destinationRef>
+    <app-register [hidden]="false"></app-register>
+  </div>
 </div>
 
