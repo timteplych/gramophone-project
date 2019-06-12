@@ -1,8 +1,10 @@
 package com.geekbrains.gramophone.controllers;
 
 import com.geekbrains.gramophone.entities.Track;
+import com.geekbrains.gramophone.entities.User;
 import com.geekbrains.gramophone.repositories.specifications.TrackSpecs;
 import com.geekbrains.gramophone.services.TrackService;
+import com.geekbrains.gramophone.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.security.Principal;
 import java.util.Optional;
 
 @Controller
@@ -22,10 +25,16 @@ public class MainController {
     private static final int PAGE_SIZE = 5;
 
     private TrackService trackService;
+    private UserService userService;
 
     @Autowired
     public void setTrackService(TrackService trackService) {
         this.trackService = trackService;
+    }
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping("/")
@@ -33,7 +42,8 @@ public class MainController {
                         @RequestParam(value = "page") Optional<Integer> page,
                         @RequestParam(value = "title", required = false) String title,
                         @RequestParam(value = "wordAuthor", required = false) String wordAuthor,
-                        @RequestParam(value = "musicAuthor", required = false) String musicAuthor
+                        @RequestParam(value = "musicAuthor", required = false) String musicAuthor,
+                        Principal principal
     ) {
         final int currentPage = (page.orElse(0) < 1) ? INITIAL_PAGE : page.get() - 1;
 
@@ -63,6 +73,12 @@ public class MainController {
         model.addAttribute("wordAuthor", wordAuthor);
         model.addAttribute("musicAuthor", musicAuthor);
         model.addAttribute("title", title);
+
+        if(principal != null){
+            User currentUser = userService.findByUsername(principal.getName());
+            model.addAttribute("currentUser", currentUser);
+        }
+
         return "index";
     }
 }

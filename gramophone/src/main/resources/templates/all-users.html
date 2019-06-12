@@ -17,9 +17,28 @@
 </head>
 
 <body>
-<div th:replace="~{navigation :: navi(UploadUnsuccess)}"/>
 
-<h2>произошла ошибка при закачки файла, пофторите загрузку ещё раз</h2>
+<div th:replace="~{navigation :: navi(Home)}"/>
+
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th>Аватар</th>
+        <th>Пользователь</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${users}">
+        <td>
+            <img th:src="@{${user.avatar != null ? '/' + user.avatar : '/images/ava.png'}}"
+                 class="img-thumbnail" width="100">
+        </td>
+        <td>
+            <a th:text="${user.username}" th:href="@{'/my-page/' + ${user.id}}"/>
+        </td>
+    </tr>
+    </tbody>
+</table>
 
 </body>
 </html>

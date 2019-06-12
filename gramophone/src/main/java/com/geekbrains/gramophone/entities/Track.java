@@ -5,6 +5,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -40,13 +41,10 @@ public class Track {
     @Column(name = "listening_amount")
     private Long listeningAmount;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "user_id")
-//    @JsonBackReference
-//    private User performer;
-
-    @Column(name = "performer")
-    private String performer;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    @JsonBackReference
+    private User performer;
 
     @Column(name = "cover")
     private String cover;
@@ -60,4 +58,20 @@ public class Track {
     @OneToMany(mappedBy = "track")
     private Set<Comment> comments;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Track track = (Track) o;
+        return Objects.equals(id, track.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override public String toString() {
+        return "Track: " + this.id;
+    }
 }

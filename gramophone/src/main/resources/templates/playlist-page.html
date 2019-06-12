@@ -31,9 +31,14 @@
             <li class="list-group-item active" th:text="${'Мой плейлист: ' + user.playlist.name}"></li>
             <li class="list-group-item" th:each="track : ${userTracks}">
                 <p th:text="${track.title}"></p>
-                <p th:text="${track.performer}"></p>
-                <a th:href="@{/remove-track-to-playlist(trackId=${track.id})}">
+                <p th:text="${track.performer.username}"></p>
+                <a th:href="@{/remove-track-to-playlist(trackId=${track.id})}"
+                   th:if="${isCurrentUser}">
                     <i class="fa fa-minus" style="display: inline"></i>
+                </a>
+                <a th:href="@{/add-track-to-playlist(trackId=${track.id})}"
+                   th:if="${!isCurrentUser && !currentUser.playlist.tracks.contains(track)}">
+                    <i class="fa fa-plus" style="display: inline"></i>
                 </a>
             </li>
         </ul>
@@ -45,8 +50,9 @@
             <li class="list-group-item active" th:text="${'Список всех треков на платформе'}"></li>
             <li class="list-group-item" th:each="gramophoneTrack : ${allGramophoneTracks}">
                 <p th:text="${gramophoneTrack.title}"></p>
-                <p th:text="${gramophoneTrack.performer}"></p>
-                <a th:href="@{/add-track-to-playlist(trackId=${gramophoneTrack.id})}">
+                <p th:text="${gramophoneTrack.performer.username}"></p>
+                <a th:href="@{/add-track-to-playlist(trackId=${gramophoneTrack.id})}"
+                   th:if="${!currentUser.playlist.tracks.contains(gramophoneTrack)}">
                     <i class="fa fa-plus" style="display: inline"></i>
                 </a>
             </li>

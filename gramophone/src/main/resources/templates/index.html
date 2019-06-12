@@ -52,12 +52,13 @@
         <tr th:each="track : ${tracks}">
             <td th:text="${track.id}"/>
             <td>
-                <a th:text="${track.title}" th:href="@{'/gramophon/track_info/' + ${track.id}}"/>
+                <a th:text="${track.title}" th:href="@{'/track-info/' + ${track.id}}"/>
             </td>
             <td th:text="${track.wordAuthor}"/>
             <td th:text="${track.musicAuthor}"/>
             <td sec:authorize="isAuthenticated()">
-                <a th:href="@{/add-track-to-playlist(trackId=${track.id})}">
+                <a th:href="@{/add-track-to-playlist(trackId=${track.id})}"
+                   th:if="${!currentUser.playlist.tracks.contains(track)}">
                     <i class="fa fa-plus" style="display: inline"></i>
                 </a>
             </td>
@@ -76,8 +77,9 @@
         </ul>
     </nav>
 
-    <a th:href="@{/upload-track}" sec:authorize="isAuthenticated()">загрузить трек</a>
-    <a th:href="@{/playlist-page}" sec:authorize="isAuthenticated()">плейлист</a>
+    <a th:href="@{/my-page/{userId}(userId = ${currentUser.id})}" sec:authorize="isAuthenticated()">моя страничка</a>
+    <br>
+    <a th:href="@{/users-list}" sec:authorize="isAuthenticated()">все пользователи</a>
 </div>
 
 </body>

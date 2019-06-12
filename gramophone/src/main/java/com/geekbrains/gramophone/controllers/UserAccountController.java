@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.security.Principal;
 
 @Controller
-public class SingerAccountController {
+public class UserAccountController {
 
     private UserService userService;
     private UploadTrackService uploadTrackService;
@@ -28,7 +28,14 @@ public class SingerAccountController {
         this.uploadTrackService = uploadTrackService;
     }
 
-    @RequestMapping("/singer-page/{id}")
+    @GetMapping("/users-list")
+    public String showAllUserPage(Model model){
+        model.addAttribute("users", userService.findAll());
+        return "all-users";
+    }
+
+
+    @RequestMapping("/my-page/{id}")
     public String showUserPage(
             Principal principal,
             @PathVariable("id") Long id,
@@ -38,10 +45,13 @@ public class SingerAccountController {
         User currentUser = userService.findByUsername(principal.getName());
 
         model.addAttribute("user", user);
-        //model.addAttribute("isSubscriber", user.getSubscribers().contains(currentUser));
+        model.addAttribute("isSubscriber", user.getSubscribers().contains(currentUser));
         model.addAttribute("isCurrentUser", currentUser.getId().equals(user.getId()));
 
-        return "singer-page";
+        if(user.getSinger()){
+            return "singer-page";
+        }
+        return "user-page";
     }
 
     //подписаться
@@ -53,7 +63,7 @@ public class SingerAccountController {
         User currentUser = userService.findByUsername(principal.getName());
         userService.subscribeOnUser(currentUser, userId);
 
-        return "redirect:/singer-page/" + userId;
+        return "redirect:/my-page/" + userId;
     }
 
     //отписаться
@@ -65,7 +75,7 @@ public class SingerAccountController {
         User currentUser = userService.findByUsername(principal.getName());
         userService.unsubscribeOnUser(currentUser, userId);
 
-        return "redirect:/singer-page/" + userId;
+        return "redirect:/my-page/" + userId;
     }
 
     // показать список подписчиков и подписок
@@ -93,23 +103,23 @@ public class SingerAccountController {
     }
 
 
-    //перенести в отдельный общий метод, чтобы с любого аккаунта можно было загружать аватар
-//    @PostMapping("/download-avatar")
-//    public String uploadAvatar(
-//            @RequestParam("file") MultipartFile file,
-//            Principal principal,
-//            Model model
-//    ) {
-//        User user = userService.findByUsername(principal.getName());
-//
-//        if (!file.isEmpty()) {
-//            if (uploadTrackService.upload(principal.getName(), file, "images/")) {
-//                user.setAvatar("images/" + user.getUsername() + "/" + file.getOriginalFilename());
-//                userService.save(user);
-//            } else {
-//                model.addAttribute("imgDownloadError", "Произошел сбой во время загрузки фото");
-//            }
-//        }
-//        return "redirect:/singer-page/" + user.getId();
-//    }
+    @PostMapping("/download-avatar")
+    public String uploadAvatar(
+            @RequestParam("file") MultipartFile file,
+            Principal principal,
+            Model model
+    ) {
+        User currentUser = userService.findByUsername(principal.getName());
+
+        if (!file.isEmpty()) {
+            if (uploadTrackService.upload(principal.getName(), file, "images/")) {
+                currentUser.setAvatar("images/" + currentUser.getUsername() + "/" + file.getOriginalFilename());
+                userService.save(currentUser);
+            } else {
+                model.addAttribute("imgDownloadError", "Произошел сбой во время загрузки фото");
+            }
+        }
+
+        return "redirect:/my-page/" + currentUser.getId();
+    }
 }

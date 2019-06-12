@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS users CASCADE;
 CREATE TABLE users
 (
     id          SERIAL,
@@ -14,7 +14,7 @@ CREATE TABLE users
     PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS roles;
+DROP TABLE IF EXISTS roles CASCADE;
 CREATE TABLE roles
 (
     id   SERIAL,
@@ -22,7 +22,7 @@ CREATE TABLE roles
     PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS users_roles;
+DROP TABLE IF EXISTS users_roles CASCADE;
 CREATE TABLE users_roles
 (
     user_id INTEGER NOT NULL,
@@ -41,7 +41,7 @@ CREATE TABLE users_roles
         ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
-DROP TABLE IF EXISTS genres;
+DROP TABLE IF EXISTS genres CASCADE;
 CREATE TABLE genres
 (
     id    SERIAL,
@@ -49,7 +49,7 @@ CREATE TABLE genres
     PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS tracks;
+DROP TABLE IF EXISTS tracks CASCADE;
 CREATE TABLE tracks
 (
     id                 SERIAL,
@@ -60,15 +60,18 @@ CREATE TABLE tracks
     genre_id           INTEGER      NOT NULL,
     create_at          DATE         NOT NULL,
     listening_amount   INTEGER,
-    performer          VARCHAR(50)  NOT NULL,
+    user_id            INTEGER      NOT NULL,
     cover              VARCHAR(100),
     PRIMARY KEY (id),
     CONSTRAINT FK_GENRE_ID FOREIGN KEY (genre_id)
         REFERENCES genres (id)
+        ON DELETE NO ACTION ON UPDATE NO ACTION,
+    CONSTRAINT FK_PERFORMER_ID FOREIGN KEY (user_id)
+        REFERENCES users (id)
         ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
-DROP TABLE IF EXISTS comments;
+DROP TABLE IF EXISTS comments CASCADE;
 CREATE TABLE comments
 (
     id       SERIAL,
@@ -84,7 +87,7 @@ CREATE TABLE comments
         ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
-DROP TABLE IF EXISTS tracks_likes;
+DROP TABLE IF EXISTS tracks_likes CASCADE;
 CREATE TABLE tracks_likes
 (
     track_id INTEGER NOT NULL,
@@ -98,7 +101,7 @@ CREATE TABLE tracks_likes
         ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
-DROP TABLE IF EXISTS comments_likes;
+DROP TABLE IF EXISTS comments_likes CASCADE;
 CREATE TABLE comments_likes
 (
     comment_id INTEGER NOT NULL,
@@ -112,7 +115,7 @@ CREATE TABLE comments_likes
         ON DELETE NO ACTION ON UPDATE NO ACTION
 );
 
-DROP TABLE IF EXISTS playlist;
+DROP TABLE IF EXISTS playlist CASCADE;
 CREATE TABLE playlist
 (
     id   SERIAL,
@@ -120,7 +123,7 @@ CREATE TABLE playlist
     PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS playlist_tracks;
+DROP TABLE IF EXISTS playlist_tracks CASCADE;
 CREATE TABLE playlist_tracks
 (
     playlist_id INTEGER NOT NULL,

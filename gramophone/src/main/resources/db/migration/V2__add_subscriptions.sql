@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS user_subscriptions;
+DROP TABLE IF EXISTS user_subscriptions CASCADE;
 CREATE TABLE user_subscriptions
 (
     singer_id     INTEGER NOT NULL,

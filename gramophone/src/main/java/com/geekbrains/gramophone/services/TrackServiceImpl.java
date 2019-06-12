@@ -1,7 +1,9 @@
 package com.geekbrains.gramophone.services;
 
+import com.geekbrains.gramophone.entities.Comment;
 import com.geekbrains.gramophone.entities.Genre;
 import com.geekbrains.gramophone.entities.Track;
+import com.geekbrains.gramophone.entities.User;
 import com.geekbrains.gramophone.repositories.GenreRepository;
 import com.geekbrains.gramophone.repositories.TrackRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class TrackServiceImpl implements TrackService {
@@ -88,4 +91,25 @@ public class TrackServiceImpl implements TrackService {
     public Track findTrackById(Long id) {
         return trackRepository.findById(id).orElse(null);
     }
+
+    public void changeLike(Long id, User user) {
+        Track track = findTrackById(id);
+        if (track.getLikes().contains(user))
+            removeLike(id, user);
+        else
+            setLike(id, user);
+    }
+
+    public void setLike(Long id, User user) {
+        Track track = findTrackById(id);
+        track.getLikes().add(user);
+        trackRepository.save(track);
+    }
+
+    public void removeLike(Long id, User user) {
+        Track track = findTrackById(id);
+        track.getLikes().remove(user);
+        trackRepository.save(track);
+    }
+
 }
