@@ -24,6 +24,12 @@ public class Comment {
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> likes;
 
+    @OneToMany
+    @JoinTable(name = "comments_dislikes",
+            joinColumns = @JoinColumn(name = "comment_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<User> dislikes;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

@@ -16,7 +16,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.Date;
 
 @Service
-public class UploadTrackService {
+public class UploadService {
 
     private GenreService genreService;
 

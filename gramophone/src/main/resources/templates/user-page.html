@@ -18,56 +18,77 @@
 
 <body>
 
+
 <div th:replace="~{navigation :: navi(UserPage)}"/>
 
-<br>
-<h2 th:text="${user.username}"></h2>
-<br>
+<div class="container">
+    <h2 th:text="${user.username}"></h2>
+</div>
+
+<div class="container" th:if="${isCurrentUser && !currentUser.singer}">
+    <a href="#" class="btn btn-primary">Стать исполнителем</a>
+</div>
 
 <div class="container">
-    <div class="row">
-        <div class="col-4 mt-3">
-            <div>
-                <img th:src="@{${user.avatar != null ? '/' + user.avatar : '/images/ava.png'}}" class="img-thumbnail"
-                     width="200">
-            </div>
-            <br>
-            <div th:if="${isCurrentUser}">
-                <form th:action="@{/download-avatar}" method="post" enctype="multipart/form-data">
-                    <input type="file" style="width: 100%;" class="btn btn-outline-primary" id="file"
-                           name="file"
-                           accept="image/*">
-                    <button type="submit" class="btn btn-primary" style="height: 100%">Загрузить аватар</button>
-                </form>
-            </div>
-            <br>
-            <div th:if="${isCurrentUser}">
-                <a href="#" class="btn btn-primary">Стать исполнителем</a>
-            </div>
-            <br>
+    <div class="container" th:if="${!isCurrentUser}">
+        <div class="row">
+            <a class="btn btn-primary" th:href="@{/users/{user_id}/subscribe(user_id = ${user.id})}"
+               th:if="${!isSubscriber}">Подписаться</a>
+
+            <a class="btn btn-primary" th:href="@{/users/{user_id}/unsubscribe(user_id = ${user.id})}"
+               th:if="${isSubscriber}">Отписаться</a>
         </div>
     </div>
 </div>
 
 <div class="container">
-    <a th:href="@{/playlist-page/user/{userId}(userId=${user.id})}">плейлист</a>
+    <div>
+        <img th:src="@{${user.avatar != null ? '/' + user.avatar : '/images/ava.png'}}" class="img-thumbnail"
+             width="200">
+    </div>
+</div>
+
+<div class="container" th:if="${isCurrentUser}">
+    <form th:action="@{/avatar}" method="post" enctype="multipart/form-data">
+        <input type="file" style="width: 100%;" class="btn btn-outline-primary" id="file"
+               name="file"
+               accept="image/*">
+        <button type="submit" class="btn btn-primary" style="height: 100%">Загрузить аватар</button>
+    </form>
+</div>
+
+<div class="container" th:if="${isCurrentUser && currentUser.singer}">
+    <a th:href="@{/upload/track}">загрузить трек</a>
 </div>
 
 <div class="container">
-    <div class="row">
-        <div class="col">
-            <div class="card">
-                <div class="card-body">
-                    <div class="card-title">Мои подписки</div>
-                    <div class="card-text">
-                        <a th:href="@{/subscriptions/{userId}/userList(userId = ${user.id})}"
-                           th:text="${user.getSubscriptions().size()}"></a>
-                    </div>
-                </div>
+    <div class="card">
+        <div class="card-body">
+            <div class="card-title">Мои подписки</div>
+            <div class="card-text">
+                <a th:href="@{/users/{user_id}/subscriptions(user_id = ${user.id})}"
+                   th:text="${user.getSubscriptions().size()}"></a>
             </div>
         </div>
     </div>
 </div>
+
+<div class="container" th:if="${user.singer}">
+    <div class="card">
+        <div class="card-body">
+            <div class="card-title">Мои подписчики</div>
+            <div class="card-text">
+                <a th:href="@{/users/{user_id}/subscribers(user_id = ${user.id})}"
+                   th:text="${user.getSubscribers().size()}"></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <a th:href="@{/users/{user_id}/playlists(user_id = ${user.id})}">плейлисты</a>
+</div>
+
 
 </body>
 </html>

@@ -21,18 +21,17 @@
 <div th:replace="~{navigation :: navi(Home)}"/>
 
 <div class="container">
-    <br>
-    <div>
-        <h2 th:text="${user.username}"></h2>
-    </div>
-    <div>
-        <h2 th:text="${subTitle}"></h2>
-    </div>
-    <ul class="list-group">
-        <li class="list-group-item" th:each="user :${users}">
-            <a th:href="@{/singer-page/{userId}(userId = ${user.id})}" th:text="${user.username}"></a>
-        </li>
-    </ul>
+    <form th:action="@{/playlists/track/add}" method="post">
+        <p th:text="${'Добавить трек ' + track.title} + ' в плейлист'"></p>
+        <select class="form-control" name="playlist_id">
+            <option th:each="playlist : ${playlistList}"
+                    th:value="${playlist.id}"
+                    th:text="${playlist.name}">
+            </option>
+        </select>
+        <input type="hidden" th:value="${track.id}" name="track_id">
+        <button type="submit">добавить</button>
+    </form>
 </div>
 
 </body>

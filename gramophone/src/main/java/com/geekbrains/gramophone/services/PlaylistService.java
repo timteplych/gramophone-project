@@ -1,12 +1,14 @@
 package com.geekbrains.gramophone.services;
 
 import com.geekbrains.gramophone.entities.Playlist;
-import com.geekbrains.gramophone.entities.Track;
 import com.geekbrains.gramophone.entities.User;
 
-public interface PlaylistService {
+import java.util.List;
 
-    void addTrack(User user,  Track track);
-    void removeTrack(User user,  Track track);
+public interface PlaylistService {
+    void addTrack(User user, Long playlistId, Long trackId);
+    void removeTrack(User user, Long playlistId, Long trackId);
     void savePlaylist(Playlist playlist);
+    void addPlaylist(User currentUser, String playlistName);
+    List<Playlist> findAllPlaylistsByUser(User user);
 }

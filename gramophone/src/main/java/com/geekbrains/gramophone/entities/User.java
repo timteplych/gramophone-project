@@ -3,10 +3,7 @@ package com.geekbrains.gramophone.entities;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "users")
@@ -47,9 +44,11 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Collection<Role> roles;
 
-    @OneToOne
-    @JoinColumn(name = "playlist_id")
-    private Playlist playlist;
+    @OneToMany
+    @JoinTable(name = "users_playlists",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "playlist_id"))
+    private List<Playlist> playlistList;
 
     // подписчики
     @ManyToMany(fetch = FetchType.LAZY)
@@ -105,5 +104,13 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                '}';
     }
 }

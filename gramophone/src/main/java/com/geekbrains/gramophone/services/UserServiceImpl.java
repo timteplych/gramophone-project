@@ -69,23 +69,21 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setUsername(systemUser.getUsername());
         user.setPassword(passwordEncoder.encode(systemUser.getPassword()));
-        //performer.setFirstName("noFirstName");
-        //performer.setLastName("noLastName");
         user.setEmail(systemUser.getEmail());
-        //performer.setPhone("noPhone");
         user.setSinger(false);
         user.setRoles(Arrays.asList(roleRepository.findOneByName("ROLE_USER")));
         // todo check username is exists
-        createPlaylist(user);
         userRepository.save(user);
+        createPlaylist(user);
 
         return true;
     }
 
     private void createPlaylist(User user) {
         Playlist playlist = new Playlist();
+        playlist.setUser(user);
+        playlist.setName("default");
         playlistService.savePlaylist(playlist);
-        user.setPlaylist(playlist);
     }
 
     @Override

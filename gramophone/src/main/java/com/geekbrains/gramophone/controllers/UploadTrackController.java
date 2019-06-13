@@ -3,7 +3,7 @@ package com.geekbrains.gramophone.controllers;
 import com.geekbrains.gramophone.entities.Track;
 import com.geekbrains.gramophone.services.GenreService;
 import com.geekbrains.gramophone.services.TrackService;
-import com.geekbrains.gramophone.services.UploadTrackService;
+import com.geekbrains.gramophone.services.UploadService;
 import com.geekbrains.gramophone.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,7 +21,7 @@ public class UploadTrackController {
 
     private TrackService trackService;
     private GenreService genreService;
-    private UploadTrackService uploadTrackService;
+    private UploadService uploadTrackService;
     private UserService userService;
 
     @Autowired
@@ -40,11 +40,11 @@ public class UploadTrackController {
     }
 
     @Autowired
-    public void setUploadTrackService(UploadTrackService uploadTrackService) {
+    public void setUploadTrackService(UploadService uploadTrackService) {
         this.uploadTrackService = uploadTrackService;
     }
 
-    @GetMapping("/upload-track")
+    @GetMapping("/upload/track")
     public String showUploadPage(
             Principal principal,
             Model model) {
@@ -57,7 +57,7 @@ public class UploadTrackController {
         return "upload-page";
     }
 
-    @PostMapping("/upload-process")
+    @PostMapping("/upload/track")
     public String uploadProcessing(
             @ModelAttribute("track") Track trackFromForm,
             @RequestParam("file") MultipartFile file,
@@ -81,6 +81,6 @@ public class UploadTrackController {
                 return "upload-fail";
             }
         }
-        return "redirect:/";
+        return "redirect:/"; // сообщить, что файл пустой трек не загружен
     }
 }

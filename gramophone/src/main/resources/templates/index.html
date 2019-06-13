@@ -57,8 +57,7 @@
             <td th:text="${track.wordAuthor}"/>
             <td th:text="${track.musicAuthor}"/>
             <td sec:authorize="isAuthenticated()">
-                <a th:href="@{/add-track-to-playlist(trackId=${track.id})}"
-                   th:if="${!currentUser.playlist.tracks.contains(track)}">
+                <a th:href="@{/playlists/add/{track_id}(track_id=${track.id})}">
                     <i class="fa fa-plus" style="display: inline"></i>
                 </a>
             </td>
@@ -77,9 +76,9 @@
         </ul>
     </nav>
 
-    <a th:href="@{/my-page/{userId}(userId = ${currentUser.id})}" sec:authorize="isAuthenticated()">моя страничка</a>
+    <a th:href="@{/users/{user_id}(user_id = ${currentUser.id})}" sec:authorize="isAuthenticated()">моя страничка</a>
     <br>
-    <a th:href="@{/users-list}" sec:authorize="isAuthenticated()">все пользователи</a>
+    <a th:href="@{/users/list}" sec:authorize="isAuthenticated()">все пользователи</a>
 </div>
 
 </body>

@@ -23,7 +23,7 @@
         <div sec:authorize="isAuthenticated()" class="mb-3">
             <h2>Загрузить трек</h2>
             <p>Размер загружаемого файла не должен превышать 10 мегабайт</p>
-            <form th:action="@{/upload-process}"
+            <form th:action="@{/upload/track}"
                   method="post"
                   enctype="multipart/form-data"
                   th:object="${track}">

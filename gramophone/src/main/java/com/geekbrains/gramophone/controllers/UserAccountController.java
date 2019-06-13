@@ -1,10 +1,9 @@
 package com.geekbrains.gramophone.controllers;
 
 import com.geekbrains.gramophone.entities.User;
-import com.geekbrains.gramophone.services.UploadTrackService;
+import com.geekbrains.gramophone.services.UploadService;
 import com.geekbrains.gramophone.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +15,7 @@ import java.security.Principal;
 public class UserAccountController {
 
     private UserService userService;
-    private UploadTrackService uploadTrackService;
+    private UploadService uploadTrackService;
 
     @Autowired
     public void setUserService(UserService userService) {
@@ -24,65 +23,62 @@ public class UserAccountController {
     }
 
     @Autowired
-    public void setUploadTrackService(UploadTrackService uploadTrackService) {
+    public void setUploadTrackService(UploadService uploadTrackService) {
         this.uploadTrackService = uploadTrackService;
     }
 
-    @GetMapping("/users-list")
-    public String showAllUserPage(Model model){
+    @GetMapping("/users/list")
+    public String showAllUserPage(Model model) {
         model.addAttribute("users", userService.findAll());
         return "all-users";
     }
 
 
-    @RequestMapping("/my-page/{id}")
+    @RequestMapping("/users/{user_id}")
     public String showUserPage(
             Principal principal,
-            @PathVariable("id") Long id,
+            @PathVariable("user_id") Long userId,
             Model model
     ) {
-        User user = userService.findById(id).get();
+        User user = userService.findById(userId).get();
         User currentUser = userService.findByUsername(principal.getName());
 
         model.addAttribute("user", user);
+        model.addAttribute("currentUser", currentUser);
         model.addAttribute("isSubscriber", user.getSubscribers().contains(currentUser));
         model.addAttribute("isCurrentUser", currentUser.getId().equals(user.getId()));
 
-        if(user.getSinger()){
-            return "singer-page";
-        }
         return "user-page";
     }
 
     //подписаться
-    @GetMapping("subscribe/{userId}")
+    @GetMapping("/users/{user_id}/subscribe")
     public String subscribe(
-            @PathVariable("userId") Long userId,
+            @PathVariable("user_id") Long userId,
             Principal principal
     ) {
         User currentUser = userService.findByUsername(principal.getName());
         userService.subscribeOnUser(currentUser, userId);
 
-        return "redirect:/my-page/" + userId;
+        return "redirect:/users/" + userId;
     }
 
     //отписаться
-    @GetMapping("unsubscribe/{userId}")
+    @GetMapping("/users/{user_id}/unsubscribe")
     public String unsubscribe(
-            @PathVariable("userId") Long userId,
+            @PathVariable("user_id") Long userId,
             Principal principal
     ) {
         User currentUser = userService.findByUsername(principal.getName());
         userService.unsubscribeOnUser(currentUser, userId);
 
-        return "redirect:/my-page/" + userId;
+        return "redirect:/users/" + userId;
     }
 
-    // показать список подписчиков и подписок
-    @GetMapping("{type}/{userId}/userList")
-    public String userList(
-            @PathVariable("type") String type,
-            @PathVariable("userId") Long userId,
+    // показать список подписок
+    @GetMapping("users/{user_id}/subscriptions")
+    public String subscriptionsList(
+            @PathVariable("user_id") Long userId,
             Principal principal,
             Model model
     ) {
@@ -91,19 +87,32 @@ public class UserAccountController {
 
         model.addAttribute("user", user);
         model.addAttribute("currentUser", currentUser);
-        model.addAttribute("type", type);
+        model.addAttribute("users", user.getSubscriptions());
+        model.addAttribute("subTitle", "Мои подписки");
 
-        if ("subscriptions".equals(type)) {
-            model.addAttribute("users", user.getSubscriptions());
-        } else {
-            model.addAttribute("users", user.getSubscribers());
-        }
+        return "subscriptions";
+    }
+
+    // показать список подписчиков
+    @GetMapping("users/{user_id}/subscribers")
+    public String subscribersList(
+            @PathVariable("user_id") Long userId,
+            Principal principal,
+            Model model
+    ) {
+        User user = userService.findById(userId).get();
+        User currentUser = userService.findByUsername(principal.getName());
+
+        model.addAttribute("user", user);
+        model.addAttribute("currentUser", currentUser);
+        model.addAttribute("users", user.getSubscribers());
+        model.addAttribute("subTitle", "Мои подписчики");
 
         return "subscriptions";
     }
 
 
-    @PostMapping("/download-avatar")
+    @PostMapping("/avatar")
     public String uploadAvatar(
             @RequestParam("file") MultipartFile file,
             Principal principal,
@@ -120,6 +129,6 @@ public class UserAccountController {
             }
         }
 
-        return "redirect:/my-page/" + currentUser.getId();
+        return "redirect:/users/" + currentUser.getId(); // сообщить, что файл пустой аватар не загружен
     }
 }

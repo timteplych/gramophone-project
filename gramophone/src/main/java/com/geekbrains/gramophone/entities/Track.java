@@ -55,6 +55,12 @@ public class Track {
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> likes;
 
+    @OneToMany
+    @JoinTable(name = "tracks_dislikes",
+            joinColumns = @JoinColumn(name = "track_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<User> dislikes;
+
     @OneToMany(mappedBy = "track")
     private Set<Comment> comments;
 
