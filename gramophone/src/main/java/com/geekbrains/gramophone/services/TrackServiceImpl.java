@@ -94,7 +94,7 @@ public class TrackServiceImpl implements TrackService {
 
     public void changeLike(Long id, User user) {
         Track track = findTrackById(id);
-        if (track.getLikes().contains(user))
+        if (trackRepository.trackLikedBy(track.getId(), user.getId()) > 0) //(track.getLikes().contains(user))
             removeLike(id, user);
         else
             setLike(id, user);
