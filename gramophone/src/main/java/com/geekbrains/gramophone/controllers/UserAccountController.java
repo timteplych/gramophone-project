@@ -41,7 +41,7 @@ public class UserAccountController {
             @PathVariable("id") Long id,
             Model model
     ) {
-        User user = userService.findById(id).get();
+        User user = userService.findById(id);
         User currentUser = userService.findByUsername(principal.getName());
 
         model.addAttribute("user", user);
@@ -86,7 +86,7 @@ public class UserAccountController {
             Principal principal,
             Model model
     ) {
-        User user = userService.findById(userId).get();
+        User user = userService.findById(userId);
         User currentUser = userService.findByUsername(principal.getName());
 
         model.addAttribute("user", user);

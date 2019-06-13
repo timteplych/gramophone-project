@@ -45,7 +45,7 @@ public class PlaylistController {
             Model model
     ) {
         User currentUser = userService.findByUsername(principal.getName());
-        User user = userService.findById(userId).get();
+        User user = userService.findById(userId);
 
         List<Track> allGramophoneTracks = trackService.findAll();
         List<Track> userTracks = user.getPlaylist().getTracks();

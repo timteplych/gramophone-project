@@ -17,8 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -56,8 +56,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findById(Long id) {
-        return userRepository.findById(id);
+    public User findById(Long id) {
+        return userRepository.findById(id).orElse(null);
     }
 
     @Override
@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
         user.setEmail(systemUser.getEmail());
         //performer.setPhone("noPhone");
         user.setSinger(false);
-        user.setRoles(Arrays.asList(roleRepository.findOneByName("ROLE_USER")));
+        user.setRoles(Collections.singletonList(roleRepository.findOneByName("ROLE_USER")));
         // todo check username is exists
         createPlaylist(user);
         userRepository.save(user);
@@ -100,14 +100,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void subscribeOnUser(User currentUser, Long subscribeOnUserId) {
-        User user = userRepository.findById(subscribeOnUserId).get();
+        User user = userRepository.findById(subscribeOnUserId).orElse(null);
+        assert user != null;
         user.getSubscribers().add(currentUser);
         userRepository.save(user);
     }
 
     @Override
     public void unsubscribeOnUser(User currentUser, Long unsubscribeOnUserId) {
-        User user = userRepository.findById(unsubscribeOnUserId).get();
+        User user = userRepository.findById(unsubscribeOnUserId).orElse(null);
+        assert user != null;
         user.getSubscribers().remove(currentUser);
         userRepository.save(user);
     }
