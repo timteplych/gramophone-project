@@ -1,7 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import * as moment from 'moment';
 import {Duration} from 'moment';
-import {Observable, timer} from 'rxjs';
+import {timer} from 'rxjs';
+import {TracksService} from '../_services';
+import {Track} from '../_models';
 
 
 @Component({
@@ -22,14 +24,21 @@ export class MusicPlayerComponent implements OnInit {
   subscribe = null;
   source;
   audioList;
-  currentTrack = '../../assets/1.mp3';
+  trackTitle;
+  trackPerformer;
+  currentTrack: Track;
 
-  constructor() {
+  constructor(
+    private trackService: TracksService
+  ) {
   }
 
   ngOnInit() {
     this.audio = new Audio();
-    this.audio.src = this.currentTrack;
+    this.currentTrack = JSON.parse(localStorage.getItem('track'));
+    this.audio.src = this.currentTrack.downloadUrl;
+    this.trackPerformer = this.currentTrack.wordAuthor;
+    this.trackTitle = this.currentTrack.title;
     this.audio.load();
     this.source = timer(this.audio.duration, 1000);
     this.audio.addEventListener('timeupdate', event => {
