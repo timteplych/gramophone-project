@@ -3,6 +3,7 @@ package com.geekbrains.gramophone.entities;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -22,13 +23,13 @@ public class Comment {
     @JoinTable(name = "comments_likes",
             joinColumns = @JoinColumn(name = "comment_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Set<User> likes;
+    private Set<User> likes  = new HashSet<>();
 
     @OneToMany
     @JoinTable(name = "comments_dislikes",
             joinColumns = @JoinColumn(name = "comment_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Set<User> dislikes;
+    private Set<User> dislikes = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "user_id")

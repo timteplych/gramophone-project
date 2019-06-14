@@ -9,10 +9,7 @@ import com.geekbrains.gramophone.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
@@ -43,11 +40,30 @@ public class PlaylistController {
     public String addPlaylist(
             @RequestParam("playlist_name") String playlistName,
             Principal principal
-    ){
-        // сделать проверку, если пользователь хочет создать плейлист с существующим именем
-
+    ) {
         User currentUser = userService.findByUsername(principal.getName());
-        playlistService.addPlaylist(currentUser, playlistName);
+
+        if(playlistName.isEmpty()){
+            System.out.println("Сделать вывод на фронт сообщения: Введите название плейлиста"); //todo
+            return "redirect:/users/" + currentUser.getId() + "/playlists";
+        }
+
+        boolean isPlaylistAdd = playlistService.addPlaylist(currentUser, playlistName);
+
+        if(!isPlaylistAdd){
+            System.out.println("Сделать вывод на фронт сообщения: Плейлист с таким именем уже существует"); //todo
+        }
+
+        return "redirect:/users/" + currentUser.getId() + "/playlists";
+    }
+
+    @GetMapping("/playlists/{playlist_id}/remove")
+    public String removePlaylist(
+            @PathVariable("playlist_id") Long playlistId,
+            Principal principal
+    ) {
+        User currentUser = userService.findByUsername(principal.getName());
+        playlistService.removePlaylist(playlistId);
 
         return "redirect:/users/" + currentUser.getId() + "/playlists";
     }
@@ -61,14 +77,13 @@ public class PlaylistController {
         User currentUser = userService.findByUsername(principal.getName());
         User user = userService.findById(userId).get();
         List<Playlist> playlistList = playlistService.findAllPlaylistsByUser(user);
-
-        List<Track> allGramophoneTracks = trackService.findAll();
+        List<Track> allCurrentUserTracks = userService.allUserTracksFromPlaylists(currentUser.getId());
 
         model.addAttribute("user", user);
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("playlistList", playlistList);
         model.addAttribute("isCurrentUser", currentUser.getId().equals(user.getId()));
-        model.addAttribute("allGramophoneTracks", allGramophoneTracks);
+        model.addAttribute("allCurrentUserTracks", allCurrentUserTracks);
 
         return "playlist-page";
     }
@@ -78,7 +93,7 @@ public class PlaylistController {
             @PathVariable("track_id") Long trackId,
             Model model,
             Principal principal
-    ){
+    ) {
         User currentUser = userService.findByUsername(principal.getName());
         Track track = trackService.findTrackById(trackId);
         List<Playlist> playlistList = playlistService.findAllPlaylistsByUser(currentUser);
@@ -89,7 +104,7 @@ public class PlaylistController {
         return "add-track";
     }
 
-    @PostMapping("/playlists/track/add")
+    @PostMapping("/playlists/add/track")
     public String addTrackInPlaylist(
             @RequestParam("playlist_id") Long playlistId,
             @RequestParam("track_id") Long trackId,
@@ -101,7 +116,7 @@ public class PlaylistController {
         return "redirect:/users/" + currentUser.getId() + "/playlists"; // переделать возврат на ту страницу с которой был добавлен трек
     }
 
-    @RequestMapping("/playlists/{playlist_id}/{track_id}/remove")
+    @RequestMapping("/playlists/{playlist_id}/remove/{track_id}")
     public String removeTrackFromPlaylist(
             @PathVariable("playlist_id") Long playlistId,
             @PathVariable("track_id") Long trackId,
@@ -112,5 +127,4 @@ public class PlaylistController {
 
         return "redirect:/users/" + currentUser.getId() + "/playlists";
     }
-
 }

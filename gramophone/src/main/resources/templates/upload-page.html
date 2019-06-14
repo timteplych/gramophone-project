@@ -39,14 +39,14 @@
                        type="text"
                        id="wordAuthor"
                        th:field="*{wordAuthor}"
-                       th:value="${user.firstName + ' ' + user.lastName}">
+                       th:value="${user.infoSinger.firstName + ' ' + user.infoSinger.lastName}">
 
                 <label for="musicAuthor">Автор музыки</label>
                 <input class="form-control"
                        type="text"
                        id="musicAuthor"
                        th:field="*{musicAuthor}"
-                       th:value="${user.firstName + ' ' + user.lastName}">
+                       th:value="${user.infoSinger.firstName + ' ' + user.infoSinger.lastName}">
 
                 <label for="genre">Жанр песни</label>
                 <select class="form-control" id="genre" name="genre">

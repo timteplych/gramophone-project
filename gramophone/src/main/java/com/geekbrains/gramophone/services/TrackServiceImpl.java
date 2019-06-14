@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
@@ -21,7 +22,6 @@ import java.util.Set;
 public class TrackServiceImpl implements TrackService {
 
     private TrackRepository trackRepository;
-
     private GenreRepository genreRepository;
 
     @Autowired
@@ -110,6 +110,19 @@ public class TrackServiceImpl implements TrackService {
         Track track = findTrackById(id);
         track.getLikes().remove(user);
         trackRepository.save(track);
+    }
+
+    @Override
+    public List<Track> findAllSingerUserTracks(User user) {
+        return trackRepository.findAllByPerformer(user);
+    }
+
+    @Override
+    @Transactional
+    public void deleteTrack(Long id) {
+        trackRepository.deleteTrackFromAllPlaylists(id);
+        trackRepository.deleteById(id);
+        //удалить файл трека с сервера
     }
 
 }
