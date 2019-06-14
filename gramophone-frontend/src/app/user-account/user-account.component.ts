@@ -28,6 +28,7 @@ export class UserAccountComponent implements OnInit {
       lastName: ['', Validators.required],
       email: ['', Validators.required],
       phone: ['', Validators.required],
+      oldPassword: ['', Validators.required],
       password: ['', Validators.required],
       password2: ['', Validators.required]
     });

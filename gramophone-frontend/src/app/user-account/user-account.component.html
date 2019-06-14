@@ -39,11 +39,15 @@
         <input type="text" formControlName="phone" name="phone">
       </div>
       <div class="field">
-        <label>Пароль</label>
+        <label>Старый пароль</label>
+        <input type="password" autocomplete="old-password" formControlName="oldPassword" name="password">
+      </div>
+      <div class="field">
+        <label>Новый пароль</label>
         <input type="password" autocomplete="new-password" formControlName="password" name="password">
       </div>
       <div class="field">
-        <label>Подтвердить пароль</label>
+        <label>Подтвердить новый пароль</label>
         <input type="password" autocomplete="current-password" formControlName="password2" name="password2">
       </div>
       <button class="ui button" type="submit">Сохранить</button>
