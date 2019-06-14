@@ -30,7 +30,7 @@
 </div>
 
 <div class="container">
-    <div class="container" th:if="${!isCurrentUser}">
+    <div class="container" th:if="${!isCurrentUser && user.singer}">
         <div class="row">
             <a class="btn btn-primary" th:href="@{/users/{user_id}/subscribe(user_id = ${user.id})}"
                th:if="${!isSubscriber}">Подписаться</a>
@@ -49,7 +49,7 @@
 </div>
 
 <div class="container" th:if="${isCurrentUser}">
-    <form th:action="@{/avatar}" method="post" enctype="multipart/form-data">
+    <form th:action="@{download/avatar}" method="post" enctype="multipart/form-data">
         <input type="file" style="width: 100%;" class="btn btn-outline-primary" id="file"
                name="file"
                accept="image/*">
@@ -88,7 +88,6 @@
 <div class="container">
     <a th:href="@{/users/{user_id}/playlists(user_id = ${user.id})}">плейлисты</a>
 </div>
-
 
 </body>
 </html>

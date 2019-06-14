@@ -112,7 +112,7 @@ public class UserAccountController {
     }
 
 
-    @PostMapping("/avatar")
+    @PostMapping("download/avatar")
     public String uploadAvatar(
             @RequestParam("file") MultipartFile file,
             Principal principal,

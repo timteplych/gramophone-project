@@ -57,7 +57,8 @@
             <td th:text="${track.wordAuthor}"/>
             <td th:text="${track.musicAuthor}"/>
             <td sec:authorize="isAuthenticated()">
-                <a th:href="@{/playlists/add/{track_id}(track_id=${track.id})}">
+                <a th:href="@{/playlists/add/{track_id}(track_id=${track.id})}"
+                   th:if="${!allCurrentUserTracks.contains(track)}">
                     <i class="fa fa-plus" style="display: inline"></i>
                 </a>
             </td>

@@ -1,9 +1,6 @@
 package com.geekbrains.gramophone.services;
 
-import com.geekbrains.gramophone.entities.Playlist;
-import com.geekbrains.gramophone.entities.Role;
-import com.geekbrains.gramophone.entities.SystemUser;
-import com.geekbrains.gramophone.entities.User;
+import com.geekbrains.gramophone.entities.*;
 import com.geekbrains.gramophone.repositories.RoleRepository;
 import com.geekbrains.gramophone.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -74,16 +68,9 @@ public class UserServiceImpl implements UserService {
         user.setRoles(Arrays.asList(roleRepository.findOneByName("ROLE_USER")));
         // todo check username is exists
         userRepository.save(user);
-        createPlaylist(user);
+        playlistService.addPlaylist(user, "default");
 
         return true;
-    }
-
-    private void createPlaylist(User user) {
-        Playlist playlist = new Playlist();
-        playlist.setUser(user);
-        playlist.setName("default");
-        playlistService.savePlaylist(playlist);
     }
 
     @Override
@@ -123,5 +110,20 @@ public class UserServiceImpl implements UserService {
 
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
         return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Track> allUserTracksFromPlaylists(Long userId) {
+        User user = userRepository.findById(userId).get();
+        List<Track> tracks = new ArrayList<>();
+        List<Playlist> playlistList = playlistService.findAllPlaylistsByUser(user);
+
+        for (Playlist p : playlistList){
+            if(!p.getTracks().isEmpty()){
+                tracks.addAll(p.getTracks());
+            }
+        }
+
+        return tracks;
     }
 }
