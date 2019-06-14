@@ -1,10 +1,9 @@
 package com.geekbrains.gramophone.controllers;
 
 import com.geekbrains.gramophone.entities.User;
-import com.geekbrains.gramophone.services.UploadTrackService;
+import com.geekbrains.gramophone.services.UploadService;
 import com.geekbrains.gramophone.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +15,7 @@ import java.security.Principal;
 public class UserAccountController {
 
     private UserService userService;
-    private UploadTrackService uploadTrackService;
+    private UploadService uploadService;
 
     @Autowired
     public void setUserService(UserService userService) {
@@ -24,8 +23,8 @@ public class UserAccountController {
     }
 
     @Autowired
-    public void setUploadTrackService(UploadTrackService uploadTrackService) {
-        this.uploadTrackService = uploadTrackService;
+    public void setUploadService(UploadService uploadService) {
+        this.uploadService = uploadService;
     }
 
     @GetMapping("/users-list")
@@ -112,7 +111,7 @@ public class UserAccountController {
         User currentUser = userService.findByUsername(principal.getName());
 
         if (!file.isEmpty()) {
-            if (uploadTrackService.upload(principal.getName(), file, "images/")) {
+            if (uploadService.upload(principal.getName(), file, "images/")) {
                 currentUser.setAvatar("images/" + currentUser.getUsername() + "/" + file.getOriginalFilename());
                 userService.save(currentUser);
             } else {
