@@ -30,6 +30,9 @@ public class Track {
     @Column(name = "location_on_server")
     private String locationOnServer;
 
+    @Column(name = "download_url")
+    private String downloadUrl;
+
     @OneToOne
     @JoinColumn(name = "genre_id")
     private Genre genre;
