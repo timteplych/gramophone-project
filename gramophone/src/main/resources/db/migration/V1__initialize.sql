@@ -1,15 +1,23 @@
 DROP TABLE IF EXISTS users CASCADE;
 CREATE TABLE users
 (
+    id              SERIAL,
+    username        VARCHAR(50) NOT NULL,
+    password        VARCHAR(80) NOT NULL,
+    email           VARCHAR(50) NOT NULL,
+    activation_code VARCHAR(255),
+    info_singer_id  INTEGER,
+    avatar          VARCHAR(100),
+    PRIMARY KEY (id)
+);
+
+DROP TABLE IF EXISTS info_singers CASCADE;
+CREATE TABLE info_singers
+(
     id         SERIAL,
-    username   VARCHAR(50) NOT NULL,
-    password   VARCHAR(80) NOT NULL,
     first_name VARCHAR(50),
     last_name  VARCHAR(50),
-    singer     BOOL        NOT NULL,
-    email      VARCHAR(50) NOT NULL,
     phone      VARCHAR(15),
-    avatar     VARCHAR(100),
     PRIMARY KEY (id)
 );
 
@@ -188,17 +196,31 @@ VALUES ('ROLE_USER'),
        ('ROLE_MUSICIAN'),
        ('ROLE_ADMIN');
 
-INSERT INTO users (username, password, first_name, last_name, singer, email, phone)
-VALUES ('admin', '$2a$04$Fx/SX9.BAvtPlMyIIqqFx.hLY2Xp8nnhpzvEEVINvVpwIPbA3v/.i', 'Admin', 'Admin', true,
-        'admin@gmail.com', '+79881111111');
+INSERT INTO info_singers (first_name, last_name, phone)
+VALUES ('Admin', 'Adminoff', '+79881111111');
 
-INSERT INTO users (username, password, first_name, last_name, singer, email, phone)
-VALUES ('singer', '$2a$04$Fx/SX9.BAvtPlMyIIqqFx.hLY2Xp8nnhpzvEEVINvVpwIPbA3v/.i', 'Singer', 'Singer', true,
-        'singer@gmail.com', '+79881111111');
+INSERT INTO users (username, password, info_singer_id, email)
+VALUES ('admin', '$2a$04$Fx/SX9.BAvtPlMyIIqqFx.hLY2Xp8nnhpzvEEVINvVpwIPbA3v/.i', 1, 'admin@gmail.com');
 
-INSERT INTO users (username, password, first_name, last_name, singer, email, phone)
-VALUES ('user', '$2a$04$Fx/SX9.BAvtPlMyIIqqFx.hLY2Xp8nnhpzvEEVINvVpwIPbA3v/.i', 'User', 'User', false,
-        'user@gmail.com', '+79881111111');
+INSERT INTO playlist (user_id, name)
+VALUES (1, 'default');
+
+
+INSERT INTO info_singers (first_name, last_name, phone)
+VALUES ('Singer', 'Singeroff', '+79881111111');
+
+INSERT INTO users (username, password, info_singer_id, email)
+VALUES ('singer', '$2a$04$Fx/SX9.BAvtPlMyIIqqFx.hLY2Xp8nnhpzvEEVINvVpwIPbA3v/.i', 2, 'singer@gmail.com');
+
+INSERT INTO playlist (user_id, name)
+VALUES (2, 'default');
+
+
+INSERT INTO users (username, password, email)
+VALUES ('user', '$2a$04$Fx/SX9.BAvtPlMyIIqqFx.hLY2Xp8nnhpzvEEVINvVpwIPbA3v/.i', 'user@gmail.com');
+
+INSERT INTO playlist (user_id, name)
+VALUES (3, 'default');
 
 INSERT INTO users_roles (user_id, role_id)
 VALUES (1, 1),
@@ -209,7 +231,13 @@ VALUES (1, 1),
        (3, 1);
 
 INSERT INTO genres (title)
-VALUES ('Попса'),
+VALUES ('Блюз'),
+       ('Джаз'),
+       ('Кантри'),
+       ('Попса'),
        ('Реп'),
+       ('Ритм-н-блюз'),
+       ('Рок'),
+       ('Романс'),
        ('Шансон'),
-       ('Рок');
+       ('Электронная музыка');

@@ -1,6 +1,9 @@
 package com.geekbrains.gramophone.controllers;
 
+import com.geekbrains.gramophone.entities.Track;
 import com.geekbrains.gramophone.entities.User;
+import com.geekbrains.gramophone.services.InfoSingerService;
+import com.geekbrains.gramophone.services.TrackService;
 import com.geekbrains.gramophone.services.UploadService;
 import com.geekbrains.gramophone.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,12 +13,15 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 public class UserAccountController {
 
     private UserService userService;
     private UploadService uploadTrackService;
+    private InfoSingerService infoSingerService;
+    private TrackService trackService;
 
     @Autowired
     public void setUserService(UserService userService) {
@@ -25,6 +31,16 @@ public class UserAccountController {
     @Autowired
     public void setUploadTrackService(UploadService uploadTrackService) {
         this.uploadTrackService = uploadTrackService;
+    }
+
+    @Autowired
+    public void setInfoSingerService(InfoSingerService infoSingerService) {
+        this.infoSingerService = infoSingerService;
+    }
+
+    @Autowired
+    public void setTrackService(TrackService trackService) {
+        this.trackService = trackService;
     }
 
     @GetMapping("/users/list")
@@ -42,11 +58,18 @@ public class UserAccountController {
     ) {
         User user = userService.findById(userId).get();
         User currentUser = userService.findByUsername(principal.getName());
+        List<Track> allCurrentUserTracks = userService.allUserTracksFromPlaylists(currentUser.getId());
+
+        if (user.getInfoSinger() != null) {
+            List<Track> singerTracks = trackService.findAllSingerUserTracks(user);
+            model.addAttribute("singerTracks", singerTracks);
+        }
 
         model.addAttribute("user", user);
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("isSubscriber", user.getSubscribers().contains(currentUser));
         model.addAttribute("isCurrentUser", currentUser.getId().equals(user.getId()));
+        model.addAttribute("allCurrentUserTracks", allCurrentUserTracks);
 
         return "user-page";
     }
@@ -76,7 +99,7 @@ public class UserAccountController {
     }
 
     // показать список подписок
-    @GetMapping("users/{user_id}/subscriptions")
+    @GetMapping("/users/{user_id}/subscriptions")
     public String subscriptionsList(
             @PathVariable("user_id") Long userId,
             Principal principal,
@@ -94,7 +117,7 @@ public class UserAccountController {
     }
 
     // показать список подписчиков
-    @GetMapping("users/{user_id}/subscribers")
+    @GetMapping("/users/{user_id}/subscribers")
     public String subscribersList(
             @PathVariable("user_id") Long userId,
             Principal principal,
@@ -111,8 +134,22 @@ public class UserAccountController {
         return "subscriptions";
     }
 
+    @PostMapping("/confirm/singer")
+    public String confirmInfoSinger(
+            @RequestParam("first_name") String firstName,
+            @RequestParam("last_name") String lastName,
+            @RequestParam("phone") String phone,
+            Principal principal
+    ) {
+        User currentUser = userService.findByUsername(principal.getName());
 
-    @PostMapping("/avatar")
+        //добавить валидацию данных
+        infoSingerService.saveUserAsSinger(currentUser, firstName, lastName, phone);
+
+        return "redirect:/users/" + currentUser.getId();
+    }
+
+    @PostMapping("/download/avatar")
     public String uploadAvatar(
             @RequestParam("file") MultipartFile file,
             Principal principal,

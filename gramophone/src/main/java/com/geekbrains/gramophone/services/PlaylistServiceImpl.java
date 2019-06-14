@@ -56,20 +56,28 @@ public class PlaylistServiceImpl implements PlaylistService {
     }
 
     @Override
-    public void savePlaylist(Playlist playlist) {
-        playlistRepository.save(playlist);
+    public List<Playlist> findAllPlaylistsByUser(User user) {
+        return playlistRepository.findAllByUser(user);
     }
 
     @Override
-    public void addPlaylist(User currentUser, String playlistName) {
+    public boolean addPlaylist(User currentUser, String playlistName) {
+        for (Playlist p : playlistRepository.findAllByUser(currentUser)) {
+            if (playlistName.equals(p.getName())) {
+                return false;
+            }
+        }
         Playlist playlist = new Playlist();
         playlist.setUser(currentUser);
         playlist.setName(playlistName);
         playlistRepository.save(playlist);
+
+        return true;
     }
 
     @Override
-    public List<Playlist> findAllPlaylistsByUser(User user) {
-        return playlistRepository.findAllByUser(user);
+    public void removePlaylist(Long playlistId) {
+        playlistRepository.deleteById(playlistId);
     }
+
 }

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -77,6 +78,8 @@ public class MainController {
         if(principal != null){
             User currentUser = userService.findByUsername(principal.getName());
             model.addAttribute("currentUser", currentUser);
+            List<Track> allCurrentUserTracks = userService.allUserTracksFromPlaylists(currentUser.getId());
+            model.addAttribute("allCurrentUserTracks", allCurrentUserTracks);
         }
 
         return "index";
