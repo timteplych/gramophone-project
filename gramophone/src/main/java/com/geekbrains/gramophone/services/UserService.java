@@ -16,6 +16,5 @@ public interface UserService extends UserDetailsService {
     List<User> findAll();
     void subscribeOnUser(User currentUser, Long subscribeUserId);
     void unsubscribeOnUser(User currentUser, Long subscribeUserId);
-
     List<Track> allUserTracksFromPlaylists(Long userId);
 }

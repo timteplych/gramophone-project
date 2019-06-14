@@ -1,6 +1,7 @@
 package com.geekbrains.gramophone.controllers;
 
 import com.geekbrains.gramophone.entities.User;
+import com.geekbrains.gramophone.services.InfoSingerService;
 import com.geekbrains.gramophone.services.UploadService;
 import com.geekbrains.gramophone.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ public class UserAccountController {
 
     private UserService userService;
     private UploadService uploadTrackService;
+    private InfoSingerService infoSingerService;
 
     @Autowired
     public void setUserService(UserService userService) {
@@ -25,6 +27,11 @@ public class UserAccountController {
     @Autowired
     public void setUploadTrackService(UploadService uploadTrackService) {
         this.uploadTrackService = uploadTrackService;
+    }
+
+    @Autowired
+    public void setInfoSingerService(InfoSingerService infoSingerService) {
+        this.infoSingerService = infoSingerService;
     }
 
     @GetMapping("/users/list")
@@ -76,7 +83,7 @@ public class UserAccountController {
     }
 
     // показать список подписок
-    @GetMapping("users/{user_id}/subscriptions")
+    @GetMapping("/users/{user_id}/subscriptions")
     public String subscriptionsList(
             @PathVariable("user_id") Long userId,
             Principal principal,
@@ -94,7 +101,7 @@ public class UserAccountController {
     }
 
     // показать список подписчиков
-    @GetMapping("users/{user_id}/subscribers")
+    @GetMapping("/users/{user_id}/subscribers")
     public String subscribersList(
             @PathVariable("user_id") Long userId,
             Principal principal,
@@ -111,8 +118,22 @@ public class UserAccountController {
         return "subscriptions";
     }
 
+    @PostMapping("/confirm/singer")
+    public String confirmInfoSinger(
+            @RequestParam("first_name") String firstName,
+            @RequestParam("last_name") String lastName,
+            @RequestParam("phone") String phone,
+            Principal principal
+    ) {
+        User currentUser = userService.findByUsername(principal.getName());
 
-    @PostMapping("download/avatar")
+        //добавить валидацию данных
+        infoSingerService.saveUserAsSinger(currentUser, firstName, lastName, phone);
+
+        return "redirect:/users/" + currentUser.getId();
+    }
+
+    @PostMapping("/download/avatar")
     public String uploadAvatar(
             @RequestParam("file") MultipartFile file,
             Principal principal,

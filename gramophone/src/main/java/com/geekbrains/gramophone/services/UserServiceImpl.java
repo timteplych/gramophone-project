@@ -64,7 +64,6 @@ public class UserServiceImpl implements UserService {
         user.setUsername(systemUser.getUsername());
         user.setPassword(passwordEncoder.encode(systemUser.getPassword()));
         user.setEmail(systemUser.getEmail());
-        user.setSinger(false);
         user.setRoles(Arrays.asList(roleRepository.findOneByName("ROLE_USER")));
         // todo check username is exists
         userRepository.save(user);
@@ -126,4 +125,5 @@ public class UserServiceImpl implements UserService {
 
         return tracks;
     }
+
 }
