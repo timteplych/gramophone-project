@@ -9,9 +9,10 @@ import java.util.List;
 public interface UserService extends UserDetailsService {
     User findByUsername(String username);
     User findById(Long id);
-    boolean save(SystemUser systemUser);
+    User save(SystemUser systemUser);
     void save(User user);
     List<User> findAll();
+    User findByEmail(String email, String password);
 
     void subscribeOnUser(User currentUser, Long subscribeUserId);
     void unsubscribeOnUser(User currentUser, Long subscribeUserId);

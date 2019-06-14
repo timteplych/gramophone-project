@@ -62,24 +62,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public boolean save(SystemUser systemUser) {
+    public User save(SystemUser systemUser) {
         if (userRepository.findOneByUsername(systemUser.getUsername()) != null) {
-            return false;
+            return null;
         }
         User user = new User();
         user.setUsername(systemUser.getUsername());
         user.setPassword(passwordEncoder.encode(systemUser.getPassword()));
-        //performer.setFirstName("noFirstName");
-        //performer.setLastName("noLastName");
+        user.setFirstName("noFirstName");
+        user.setLastName("noLastName");
         user.setEmail(systemUser.getEmail());
-        //performer.setPhone("noPhone");
+        user.setPhone("noPhone");
         user.setSinger(false);
         user.setRoles(Collections.singletonList(roleRepository.findOneByName("ROLE_USER")));
         // todo check username is exists
         createPlaylist(user);
-        userRepository.save(user);
-
-        return true;
+        return userRepository.save(user);
     }
 
     private void createPlaylist(User user) {
@@ -96,6 +94,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> findAll() {
         return (List<User>) userRepository.findAll();
+    }
+
+    @Override
+    public User findByEmail(String email, String password) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        User user = userRepository.findByEmail(email);
+        if (user != null && encoder.matches(password, user.getPassword())) {
+            return user;
+        }
+        return null;
     }
 
     @Override
