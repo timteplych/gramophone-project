@@ -57,6 +57,7 @@ CREATE TABLE tracks
     word_author        VARCHAR(100) NOT NULL,
     music_author       VARCHAR(100) NOT NULL,
     location_on_server VARCHAR(100) NOT NULL,
+    download_url VARCHAR(250) NOT NULL,
     genre_id           INTEGER      NOT NULL,
     create_at          DATE         NOT NULL,
     listening_amount   INTEGER,
