@@ -26,6 +26,9 @@ public class User {
     @Column(name = "avatar")
     private String avatar;
 
+    @Column(name = "activation_code")
+    private String activationCode;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "info_singer_id")
     private InfoSinger infoSinger;
@@ -40,7 +43,7 @@ public class User {
     @JoinTable(name = "users_playlists",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "playlist_id"))
-    private List<Playlist> playlistList;
+    private List<Playlist> playlistList = new ArrayList<>();
 
     // подписчики
     @ManyToMany(fetch = FetchType.LAZY)

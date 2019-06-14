@@ -40,7 +40,7 @@
                     <p th:text="${'Плейлист: ' + playlist.name}"></p>
                     <a th:href="@{/playlists/{playlist_id}/remove(playlist_id=${playlist.id})}"
                        th:if="${isCurrentUser}">
-                        <i class="fa fa-minus" style="display: inline"></i>
+                        удалить плейлист
                     </a>
                 </li>
 
@@ -49,11 +49,12 @@
                     <p th:text="${track.performer.username}"></p>
                     <a th:href="@{/playlists/{playlist_id}/remove/{track_id}(playlist_id=${playlist.id}, track_id=${track.id})}"
                        th:if="${isCurrentUser}">
-                        <i class="fa fa-minus" style="display: inline"></i>
+                        удалить из плейлиста
                     </a>
+                    <br>
                     <a th:href="@{/playlists/add/{track_id}(track_id=${track.id})}"
                        th:if="${!allCurrentUserTracks.contains(track)}">
-                        <i class="fa fa-plus" style="display: inline"></i>
+                        добавить в плейлист
                     </a>
                 </li>
             </ul>

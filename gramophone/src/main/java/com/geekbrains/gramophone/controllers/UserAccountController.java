@@ -1,7 +1,9 @@
 package com.geekbrains.gramophone.controllers;
 
+import com.geekbrains.gramophone.entities.Track;
 import com.geekbrains.gramophone.entities.User;
 import com.geekbrains.gramophone.services.InfoSingerService;
+import com.geekbrains.gramophone.services.TrackService;
 import com.geekbrains.gramophone.services.UploadService;
 import com.geekbrains.gramophone.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 public class UserAccountController {
@@ -18,6 +21,7 @@ public class UserAccountController {
     private UserService userService;
     private UploadService uploadTrackService;
     private InfoSingerService infoSingerService;
+    private TrackService trackService;
 
     @Autowired
     public void setUserService(UserService userService) {
@@ -32,6 +36,11 @@ public class UserAccountController {
     @Autowired
     public void setInfoSingerService(InfoSingerService infoSingerService) {
         this.infoSingerService = infoSingerService;
+    }
+
+    @Autowired
+    public void setTrackService(TrackService trackService) {
+        this.trackService = trackService;
     }
 
     @GetMapping("/users/list")
@@ -49,11 +58,18 @@ public class UserAccountController {
     ) {
         User user = userService.findById(userId).get();
         User currentUser = userService.findByUsername(principal.getName());
+        List<Track> allCurrentUserTracks = userService.allUserTracksFromPlaylists(currentUser.getId());
+
+        if (user.getInfoSinger() != null) {
+            List<Track> singerTracks = trackService.findAllSingerUserTracks(user);
+            model.addAttribute("singerTracks", singerTracks);
+        }
 
         model.addAttribute("user", user);
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("isSubscriber", user.getSubscribers().contains(currentUser));
         model.addAttribute("isCurrentUser", currentUser.getId().equals(user.getId()));
+        model.addAttribute("allCurrentUserTracks", allCurrentUserTracks);
 
         return "user-page";
     }

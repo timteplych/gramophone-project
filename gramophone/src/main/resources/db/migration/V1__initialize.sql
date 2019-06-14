@@ -1,12 +1,13 @@
 DROP TABLE IF EXISTS users CASCADE;
 CREATE TABLE users
 (
-    id             SERIAL,
-    username       VARCHAR(50) NOT NULL,
-    password       VARCHAR(80) NOT NULL,
-    email          VARCHAR(50) NOT NULL,
-    info_singer_id INTEGER,
-    avatar         VARCHAR(100),
+    id              SERIAL,
+    username        VARCHAR(50) NOT NULL,
+    password        VARCHAR(80) NOT NULL,
+    email           VARCHAR(50) NOT NULL,
+    activation_code VARCHAR(255),
+    info_singer_id  INTEGER,
+    avatar          VARCHAR(100),
     PRIMARY KEY (id)
 );
 
@@ -201,14 +202,25 @@ VALUES ('Admin', 'Adminoff', '+79881111111');
 INSERT INTO users (username, password, info_singer_id, email)
 VALUES ('admin', '$2a$04$Fx/SX9.BAvtPlMyIIqqFx.hLY2Xp8nnhpzvEEVINvVpwIPbA3v/.i', 1, 'admin@gmail.com');
 
+INSERT INTO playlist (user_id, name)
+VALUES (1, 'default');
+
+
 INSERT INTO info_singers (first_name, last_name, phone)
 VALUES ('Singer', 'Singeroff', '+79881111111');
 
 INSERT INTO users (username, password, info_singer_id, email)
 VALUES ('singer', '$2a$04$Fx/SX9.BAvtPlMyIIqqFx.hLY2Xp8nnhpzvEEVINvVpwIPbA3v/.i', 2, 'singer@gmail.com');
 
+INSERT INTO playlist (user_id, name)
+VALUES (2, 'default');
+
+
 INSERT INTO users (username, password, email)
 VALUES ('user', '$2a$04$Fx/SX9.BAvtPlMyIIqqFx.hLY2Xp8nnhpzvEEVINvVpwIPbA3v/.i', 'user@gmail.com');
+
+INSERT INTO playlist (user_id, name)
+VALUES (3, 'default');
 
 INSERT INTO users_roles (user_id, role_id)
 VALUES (1, 1),

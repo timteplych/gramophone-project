@@ -79,4 +79,5 @@ public class PlaylistServiceImpl implements PlaylistService {
     public void removePlaylist(Long playlistId) {
         playlistRepository.deleteById(playlistId);
     }
+
 }
