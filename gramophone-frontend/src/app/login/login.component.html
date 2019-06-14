@@ -1,4 +1,4 @@
-<div class="ui right login vertical sidebar">
+<div class="ui right login vertical sidebar" [hidden]="loading">
   <div class="logo">
     <img src="../../assets/images/logo.png" alt="">
   </div>
@@ -17,10 +17,11 @@
       <div class="text-right field">
         <a href="">Нужна помощь?</a>
       </div>
-      <button class="ui button" type="submit" >Войти</button>
+      <button class="ui button" type="submit" (click)="onSubmited()">Войти</button>
     </form>
   <div #destinationRef>
     <app-register [hidden]="false"></app-register>
   </div>
 </div>
+
 
