@@ -8,7 +8,7 @@ export const environment = {
 
 
 
-export const API_URL = 'http://localhost:8189/api';
+export const API_URL = 'http://localhost:8189/gramophone/api';
 /*
  * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
