@@ -68,3 +68,12 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   background-color: #e0e2e8;
   border: none;
 }
+
+.mat-focused .mat-form-field-label {
+  font-family: Avenir, sans-serif;
+  color: #767676 !important;
+}
+
+.mat-form-field-ripple {
+  background-color: #f2f2f2 !important;
+}
