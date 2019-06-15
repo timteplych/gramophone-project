@@ -1,6 +1,5 @@
 package com.geekbrains.gramophone.services;
 
-import com.geekbrains.gramophone.entities.Comment;
 import com.geekbrains.gramophone.entities.Genre;
 import com.geekbrains.gramophone.entities.Track;
 import com.geekbrains.gramophone.entities.User;
@@ -9,14 +8,17 @@ import com.geekbrains.gramophone.repositories.TrackRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class TrackServiceImpl implements TrackService {
@@ -120,9 +122,19 @@ public class TrackServiceImpl implements TrackService {
     @Override
     @Transactional
     public void deleteTrack(Long id) {
+        Track track = trackRepository.findById(id).get();
+        deleteTrackFromServer(track.getLocationOnServer());
         trackRepository.deleteTrackFromAllPlaylists(id);
         trackRepository.deleteById(id);
-        //удалить файл трека с сервера
+    }
+
+    private void deleteTrackFromServer(String locationOnServer) {
+        // НЕ РАБОТАЕТ
+//        try {
+//            Files.delete(Paths.get(locationOnServer));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
 }

@@ -11,17 +11,19 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
+
     private UserRepository userRepository;
     private RoleRepository roleRepository;
     private BCryptPasswordEncoder passwordEncoder;
-
     private PlaylistService playlistService;
+    private MailSenderService mailSenderService;
 
     @Autowired
     public void setPlaylistService(PlaylistService playlistService) {
@@ -41,6 +43,11 @@ public class UserServiceImpl implements UserService {
     @Autowired
     public void setPasswordEncoder(BCryptPasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
+    }
+
+    @Autowired
+    public void setMailSenderService(MailSenderService mailSenderService) {
+        this.mailSenderService = mailSenderService;
     }
 
     @Override
@@ -65,9 +72,20 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(systemUser.getPassword()));
         user.setEmail(systemUser.getEmail());
         user.setRoles(Arrays.asList(roleRepository.findOneByName("ROLE_USER")));
-        // todo check username is exists
+        user.setActivationCode(UUID.randomUUID().toString());
         userRepository.save(user);
         playlistService.addPlaylist(user, "default");
+
+        if (!StringUtils.isEmpty(user.getEmail())) {
+            String message = String.format(
+                    "Привет, %s! \n" +
+                            "Рады видеть вас на нашей музыкальной площадке Gramophone! \n" +
+                            "Пожалуйста перейдите по ссылке \n http://localhost:8189/gramophone/activate/%s \n" +
+                            "для подтверждения вашего почтового ящика.",
+                    user.getUsername(), user.getActivationCode()
+            );
+            mailSenderService.send(user.getEmail(), "Activation code", message);
+        }
 
         return true;
     }
@@ -117,13 +135,25 @@ public class UserServiceImpl implements UserService {
         List<Track> tracks = new ArrayList<>();
         List<Playlist> playlistList = playlistService.findAllPlaylistsByUser(user);
 
-        for (Playlist p : playlistList){
-            if(!p.getTracks().isEmpty()){
+        for (Playlist p : playlistList) {
+            if (!p.getTracks().isEmpty()) {
                 tracks.addAll(p.getTracks());
             }
         }
 
         return tracks;
+    }
+
+    @Override
+    public boolean activateUser(String code) {
+        User user = userRepository.findByActivationCode(code);
+        if(user == null){
+            return false;
+        }
+        user.setActivationCode(null);
+        userRepository.save(user);
+
+        return true;
     }
 
 }

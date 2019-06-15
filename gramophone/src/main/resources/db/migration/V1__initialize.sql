@@ -8,8 +8,11 @@ CREATE TABLE users
     activation_code VARCHAR(255),
     info_singer_id  INTEGER,
     avatar          VARCHAR(100),
+    create_at       TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id)
 );
+
+
 
 DROP TABLE IF EXISTS info_singers CASCADE;
 CREATE TABLE info_singers
@@ -155,7 +158,7 @@ CREATE TABLE playlist
 (
     id      SERIAL,
     user_id INTEGER     NOT NULL,
-    name    VARCHAR(50) NOT NULL,
+    name    VARCHAR(50) NOT NULL DEFAULT 'default',
     PRIMARY KEY (id),
     CONSTRAINT FK_USER_ID_PLAYLIST FOREIGN KEY (user_id)
         REFERENCES users (id)
@@ -202,8 +205,8 @@ VALUES ('Admin', 'Adminoff', '+79881111111');
 INSERT INTO users (username, password, info_singer_id, email)
 VALUES ('admin', '$2a$04$Fx/SX9.BAvtPlMyIIqqFx.hLY2Xp8nnhpzvEEVINvVpwIPbA3v/.i', 1, 'admin@gmail.com');
 
-INSERT INTO playlist (user_id, name)
-VALUES (1, 'default');
+INSERT INTO playlist (user_id)
+VALUES (1);
 
 
 INSERT INTO info_singers (first_name, last_name, phone)
@@ -212,15 +215,15 @@ VALUES ('Singer', 'Singeroff', '+79881111111');
 INSERT INTO users (username, password, info_singer_id, email)
 VALUES ('singer', '$2a$04$Fx/SX9.BAvtPlMyIIqqFx.hLY2Xp8nnhpzvEEVINvVpwIPbA3v/.i', 2, 'singer@gmail.com');
 
-INSERT INTO playlist (user_id, name)
-VALUES (2, 'default');
+INSERT INTO playlist (user_id)
+VALUES (2);
 
 
 INSERT INTO users (username, password, email)
 VALUES ('user', '$2a$04$Fx/SX9.BAvtPlMyIIqqFx.hLY2Xp8nnhpzvEEVINvVpwIPbA3v/.i', 'user@gmail.com');
 
-INSERT INTO playlist (user_id, name)
-VALUES (3, 'default');
+INSERT INTO playlist (user_id)
+VALUES (3);
 
 INSERT INTO users_roles (user_id, role_id)
 VALUES (1, 1),
