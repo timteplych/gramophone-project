@@ -1,4 +1,4 @@
-package com.geekbrains.gramophone.configs;
+package com.geekbrains.gramophone.controllers;
 
 import com.geekbrains.gramophone.entities.RestException;
 import com.geekbrains.gramophone.exceptions.ThereIsNoSuchUserException;
