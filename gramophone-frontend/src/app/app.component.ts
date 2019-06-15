@@ -1,11 +1,12 @@
 import {Component} from '@angular/core';
-import {animate, group, query, style, transition, trigger} from '@angular/animations';
+import {animate, group, query, state, style, transition, trigger} from '@angular/animations';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  animations: [trigger('routeAnimations', [
+  animations: [
+    trigger('routeAnimations', [
     transition('Account => *', [
       query(':enter, :leave',
         style({opacity: 1}),
