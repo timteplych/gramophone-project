@@ -11,7 +11,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -20,7 +19,6 @@ import java.util.List;
 public class TrackServiceImpl implements TrackService {
 
     private TrackRepository trackRepository;
-
 
     private GenreRepository genreRepository;
 
@@ -134,6 +132,16 @@ public class TrackServiceImpl implements TrackService {
         return trackFromForm;
     }
 
+    @Override
+    public List<Track> findAllSingerUserTracks(User user) {
+        return null;
+    }
+
+    @Override
+    public void deleteTrack(Long id) {
+
+    }
+
     public Track updateTrack(Long id, Track trackFromForm, String fileName) {
         trackRepository.findById(id).ifPresent(updatedTrack -> {
             updatedTrack.setListeningAmount(trackFromForm.getListeningAmount());
@@ -154,6 +162,7 @@ public class TrackServiceImpl implements TrackService {
             }
         });
         return trackFromForm;
+
     }
 
 }

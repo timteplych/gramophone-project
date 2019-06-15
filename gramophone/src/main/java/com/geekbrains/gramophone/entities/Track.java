@@ -5,6 +5,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -56,10 +57,16 @@ public class Track {
     @JoinTable(name = "tracks_likes",
             joinColumns = @JoinColumn(name = "track_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Set<User> likes;
+    private Set<User> likes = new HashSet<>();
+
+    @OneToMany
+    @JoinTable(name = "tracks_dislikes",
+            joinColumns = @JoinColumn(name = "track_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private Set<User> dislikes = new HashSet<>();
 
     @OneToMany(mappedBy = "track")
-    private Set<Comment> comments;
+    private Set<Comment> comments = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {

@@ -22,6 +22,7 @@ public class UploadTrackController {
     private TrackService trackService;
     private GenreService genreService;
     private UploadService uploadService;
+
     private UserService userService;
 
     @Autowired
@@ -44,7 +45,7 @@ public class UploadTrackController {
         this.uploadService = uploadService;
     }
 
-    @GetMapping("/upload-track")
+    @GetMapping("/upload/track")
     public String showUploadPage(
             Principal principal,
             Model model) {
@@ -57,7 +58,7 @@ public class UploadTrackController {
         return "upload-page";
     }
 
-    @PostMapping("/upload-process")
+    @PostMapping("/upload/track")
     public String uploadProcessing(
             @ModelAttribute("track") Track trackFromForm,
             @RequestParam("file") MultipartFile file,
@@ -80,6 +81,6 @@ public class UploadTrackController {
                 return "upload-fail";
             }
         }
-        return "redirect:/";
+        return "redirect:/"; // сообщить, что файл пустой трек не загружен
     }
 }

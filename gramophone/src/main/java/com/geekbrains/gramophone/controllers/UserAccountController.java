@@ -1,6 +1,9 @@
 package com.geekbrains.gramophone.controllers;
 
+import com.geekbrains.gramophone.entities.Track;
 import com.geekbrains.gramophone.entities.User;
+import com.geekbrains.gramophone.services.InfoSingerService;
+import com.geekbrains.gramophone.services.TrackService;
 import com.geekbrains.gramophone.services.UploadService;
 import com.geekbrains.gramophone.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,12 +13,15 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.security.Principal;
+import java.util.List;
 
 @Controller
 public class UserAccountController {
 
     private UserService userService;
     private UploadService uploadService;
+    private InfoSingerService infoSingerService;
+    private TrackService trackService;
 
     @Autowired
     public void setUserService(UserService userService) {
@@ -27,61 +33,76 @@ public class UserAccountController {
         this.uploadService = uploadService;
     }
 
-    @GetMapping("/users-list")
-    public String showAllUserPage(Model model){
+    @Autowired
+    public void setInfoSingerService(InfoSingerService infoSingerService) {
+        this.infoSingerService = infoSingerService;
+    }
+
+    @Autowired
+    public void setTrackService(TrackService trackService) {
+        this.trackService = trackService;
+    }
+
+    @GetMapping("/users/list")
+    public String showAllUserPage(Model model) {
         model.addAttribute("users", userService.findAll());
         return "all-users";
     }
 
 
-    @RequestMapping("/my-page/{id}")
+    @RequestMapping("/users/{user_id}")
     public String showUserPage(
             Principal principal,
-            @PathVariable("id") Long id,
+            @PathVariable("user_id") Long userId,
             Model model
     ) {
-        User user = userService.findById(id);
+
+        User user = userService.findById(userId);
         User currentUser = userService.findByUsername(principal.getName());
+        List<Track> allCurrentUserTracks = userService.allUserTracksFromPlaylists(currentUser.getId());
+
+        if (user.getInfoSinger() != null) {
+            List<Track> singerTracks = trackService.findAllSingerUserTracks(user);
+            model.addAttribute("singerTracks", singerTracks);
+        }
 
         model.addAttribute("user", user);
+        model.addAttribute("currentUser", currentUser);
         model.addAttribute("isSubscriber", user.getSubscribers().contains(currentUser));
         model.addAttribute("isCurrentUser", currentUser.getId().equals(user.getId()));
+        model.addAttribute("allCurrentUserTracks", allCurrentUserTracks);
 
-        if(user.getSinger()){
-            return "singer-page";
-        }
         return "user-page";
     }
 
     //подписаться
-    @GetMapping("subscribe/{userId}")
+    @GetMapping("/users/{user_id}/subscribe")
     public String subscribe(
-            @PathVariable("userId") Long userId,
+            @PathVariable("user_id") Long userId,
             Principal principal
     ) {
         User currentUser = userService.findByUsername(principal.getName());
         userService.subscribeOnUser(currentUser, userId);
 
-        return "redirect:/my-page/" + userId;
+        return "redirect:/users/" + userId;
     }
 
     //отписаться
-    @GetMapping("unsubscribe/{userId}")
+    @GetMapping("/users/{user_id}/unsubscribe")
     public String unsubscribe(
-            @PathVariable("userId") Long userId,
+            @PathVariable("user_id") Long userId,
             Principal principal
     ) {
         User currentUser = userService.findByUsername(principal.getName());
         userService.unsubscribeOnUser(currentUser, userId);
 
-        return "redirect:/my-page/" + userId;
+        return "redirect:/users/" + userId;
     }
 
-    // показать список подписчиков и подписок
-    @GetMapping("{type}/{userId}/userList")
-    public String userList(
-            @PathVariable("type") String type,
-            @PathVariable("userId") Long userId,
+    // показать список подписок
+    @GetMapping("/users/{user_id}/subscriptions")
+    public String subscriptionsList(
+            @PathVariable("user_id") Long userId,
             Principal principal,
             Model model
     ) {
@@ -90,19 +111,46 @@ public class UserAccountController {
 
         model.addAttribute("user", user);
         model.addAttribute("currentUser", currentUser);
-        model.addAttribute("type", type);
-
-        if ("subscriptions".equals(type)) {
-            model.addAttribute("users", user.getSubscriptions());
-        } else {
-            model.addAttribute("users", user.getSubscribers());
-        }
+        model.addAttribute("users", user.getSubscriptions());
+        model.addAttribute("subTitle", "Мои подписки");
 
         return "subscriptions";
     }
 
+    // показать список подписчиков
+    @GetMapping("/users/{user_id}/subscribers")
+    public String subscribersList(
+            @PathVariable("user_id") Long userId,
+            Principal principal,
+            Model model
+    ) {
+        User user = userService.findById(userId);
+        User currentUser = userService.findByUsername(principal.getName());
 
-    @PostMapping("/download-avatar")
+        model.addAttribute("user", user);
+        model.addAttribute("currentUser", currentUser);
+        model.addAttribute("users", user.getSubscribers());
+        model.addAttribute("subTitle", "Мои подписчики");
+
+        return "subscriptions";
+    }
+
+    @PostMapping("/confirm/singer")
+    public String confirmInfoSinger(
+            @RequestParam("first_name") String firstName,
+            @RequestParam("last_name") String lastName,
+            @RequestParam("phone") String phone,
+            Principal principal
+    ) {
+        User currentUser = userService.findByUsername(principal.getName());
+
+        //добавить валидацию данных
+        infoSingerService.saveUserAsSinger(currentUser, firstName, lastName, phone);
+
+        return "redirect:/users/" + currentUser.getId();
+    }
+
+    @PostMapping("/download/avatar")
     public String uploadAvatar(
             @RequestParam("file") MultipartFile file,
             Principal principal,
@@ -119,6 +167,6 @@ public class UserAccountController {
             }
         }
 
-        return "redirect:/my-page/" + currentUser.getId();
+        return "redirect:/users/" + currentUser.getId(); // сообщить, что файл пустой аватар не загружен
     }
 }

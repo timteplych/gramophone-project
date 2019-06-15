@@ -1,6 +1,7 @@
 package com.geekbrains.gramophone.services;
 
 import com.geekbrains.gramophone.entities.SystemUser;
+import com.geekbrains.gramophone.entities.Track;
 import com.geekbrains.gramophone.entities.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -13,8 +14,8 @@ public interface UserService extends UserDetailsService {
     void save(User user);
     List<User> findAll();
     User findByEmail(String email, String password);
-
     void subscribeOnUser(User currentUser, Long subscribeUserId);
     void unsubscribeOnUser(User currentUser, Long subscribeUserId);
-
+    List<Track> allUserTracksFromPlaylists(Long userId);
+    boolean activateUser(String code);
 }

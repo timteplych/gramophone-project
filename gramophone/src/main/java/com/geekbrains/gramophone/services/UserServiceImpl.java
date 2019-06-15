@@ -1,9 +1,6 @@
 package com.geekbrains.gramophone.services;
 
-import com.geekbrains.gramophone.entities.Playlist;
-import com.geekbrains.gramophone.entities.Role;
-import com.geekbrains.gramophone.entities.SystemUser;
-import com.geekbrains.gramophone.entities.User;
+import com.geekbrains.gramophone.entities.*;
 import com.geekbrains.gramophone.repositories.RoleRepository;
 import com.geekbrains.gramophone.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,20 +11,23 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
+
     private UserRepository userRepository;
     private RoleRepository roleRepository;
     private BCryptPasswordEncoder passwordEncoder;
-
     private PlaylistService playlistService;
+    private MailSenderService mailSenderService;
 
     @Autowired
     public void setPlaylistService(PlaylistService playlistService) {
@@ -47,6 +47,11 @@ public class UserServiceImpl implements UserService {
     @Autowired
     public void setPasswordEncoder(BCryptPasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
+    }
+
+    @Autowired
+    public void setMailSenderService(MailSenderService mailSenderService) {
+        this.mailSenderService = mailSenderService;
     }
 
     @Override
@@ -69,21 +74,10 @@ public class UserServiceImpl implements UserService {
         User user = new User();
         user.setUsername(systemUser.getUsername());
         user.setPassword(passwordEncoder.encode(systemUser.getPassword()));
-        user.setFirstName("noFirstName");
-        user.setLastName("noLastName");
         user.setEmail(systemUser.getEmail());
-        user.setPhone("noPhone");
-        user.setSinger(false);
         user.setRoles(Collections.singletonList(roleRepository.findOneByName("ROLE_USER")));
         // todo check username is exists
-        createPlaylist(user);
         return userRepository.save(user);
-    }
-
-    private void createPlaylist(User user) {
-        Playlist playlist = new Playlist();
-        playlistService.savePlaylist(playlist);
-        user.setPlaylist(playlist);
     }
 
     @Override
@@ -136,4 +130,32 @@ public class UserServiceImpl implements UserService {
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
         return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
     }
+
+    @Override
+    public List<Track> allUserTracksFromPlaylists(Long userId) {
+        User user = userRepository.findById(userId).get();
+        List<Track> tracks = new ArrayList<>();
+        List<Playlist> playlistList = playlistService.findAllPlaylistsByUser(user);
+
+        for (Playlist p : playlistList) {
+            if (!p.getTracks().isEmpty()) {
+                tracks.addAll(p.getTracks());
+            }
+        }
+
+        return tracks;
+    }
+
+    @Override
+    public boolean activateUser(String code) {
+        User user = userRepository.findByActivationCode(code);
+        if(user == null){
+            return false;
+        }
+        user.setActivationCode(null);
+        userRepository.save(user);
+
+        return true;
+    }
+
 }

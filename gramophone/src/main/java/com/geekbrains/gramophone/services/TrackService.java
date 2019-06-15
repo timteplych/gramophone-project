@@ -22,5 +22,6 @@ public interface TrackService {
     void deleteById(Long id);
     Track updateTrack(Long id, Track trackFromForm, String fileName);
     Track buildTrack(Track trackFromForm, User user, String fileName);
-
+    List<Track> findAllSingerUserTracks(User user);
+    void deleteTrack(Long id);
 }
