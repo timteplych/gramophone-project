@@ -15,13 +15,19 @@ export class NavbarComponent implements OnInit {
 
   currentUser: User;
   users: User[] = [];
-  updatePage;
+  isLoggedIn;
+  isFilterOn = true;
 
 
   constructor(private authenticationService: AuthenticationService
   ) {
     this.currentUser = this.authenticationService.currentUserValue;
-    console.log(this.currentUser);
+    this.authenticationService.currentUser.subscribe(value => {
+      this.currentUser = value;
+      this.isLoggedIn = !!value;
+      this.isUser();
+      this.isAdmin();
+    });
   }
 
   ngOnInit() {
@@ -35,29 +41,45 @@ export class NavbarComponent implements OnInit {
       })
       .sidebar('setting', 'transition', 'overlay')
       .sidebar('toggle');
+  }
 
+  filterSidebar() {
+    if (this.isFilterOn) {
+      $('.filter.inner').removeClass('slide');
+      this.isFilterOn = false;
+    } else {
+      $('.filter.inner').addClass('slide');
+      this.isFilterOn = true;
+    }
   }
 
 
   isAdmin(): boolean {
     let variant = false;
-    this.currentUser.roles.forEach(obg => {
-      console.log(obg.name === RoleEnum.Admin);
-      if (obg.name === RoleEnum.Admin) {
-        variant = true;
-      }
-    });
+    if (this.currentUser) {
+      this.currentUser.roles.forEach(obg => {
+        if (obg.name === RoleEnum.Admin) {
+          variant = true;
+        }
+      });
+    }
     return variant;
   }
 
   isUser(): boolean {
     let variant = false;
-    this.currentUser.roles.forEach(obg => {
-      if (obg.name === RoleEnum.User) {
-        variant = true;
-      }
-    });
+    if (this.currentUser) {
+      this.currentUser.roles.forEach(obg => {
+        if (obg.name === RoleEnum.User) {
+          variant = true;
+        }
+      });
+    }
     return variant;
   }
 
+  logout() {
+    this.authenticationService.logout();
+
+  }
 }
