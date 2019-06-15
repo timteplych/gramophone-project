@@ -3,6 +3,8 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AuthenticationService} from '../_services';
 import {ActivatedRoute, Router} from '@angular/router';
 
+declare var $: any;
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -20,6 +22,9 @@ export class LoginComponent implements OnInit {
     private formBuilder: FormBuilder,
     private authService: AuthenticationService
   ) {
+    this.authService.currentUser.subscribe(value => {
+      this.loading = !!value;
+    });
   }
 
   ngOnInit() {
@@ -34,16 +39,27 @@ export class LoginComponent implements OnInit {
     return this.loginForm.controls;
   }
 
+  // onClick() {
+  //
+  //     .sidebar({
+  //       dimPage: false,
+  //       context: $('body')
+  //     })
+  //     .sidebar('setting', 'transition', 'overlay')
+  //     .sidebar('toggle');
+  // }
+
   onSubmited() {
     if (this.loginForm.invalid) {
       return;
     }
     this.authService.login(this.f.email.value, this.f.password.value).subscribe(data => {
-      this.loading = true;
+      // this.loading = true;
       },
       error => {
         this.loading = false;
       });
+    $('.login.sidebar').sidebar('toggle');
   }
 
 }
