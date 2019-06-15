@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Track} from '../_models';
+import {Genre, Track} from '../_models';
 import {TracksService} from '../_services';
 import {Subscription} from 'rxjs';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -13,7 +13,8 @@ export class MainPageComponent implements OnInit {
 
   trackListSub: Subscription;
   trackList: Track[];
-
+  genreList: Genre[];
+  genreListSub: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -28,6 +29,10 @@ export class MainPageComponent implements OnInit {
         this.trackList = res;
       },
       console.error);
+
+    this.genreListSub = this.tracksService.getGenreList().subscribe(res => {
+      this.genreList = res;
+    });
 
   }
 

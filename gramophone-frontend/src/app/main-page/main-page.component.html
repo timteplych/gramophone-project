@@ -1,8 +1,16 @@
-<div class="ui six columns center aligned grid list">
-
+<div class="ui six columns aligned grid list main-page"
+     [ngClass]="trackList != null && trackList.length >= 4 ? 'center' : 'left'"  style="transition: all .5s ease">
+  <div class="ui filter inner vertical slide right aligned menu">
+    <a class="item">
+      Все
+    </a>
+    <a class="item" *ngFor="let genre of genreList">
+      {{ genre.title }}
+    </a>
+  </div>
   <!--Список треков получаем от бэкэнд. Должна быть картинка имя трека и название группы.-->
   <a [routerLink]="['/tracks',track.id]" class="ui column item" *ngFor="let track of trackList">
-    <img src="../../assets/images/books.jpg" alt="">
+    <img src="../../assets/images/note.png" alt="">
     <div class="song text-left">{{track.title}}</div>
     <div class="singer text-left">{{track.wordAuthor}}</div>
   </a>
