@@ -18,11 +18,15 @@ import { TrackPageComponent } from './track-page/track-page.component';
 import { MusicPlayerComponent } from './music-player/music-player.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {MatProgressBarModule, MatRadioModule, MatSliderModule} from '@angular/material';
+import {
+  MatProgressBarModule,
+  MatRadioModule,
+  MatSliderModule,
+  MatFormFieldModule, MatInputModule
+} from '@angular/material';
 import { RegisterComponent } from './register/register.component';
 import { UserAccountComponent } from './user-account/user-account.component';
 import {ScrollToModule} from '@nicky-lenaers/ngx-scroll-to';
-import { FilterComponent } from './main-page/filter/filter.component';
 
 
 
@@ -36,8 +40,7 @@ import { FilterComponent } from './main-page/filter/filter.component';
     TrackPageComponent,
     MusicPlayerComponent,
     RegisterComponent,
-    UserAccountComponent,
-    FilterComponent
+    UserAccountComponent
   ],
   imports: [
     BrowserModule,
@@ -48,7 +51,7 @@ import { FilterComponent } from './main-page/filter/filter.component';
     BrowserAnimationsModule,
     MatProgressBarModule, MatRadioModule, MatSliderModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule, MatFormFieldModule, MatInputModule
   ],
   providers: [],
   bootstrap: [AppComponent],
