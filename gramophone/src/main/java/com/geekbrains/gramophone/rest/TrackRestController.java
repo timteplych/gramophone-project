@@ -1,6 +1,8 @@
 package com.geekbrains.gramophone.rest;
 
+import com.geekbrains.gramophone.entities.Genre;
 import com.geekbrains.gramophone.entities.Track;
+import com.geekbrains.gramophone.services.GenreService;
 import com.geekbrains.gramophone.services.TrackService;
 import com.geekbrains.gramophone.services.UploadService;
 import io.swagger.annotations.Api;
@@ -21,12 +23,20 @@ public class TrackRestController {
 
     private TrackService trackService;
 
+    private GenreService genreService;
+
     private UploadService uploadService;
 
     @Autowired
     public void setTrackService(TrackService trackService) {
         this.trackService = trackService;
     }
+
+    @Autowired
+    public void setGenreService(GenreService genreService) {
+        this.genreService = genreService;
+    }
+
 
     @Autowired
     public void setUploadService(UploadService uploadService) {
@@ -41,14 +51,14 @@ public class TrackRestController {
 
         if (byAutorOrByTrack != null) {
             trackList = trackList.stream()
-                        .filter(track -> isThere(track, byAutorOrByTrack))
-                        .collect(Collectors.toList());
+                    .filter(track -> isThere(track, byAutorOrByTrack))
+                    .collect(Collectors.toList());
         }
 
         if (genre != null) {
             trackList = trackList.stream()
-                        .filter(track -> genre.equals(track.getGenre().getTitle()))
-                        .collect(Collectors.toList());
+                    .filter(track -> genre.equals(track.getGenre().getTitle()))
+                    .collect(Collectors.toList());
         }
 
         return trackList;
@@ -61,11 +71,11 @@ public class TrackRestController {
 
     @DeleteMapping("/{id}")
     public void deleteTrackById(@PathVariable("id") Long id) {
-         trackService.deleteById(id);
+        trackService.deleteById(id);
     }
 
     @PostMapping("/")
-    public void setTrack(@RequestPart("track") Track track, @RequestPart(value = "file", required = false) MultipartFile file) throws IOException {
+    public void setTrack(@RequestPart("track") Track track, @RequestPart(value = "file", required = false) MultipartFile file) {
         Track updatedTrack = trackService.buildTrack(
                 track,
                 track.getPerformer(),
@@ -93,6 +103,12 @@ public class TrackRestController {
                 trackService.save(updatedTrack);
             }
         }
+    }
+
+
+    @GetMapping("/genres")
+    public Iterable<Genre> getAllGenre() {
+        return genreService.findAll();
     }
 
     private boolean isThere(Track track, String searchStr) {
