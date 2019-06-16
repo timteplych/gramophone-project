@@ -30,7 +30,7 @@
     </div>
     <ul class="list-group">
         <li class="list-group-item" th:each="user :${users}">
-            <a th:href="@{/singer-page/{userId}(userId = ${user.id})}" th:text="${user.username}"></a>
+            <a th:href="@{/users/{userId}(userId = ${user.id})}" th:text="${user.username}"></a>
         </li>
     </ul>
 </div>

@@ -76,8 +76,25 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(systemUser.getPassword()));
         user.setEmail(systemUser.getEmail());
         user.setRoles(Collections.singletonList(roleRepository.findOneByName("ROLE_USER")));
-        // todo check username is exists
-        return userRepository.save(user);
+        user.setActivationCode(UUID.randomUUID().toString());
+        User savedUser = userRepository.save(user);
+        playlistService.addPlaylist(user, "default");
+        sendActivationCode(user);
+
+        return savedUser;
+    }
+
+    private void sendActivationCode(User user) {
+        if (!StringUtils.isEmpty(user.getEmail())) {
+            String message = String.format(
+                    "Привет, %s! \n" +
+                            "Рады видеть вас на нашей музыкальной площадке Gramophone! \n" +
+                            "Пожалуйста перейдите по ссылке \nhttp://localhost:8189/gramophone/activate/%s\n" +
+                            "для подтверждения вашего почтового ящика.",
+                    user.getUsername(), user.getActivationCode()
+            );
+            mailSenderService.send(user.getEmail(), "Activation code", message);
+        }
     }
 
     @Override
@@ -158,4 +175,9 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
+    @Override
+    public void changeAvatar(User currentUser, String filename) {
+        currentUser.setAvatar("images/" + currentUser.getUsername() + "/" + filename);
+        userRepository.save(currentUser);
+    }
 }

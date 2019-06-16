@@ -11,6 +11,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -134,12 +136,25 @@ public class TrackServiceImpl implements TrackService {
 
     @Override
     public List<Track> findAllSingerUserTracks(User user) {
-        return null;
+        return trackRepository.findAllByPerformer(user);
     }
 
     @Override
+    @Transactional
     public void deleteTrack(Long id) {
+        Track track = trackRepository.findById(id).get();
+        deleteTrackFromServer(track.getLocationOnServer());
+        trackRepository.deleteTrackFromAllPlaylists(id);
+        trackRepository.deleteById(id);
+    }
 
+    private void deleteTrackFromServer(String locationOnServer) {
+        // НЕ ПОЛУЧАЕТСЯ УДАЛИТЬ
+//        try {
+//            Files.delete(Paths.get(locationOnServer));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     public Track updateTrack(Long id, Track trackFromForm, String fileName) {
@@ -162,7 +177,5 @@ public class TrackServiceImpl implements TrackService {
             }
         });
         return trackFromForm;
-
     }
-
 }
