@@ -19,7 +19,7 @@ import java.util.List;
 public class UserAccountController {
 
     private UserService userService;
-    private UploadService uploadTrackService;
+    private UploadService uploadService;
     private InfoSingerService infoSingerService;
     private TrackService trackService;
 
@@ -29,8 +29,8 @@ public class UserAccountController {
     }
 
     @Autowired
-    public void setUploadTrackService(UploadService uploadTrackService) {
-        this.uploadTrackService = uploadTrackService;
+    public void setUploadService(UploadService uploadService) {
+        this.uploadService = uploadService;
     }
 
     @Autowired
@@ -56,7 +56,8 @@ public class UserAccountController {
             @PathVariable("user_id") Long userId,
             Model model
     ) {
-        User user = userService.findById(userId).get();
+
+        User user = userService.findById(userId);
         User currentUser = userService.findByUsername(principal.getName());
         List<Track> allCurrentUserTracks = userService.allUserTracksFromPlaylists(currentUser.getId());
 
@@ -105,7 +106,7 @@ public class UserAccountController {
             Principal principal,
             Model model
     ) {
-        User user = userService.findById(userId).get();
+        User user = userService.findById(userId);
         User currentUser = userService.findByUsername(principal.getName());
 
         model.addAttribute("user", user);
@@ -123,7 +124,7 @@ public class UserAccountController {
             Principal principal,
             Model model
     ) {
-        User user = userService.findById(userId).get();
+        User user = userService.findById(userId);
         User currentUser = userService.findByUsername(principal.getName());
 
         model.addAttribute("user", user);
@@ -158,7 +159,7 @@ public class UserAccountController {
         User currentUser = userService.findByUsername(principal.getName());
 
         if (!file.isEmpty()) {
-            if (uploadTrackService.upload(principal.getName(), file, "images/")) {
+            if (uploadService.upload(principal.getName(), file, "images/")) {
                 currentUser.setAvatar("images/" + currentUser.getUsername() + "/" + file.getOriginalFilename());
                 userService.save(currentUser);
             } else {

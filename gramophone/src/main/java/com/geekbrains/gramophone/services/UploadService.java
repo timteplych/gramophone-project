@@ -1,7 +1,5 @@
 package com.geekbrains.gramophone.services;
 
-import com.geekbrains.gramophone.entities.Track;
-import com.geekbrains.gramophone.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,7 +11,6 @@ import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.Date;
 
 @Service
 public class UploadService {
@@ -49,12 +46,16 @@ public class UploadService {
         return true;
     }
 
-    public Track buildTrack(Track trackFromForm, User user, String fileName, Long genreId) {
-        trackFromForm.setPerformer(user);
-        trackFromForm.setCreateAt(new Date());
-        trackFromForm.setListeningAmount(0L);
-        trackFromForm.setGenre(genreService.findById(genreId));
-        trackFromForm.setLocationOnServer("uploads/" + user.getUsername() + "/" + fileName);
-        return trackFromForm;
+    public boolean remove(String username, MultipartFile file, String pathPartDestination) {
+        String path = pathPartDestination + username + "/" + file.getOriginalFilename();
+        File uploadFile = new File(path);
+
+        if (uploadFile.exists()) {
+            uploadFile.delete();
+            return true;
+        }
+        return false;
     }
+
+
 }

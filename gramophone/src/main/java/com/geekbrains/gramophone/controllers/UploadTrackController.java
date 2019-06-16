@@ -21,7 +21,8 @@ public class UploadTrackController {
 
     private TrackService trackService;
     private GenreService genreService;
-    private UploadService uploadTrackService;
+    private UploadService uploadService;
+
     private UserService userService;
 
     @Autowired
@@ -40,8 +41,8 @@ public class UploadTrackController {
     }
 
     @Autowired
-    public void setUploadTrackService(UploadService uploadTrackService) {
-        this.uploadTrackService = uploadTrackService;
+    public void setUploadService(UploadService uploadService) {
+        this.uploadService = uploadService;
     }
 
     @GetMapping("/upload/track")
@@ -65,16 +66,15 @@ public class UploadTrackController {
             Principal principal
     ) {
 
-        Track track = uploadTrackService.buildTrack(
+        Track track = trackService.buildTrack(
                 trackFromForm,
                 userService.findByUsername(principal.getName()),
-                file.getOriginalFilename(),
-                genreId
+                file.getOriginalFilename()
         );
 
         if (!file.isEmpty()) {
 
-            if (uploadTrackService.upload(principal.getName(), file, "uploads/")) {
+            if (uploadService.upload(principal.getName(), file, "uploads/")) {
                 trackService.save(track);
                 return "upload-success";
             } else {

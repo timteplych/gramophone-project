@@ -10,26 +10,23 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 @Service
 public class TrackServiceImpl implements TrackService {
 
     private TrackRepository trackRepository;
+
     private GenreRepository genreRepository;
 
     @Autowired
-    public void setTrackRepository(TrackRepository trackRepository) {
+    public void setTrackService(TrackRepository trackRepository) {
         this.trackRepository = trackRepository;
     }
+
 
     @Autowired
     public void setGenreRepository(GenreRepository genreRepository) {
@@ -53,7 +50,7 @@ public class TrackServiceImpl implements TrackService {
 
     @Override
     public List<Track> findByTitle(String title) {
-        if("".equals(title)){
+        if ("" .equals(title)) {
             return Collections.emptyList();
         }
         return trackRepository.findAllByTitleContaining(title);
@@ -61,7 +58,7 @@ public class TrackServiceImpl implements TrackService {
 
     @Override
     public List<Track> findByAuthor(String author) {
-        if("".equals(author)){
+        if ("" .equals(author)) {
             return Collections.emptyList();
         }
         return trackRepository.findAllByMusicAuthorContaining(author);
@@ -69,11 +66,11 @@ public class TrackServiceImpl implements TrackService {
 
     @Override
     public List<Track> findByGenreTitle(String title) {
-        if("".equals(title)){
+        if ("" .equals(title)) {
             return Collections.emptyList();
         }
         Genre genre = genreRepository.findByTitle(title);
-        if (genre == null){
+        if (genre == null) {
             return Collections.emptyList();
         }
 
@@ -83,7 +80,7 @@ public class TrackServiceImpl implements TrackService {
     @Override
     public List<Track> findByGenreId(Long id) {
         Genre genre = genreRepository.findById(id).orElse(null);
-        if(genre == null){
+        if (genre == null) {
             return Collections.emptyList();
         }
         return trackRepository.findAllByGenre(genre);
@@ -115,26 +112,57 @@ public class TrackServiceImpl implements TrackService {
     }
 
     @Override
-    public List<Track> findAllSingerUserTracks(User user) {
-        return trackRepository.findAllByPerformer(user);
-    }
-
-    @Override
-    @Transactional
-    public void deleteTrack(Long id) {
-        Track track = trackRepository.findById(id).get();
-        deleteTrackFromServer(track.getLocationOnServer());
-        trackRepository.deleteTrackFromAllPlaylists(id);
+    public void deleteById(Long id) {
         trackRepository.deleteById(id);
     }
 
-    private void deleteTrackFromServer(String locationOnServer) {
-        // НЕ РАБОТАЕТ
-//        try {
-//            Files.delete(Paths.get(locationOnServer));
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+    public Track buildTrack(Track trackFromForm, User user, String fileName) {
+        trackFromForm.setPerformer(user);
+        trackFromForm.setCreateAt(new Date());
+        trackFromForm.setListeningAmount(0L);
+        trackFromForm.setGenre(trackFromForm.getGenre());
+
+        trackFromForm.setLocationOnServer("uploads/" + user.getUsername() + "/" + fileName);
+        trackFromForm.setDownloadUrl(ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/uploads/")
+                .path(user.getUsername() + "/" + fileName)
+                .toUriString());
+
+
+        return trackFromForm;
+    }
+
+    @Override
+    public List<Track> findAllSingerUserTracks(User user) {
+        return null;
+    }
+
+    @Override
+    public void deleteTrack(Long id) {
+
+    }
+
+    public Track updateTrack(Long id, Track trackFromForm, String fileName) {
+        trackRepository.findById(id).ifPresent(updatedTrack -> {
+            updatedTrack.setListeningAmount(trackFromForm.getListeningAmount());
+            updatedTrack.setWordAuthor(trackFromForm.getWordAuthor());
+            updatedTrack.setMusicAuthor(trackFromForm.getWordAuthor());
+            updatedTrack.setTitle(trackFromForm.getTitle());
+            updatedTrack.setCover(trackFromForm.getCover());
+            updatedTrack.setGenre(trackFromForm.getGenre());
+
+            if (!updatedTrack.getLocationOnServer().equals(trackFromForm.getLocationOnServer())) {
+                trackFromForm.setLocationOnServer("uploads/" + trackFromForm.getPerformer().getUsername() + "/" + fileName);
+                updatedTrack.setLocationOnServer(trackFromForm.getLocationOnServer());
+                trackFromForm.setDownloadUrl(ServletUriComponentsBuilder.fromCurrentContextPath()
+                        .path("/uploads/")
+                        .path(trackFromForm.getPerformer().getUsername() + "/" + fileName)
+                        .toUriString());
+                updatedTrack.setDownloadUrl(trackFromForm.getDownloadUrl());
+            }
+        });
+        return trackFromForm;
+
     }
 
 }

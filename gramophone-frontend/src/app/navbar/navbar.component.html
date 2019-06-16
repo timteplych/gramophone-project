@@ -7,13 +7,16 @@
     <div class="results"></div>
   </div>
   <div class="right menu">
-    <a class="ui item" [hidden]="false">
+    <a class="ui item filter-link" (click)="filterSidebar()">
+      <fa-icon [icon]="['fas', 'sliders-h']"></fa-icon>
+    </a>
+    <a class="ui item" *ngIf="!isLoggedIn">
       <button class="btn round" (click)="onClick()">Войти</button>
     </a>
-    <a class="ui item" [hidden]="true">
+    <a class="ui item" *ngIf="isLoggedIn || isAdmin() || isUser()">
       <fa-icon [icon]="['fas', 'bell']"></fa-icon>
     </a>
-    <a class="ui item" [hidden]="true">
+    <a class="ui item" *ngIf="isLoggedIn || isAdmin() || isUser()" (click)="logout()">
       <fa-icon [icon]="['fas', 'user-circle']"></fa-icon>
     </a>
   </div>
