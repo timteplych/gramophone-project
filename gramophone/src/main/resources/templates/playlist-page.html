@@ -22,42 +22,44 @@
 
 <div class="container m-5">
 
-    <div>
+    <div class="container">
         <p th:text="${user.username}"></p>
     </div>
-
-    <div>
-        <ul class="list-group">
-            <li class="list-group-item active" th:text="${'Мой плейлист: ' + user.playlist.name}"></li>
-            <li class="list-group-item" th:each="track : ${userTracks}">
-                <p th:text="${track.title}"></p>
-                <p th:text="${track.performer.username}"></p>
-                <a th:href="@{/remove-track-to-playlist(trackId=${track.id})}"
-                   th:if="${isCurrentUser}">
-                    <i class="fa fa-minus" style="display: inline"></i>
-                </a>
-                <a th:href="@{/add-track-to-playlist(trackId=${track.id})}"
-                   th:if="${!isCurrentUser && !currentUser.playlist.tracks.contains(track)}">
-                    <i class="fa fa-plus" style="display: inline"></i>
-                </a>
-            </li>
-        </ul>
+    <br>
+    <div class="container" th:if="${isCurrentUser}">
+        <form th:action="@{/playlists/add}" method="post">
+            <input name="playlist_name">
+            <button type="submit">Добавить плейлист</button>
+        </form>
     </div>
-    <div class="m-3">
-    </div>
-    <div>
-        <ul class="list-group">
-            <li class="list-group-item active" th:text="${'Список всех треков на платформе'}"></li>
-            <li class="list-group-item" th:each="gramophoneTrack : ${allGramophoneTracks}">
-                <p th:text="${gramophoneTrack.title}"></p>
-                <p th:text="${gramophoneTrack.performer.username}"></p>
-                <a th:href="@{/add-track-to-playlist(trackId=${gramophoneTrack.id})}"
-                   th:if="${!currentUser.playlist.tracks.contains(gramophoneTrack)}">
-                    <i class="fa fa-plus" style="display: inline"></i>
-                </a>
-            </li>
+    <br>
+    <div class="container">
+        <div th:each="playlist : ${playlistList}">
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <p th:text="${'Плейлист: ' + playlist.name}"></p>
+                    <a th:href="@{/playlists/{playlist_id}/remove(playlist_id=${playlist.id})}"
+                       th:if="${isCurrentUser}">
+                        удалить плейлист
+                    </a>
+                </li>
 
-        </ul>
+                <li class="list-group-item" th:each="track : ${playlist.tracks}">
+                    <p th:text="${track.title}"></p>
+                    <p th:text="${track.performer.username}"></p>
+                    <a th:href="@{/playlists/{playlist_id}/remove/{track_id}(playlist_id=${playlist.id}, track_id=${track.id})}"
+                       th:if="${isCurrentUser}">
+                        удалить из плейлиста
+                    </a>
+                    <br>
+                    <a th:href="@{/playlists/add/{track_id}(track_id=${track.id})}"
+                       th:if="${!allCurrentUserTracks.contains(track)}">
+                        добавить в плейлист
+                    </a>
+                </li>
+            </ul>
+            <br>
+        </div>
     </div>
 </div>
 

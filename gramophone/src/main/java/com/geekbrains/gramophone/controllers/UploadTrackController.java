@@ -3,7 +3,7 @@ package com.geekbrains.gramophone.controllers;
 import com.geekbrains.gramophone.entities.Track;
 import com.geekbrains.gramophone.services.GenreService;
 import com.geekbrains.gramophone.services.TrackService;
-import com.geekbrains.gramophone.services.UploadTrackService;
+import com.geekbrains.gramophone.services.UploadService;
 import com.geekbrains.gramophone.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,7 +21,8 @@ public class UploadTrackController {
 
     private TrackService trackService;
     private GenreService genreService;
-    private UploadTrackService uploadTrackService;
+    private UploadService uploadService;
+
     private UserService userService;
 
     @Autowired
@@ -40,11 +41,11 @@ public class UploadTrackController {
     }
 
     @Autowired
-    public void setUploadTrackService(UploadTrackService uploadTrackService) {
-        this.uploadTrackService = uploadTrackService;
+    public void setUploadService(UploadService uploadService) {
+        this.uploadService = uploadService;
     }
 
-    @GetMapping("/upload-track")
+    @GetMapping("/upload/track")
     public String showUploadPage(
             Principal principal,
             Model model) {
@@ -57,7 +58,7 @@ public class UploadTrackController {
         return "upload-page";
     }
 
-    @PostMapping("/upload-process")
+    @PostMapping("/upload/track")
     public String uploadProcessing(
             @ModelAttribute("track") Track trackFromForm,
             @RequestParam("file") MultipartFile file,
@@ -65,22 +66,21 @@ public class UploadTrackController {
             Principal principal
     ) {
 
-        Track track = uploadTrackService.buildTrack(
+        Track track = trackService.buildTrack(
                 trackFromForm,
                 userService.findByUsername(principal.getName()),
-                file.getOriginalFilename(),
-                genreId
+                file.getOriginalFilename()
         );
 
         if (!file.isEmpty()) {
 
-            if (uploadTrackService.upload(principal.getName(), file, "uploads/")) {
+            if (uploadService.upload(principal.getName(), file, "uploads/")) {
                 trackService.save(track);
                 return "upload-success";
             } else {
                 return "upload-fail";
             }
         }
-        return "redirect:/";
+        return "redirect:/"; // сообщить, что файл пустой трек не загружен
     }
 }

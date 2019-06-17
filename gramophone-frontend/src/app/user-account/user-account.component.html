@@ -1,0 +1,70 @@
+<div class="ui two columns grid" style="padding-top: 50px;">
+  <div class="six wide column user-form">
+    <form class="ui form" [formGroup]="userForm">
+      <div class="ui huge header">Личные данные</div>
+      <div class="ui two columns grid info">
+        <div class="ui six wide column avatar">
+          <div class="img">
+            <img src="../../assets/images/ava.png" alt="">
+          </div>
+          <button class="photo-overlay">
+            <fa-icon [icon]="['fas', 'camera']"></fa-icon>
+          </button>
+        </div>
+        <div class="ui ten wide column list">
+          <div class="ui item subsc text-right">{{ f.username.value }}</div>
+          <div class="ui item text-right"><span>86 000</span> подписчиков</div>
+          <div class="ui item text-right"><span>1 000 000</span> прослушиваний</div>
+<!--          <div class="ui item text-right">Зрегистрирован: 12 января 2019 года</div>-->
+        </div>
+      </div>
+      <div class="field">
+        <label>Логин</label>
+        <input type="text" formControlName="username" name="username">
+      </div>
+      <div class="field">
+        <label>Имя</label>
+        <input type="text" formControlName="firstName" name="firstName">
+      </div>
+      <div class="field">
+        <label>Фамилия</label>
+        <input type="text" formControlName="lastName" name="LastName">
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input type="text" formControlName="email" name="email">
+      </div>
+      <div class="field">
+        <label>Телефон</label>
+        <input type="text" formControlName="phone" name="phone">
+      </div>
+      <div class="field">
+        <label>Старый пароль</label>
+        <input type="password" autocomplete="old-password" formControlName="oldPassword" name="password">
+      </div>
+      <div class="field">
+        <label>Новый пароль</label>
+        <input type="password" autocomplete="new-password" formControlName="password" name="password">
+      </div>
+      <div class="field">
+        <label>Подтвердить новый пароль</label>
+        <input type="password" autocomplete="current-password" formControlName="password2" name="password2">
+      </div>
+      <button class="ui button" type="submit">Сохранить</button>
+    </form>
+  </div>
+  <div class="ten wide column tabs-menu">
+    <div class="ui huge header">Панель управления аккаунтом</div>
+    <div class="ui top attached tabular menu">
+      <div class="active item" data-tab="first">Подписки</div>
+      <div class="item" data-tab="second">Плейлисты</div>
+      <div class="item" data-tab="third">О исполнителе</div>
+    </div>
+    <div class="ui bottom attached active tab segment content" data-tab="first" style="height: 800px">
+  </div>
+    <div class="ui bottom attached tab segment content" data-tab="second" style="height: 800px">
+    </div>
+    <div class="ui bottom attached tab segment content" data-tab="third" style="height: 800px">
+    </div>
+  </div>
+</div>

@@ -1,12 +1,11 @@
 package com.geekbrains.gramophone.entities;
 
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Entity
 @Table(name = "users")
@@ -23,23 +22,22 @@ public class User {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "first_name")
-    private String firstName;
-
-    @Column(name = "last_name")
-    private String lastName;
-
-    @Column(name = "singer")
-    private Boolean singer;
-
     @Column(name = "email")
     private String email;
 
-    @Column(name = "phone")
-    private String phone;
-
     @Column(name = "avatar")
     private String avatar;
+
+    @Column(name = "activation_code")
+    private String activationCode;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "info_singer_id")
+    private InfoSinger infoSinger;
+
+    @Column(name = "create_at")
+    @CreationTimestamp
+    private LocalDateTime createAt;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "users_roles",
@@ -47,9 +45,11 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Collection<Role> roles;
 
-    @OneToOne
-    @JoinColumn(name = "playlist_id")
-    private Playlist playlist;
+    @OneToMany
+    @JoinTable(name = "users_playlists",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "playlist_id"))
+    private List<Playlist> playlistList = new ArrayList<>();
 
     // подписчики
     @ManyToMany(fetch = FetchType.LAZY)
@@ -72,26 +72,17 @@ public class User {
     public User() {
     }
 
-    public User(String username, String password, String firstName, String lastName, Boolean isSinger, String email, String phone) {
+    public User(String username, String password, String email) {
         this.username = username;
         this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.singer = isSinger;
         this.email = email;
-        this.phone = phone;
     }
 
-    public User(String username, String password, String firstName, String lastName, Boolean isSinger, String email, String phone,
-                Collection<Role> roles) {
+    public User(String username, String password, String email, Collection<Role> roles) {
         this.username = username;
         this.password = password;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.singer = isSinger;
         this.email = email;
         this.roles = roles;
-        this.phone = phone;
     }
 
     @Override
@@ -105,5 +96,13 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                '}';
     }
 }

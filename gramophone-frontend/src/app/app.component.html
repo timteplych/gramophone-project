@@ -3,12 +3,14 @@
     <div class="three wide column">
       <app-sidebar></app-sidebar>
     </div>
-    <div class="thirteen wide column">
+    <div [@routeAnimations]="o && o.activatedRouteData
+      && o.activatedRouteData['animation']" class="thirteen wide column">
       <app-navbar></app-navbar>
-      <router-outlet></router-outlet>
+      <router-outlet #o="outlet" class="ui route attached pushable"></router-outlet>
     </div>
   </div>
 </div>
+<app-music-player></app-music-player>
 <app-login></app-login>
 
 

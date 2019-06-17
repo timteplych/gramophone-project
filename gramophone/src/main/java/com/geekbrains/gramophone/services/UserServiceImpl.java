@@ -1,9 +1,6 @@
 package com.geekbrains.gramophone.services;
 
-import com.geekbrains.gramophone.entities.Playlist;
-import com.geekbrains.gramophone.entities.Role;
-import com.geekbrains.gramophone.entities.SystemUser;
-import com.geekbrains.gramophone.entities.User;
+import com.geekbrains.gramophone.entities.*;
 import com.geekbrains.gramophone.repositories.RoleRepository;
 import com.geekbrains.gramophone.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,20 +11,23 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
+
     private UserRepository userRepository;
     private RoleRepository roleRepository;
     private BCryptPasswordEncoder passwordEncoder;
-
     private PlaylistService playlistService;
+    private MailSenderService mailSenderService;
 
     @Autowired
     public void setPlaylistService(PlaylistService playlistService) {
@@ -49,6 +49,11 @@ public class UserServiceImpl implements UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Autowired
+    public void setMailSenderService(MailSenderService mailSenderService) {
+        this.mailSenderService = mailSenderService;
+    }
+
     @Override
     @Transactional
     public User findByUsername(String username) {
@@ -56,36 +61,40 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findById(Long id) {
-        return userRepository.findById(id);
+    public User findById(Long id) {
+        return userRepository.findById(id).orElse(null);
     }
 
     @Override
     @Transactional
-    public boolean save(SystemUser systemUser) {
+    public User save(SystemUser systemUser) {
         if (userRepository.findOneByUsername(systemUser.getUsername()) != null) {
-            return false;
+            return null;
         }
         User user = new User();
         user.setUsername(systemUser.getUsername());
         user.setPassword(passwordEncoder.encode(systemUser.getPassword()));
-        //performer.setFirstName("noFirstName");
-        //performer.setLastName("noLastName");
         user.setEmail(systemUser.getEmail());
-        //performer.setPhone("noPhone");
-        user.setSinger(false);
-        user.setRoles(Arrays.asList(roleRepository.findOneByName("ROLE_USER")));
-        // todo check username is exists
-        createPlaylist(user);
-        userRepository.save(user);
+        user.setRoles(Collections.singletonList(roleRepository.findOneByName("ROLE_USER")));
+        user.setActivationCode(UUID.randomUUID().toString());
+        User savedUser = userRepository.save(user);
+        playlistService.addPlaylist(user, "default");
+        sendActivationCode(user);
 
-        return true;
+        return savedUser;
     }
 
-    private void createPlaylist(User user) {
-        Playlist playlist = new Playlist();
-        playlistService.savePlaylist(playlist);
-        user.setPlaylist(playlist);
+    private void sendActivationCode(User user) {
+        if (!StringUtils.isEmpty(user.getEmail())) {
+            String message = String.format(
+                    "Привет, %s! \n" +
+                            "Рады видеть вас на нашей музыкальной площадке Gramophone! \n" +
+                            "Пожалуйста перейдите по ссылке \nhttp://localhost:8189/gramophone/activate/%s\n" +
+                            "для подтверждения вашего почтового ящика.",
+                    user.getUsername(), user.getActivationCode()
+            );
+            mailSenderService.send(user.getEmail(), "Activation code", message);
+        }
     }
 
     @Override
@@ -99,15 +108,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User findByEmail(String email, String password) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        User user = userRepository.findByEmail(email);
+        if (user != null && encoder.matches(password, user.getPassword())) {
+            return user;
+        }
+        return null;
+    }
+
+    @Override
     public void subscribeOnUser(User currentUser, Long subscribeOnUserId) {
-        User user = userRepository.findById(subscribeOnUserId).get();
+        User user = userRepository.findById(subscribeOnUserId).orElse(null);
+        assert user != null;
         user.getSubscribers().add(currentUser);
         userRepository.save(user);
     }
 
     @Override
     public void unsubscribeOnUser(User currentUser, Long unsubscribeOnUserId) {
-        User user = userRepository.findById(unsubscribeOnUserId).get();
+        User user = userRepository.findById(unsubscribeOnUserId).orElse(null);
+        assert user != null;
         user.getSubscribers().remove(currentUser);
         userRepository.save(user);
     }
@@ -125,5 +146,38 @@ public class UserServiceImpl implements UserService {
 
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
         return roles.stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Track> allUserTracksFromPlaylists(Long userId) {
+        User user = userRepository.findById(userId).get();
+        List<Track> tracks = new ArrayList<>();
+        List<Playlist> playlistList = playlistService.findAllPlaylistsByUser(user);
+
+        for (Playlist p : playlistList) {
+            if (!p.getTracks().isEmpty()) {
+                tracks.addAll(p.getTracks());
+            }
+        }
+
+        return tracks;
+    }
+
+    @Override
+    public boolean activateUser(String code) {
+        User user = userRepository.findByActivationCode(code);
+        if(user == null){
+            return false;
+        }
+        user.setActivationCode(null);
+        userRepository.save(user);
+
+        return true;
+    }
+
+    @Override
+    public void changeAvatar(User currentUser, String filename) {
+        currentUser.setAvatar("images/" + currentUser.getUsername() + "/" + filename);
+        userRepository.save(currentUser);
     }
 }

@@ -1,5 +1,5 @@
 .sidebar {
-  background: #f9f9f9 !important;
+  background: #fafafa !important;
   border: none;
   width: 300px !important;
 
@@ -11,6 +11,16 @@
     font-weight: 500;
     padding: 20px 0 20px 45px;
 
+    &:focus {
+      outline: none;
+    }
+
+    &.like {
+      padding: 20px 0 20px 75px !important;
+      color: #c9c9ca;
+    }
+
+
     fa-icon {
       color: #cdcacd;
       font-size: 16px;
@@ -21,6 +31,8 @@
       height: 0 !important;
       background-color: transparent;
     }
+
+
 
     &:hover {
       background-color: #f2f3f8 !important;

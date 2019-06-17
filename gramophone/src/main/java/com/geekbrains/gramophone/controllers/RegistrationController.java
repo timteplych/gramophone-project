@@ -9,10 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -56,5 +53,19 @@ public class RegistrationController {
         }
         userService.save(systemUser);
         return "registration-confirmation";
+    }
+
+    // todo Сообщить пользователю, что на его почтовый ящик отправлено письмо для активации
+    @GetMapping("/activate/{code}")
+    public String activate(Model model, @PathVariable("code") String code) {
+        boolean isActivated = userService.activateUser(code);
+
+        if (isActivated) {
+            model.addAttribute("messageActivate", "Активация пользователя прошла успешно");
+        } else {
+            model.addAttribute("messageActivate", "Код активации не найден! Код выслан на указанный почтовый ящик.");
+        }
+
+        return "activate";
     }
 }

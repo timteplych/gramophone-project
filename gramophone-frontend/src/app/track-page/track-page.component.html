@@ -1,0 +1,114 @@
+<div class="ui two columns grid" style="padding-top: 50px" *ngIf="track">
+  <div class="nine wide column content">
+    <div class="ui two columns grid header">
+      <div class="column song-info">
+        <h3>{{ track.title }}</h3>
+        <span>{{ track.wordAuthor }}</span>
+      </div>
+      <div class="column text-right feed">
+        <a class="ui label">
+          <i class="play icon"></i>
+          21K
+        </a>
+        <a class="ui label">
+          <i class="thumbs up icon"></i>
+          1341
+        </a>
+        <a class="ui label">
+          <i class="thumbs down icon"></i>
+          578
+        </a>
+        <a class="ui label">
+          <i class="share icon"></i>
+        </a>
+      </div>
+    </div>
+    <div class="waves">
+      <img src="../../assets/images/waves.png" alt="" width="100%">
+    </div>
+    <div class="ui two columns grid description">
+      <div class="ten wide column text-left text">
+        <a href="">
+          <img src="../../assets/images/ava.png" alt="">
+          <div class="username">Вася Пупкин</div>
+          <div class="createAt"><span>Опубликовано:</span> 21 июля 2019 г.</div>
+        </a>
+      </div>
+
+      <div class="six wide column text-center subs">
+        <button class="ui red button">Подписаться 405 ТЫС.</button>
+      </div>
+    </div>
+    <div class="authors-info">
+      <div class="wordAuthor">
+        <span>Автор слов:</span> Вася Пупкин
+      </div>
+      <div class="singer">
+        <span>Исполнитель:</span> Вася Пупкин
+      </div>
+      <div class="musicAuthor">
+        <span>Автор музыки:</span> Вася Пупкин
+      </div>
+    </div>
+    <div class="comments">
+      <h3 class="comment-count">3 564 коментария</h3>
+      <form action="" [formGroup]="commentForm">
+        <img src="../../assets/images/ava.png">
+        <mat-form-field class="example-full-width" [floatLabel]="'never'">
+          <textarea matInput placeholder="Оставить комментарий" (focus)="myFocusVar = true" (blur)="myFocusVar = false"
+                    formControlName="comment" mat-autosize matTextareaAutosize></textarea>
+        </mat-form-field>
+        <button class="ui button right floated confirm-comment" [hidden]="!myFocusVar"
+                [ngStyle]="f.comment.value ? { backgroundColor: '#4285f4' } : { backgroundColor: '#767676' }">Оставить
+          комментарий
+        </button>
+        <button class="ui button right floated" [hidden]="!myFocusVar">Отменить</button>
+      </form>
+    </div>
+    <div class="comments-list">
+      <div class="comments-list-item">
+        <img src="../../assets/images/ava.png">
+        <div class="who">Username <span>2 часа назад</span></div>
+        <div class="comment-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus amet assumenda at
+          aut error est et fuga, labore mollitia nihil, nulla placeat provident qui quibusdam quisquam reiciendis
+          repellendus sint sunt suscipit unde! Asperiores consequuntur fugit incidunt ipsam laboriosam maxime molestiae
+          nemo odio placeat provident quaerat quam quas reiciendis, similique veniam!
+        </div>
+      </div>
+      <div class="comments-list-item">
+        <img src="../../assets/images/ava.png">
+        <div class="who">Username <span>2 часа назад</span></div>
+        <div class="comment-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus amet assumenda at
+          aut error est et fuga, labore mollitia nihil, nulla placeat provident qui quibusdam quisquam reiciendis
+          repellendus sint sunt suscipit unde! Asperiores consequuntur fugit incidunt ipsam laboriosam maxime molestiae
+          nemo odio placeat provident quaerat quam quas reiciendis, similique veniam!
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="seven wide column proposed">
+    <div class="album">
+      <img src="../../assets/images/example.png" alt="" width="100%">
+      <div class="prediction-tracks-list">
+        <div class="ui relaxed divided list">
+          <div class="item prediction-track">
+            <button>
+              <fa-icon [icon]="['fas', 'play-circle']"></fa-icon>
+              <fa-icon [icon]="['fas', 'pause-circle']" [hidden]="true"></fa-icon>
+            </button>
+            <div class="bandAndSong">Весело живем - Вася Пупкин <span class="time">3:15</span></div>
+          </div>
+          <div class="item prediction-track">
+            <button>
+              <fa-icon [icon]="['fas', 'play-circle']"></fa-icon>
+              <fa-icon [icon]="['fas', 'pause-circle']" [hidden]="true"></fa-icon>
+            </button>
+            <div class="bandAndSong">Весело живем - Вася Пупкин <span class="time">3:15</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

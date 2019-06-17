@@ -26,11 +26,11 @@
         <h2 th:text="${user.username}"></h2>
     </div>
     <div>
-        <h2 th:text="${type}"></h2>
+        <h2 th:text="${subTitle}"></h2>
     </div>
     <ul class="list-group">
         <li class="list-group-item" th:each="user :${users}">
-            <a th:href="@{/singer-page/{userId}(userId = ${user.id})}" th:text="${user.username}"></a>
+            <a th:href="@{/users/{userId}(userId = ${user.id})}" th:text="${user.username}"></a>
         </li>
     </ul>
 </div>

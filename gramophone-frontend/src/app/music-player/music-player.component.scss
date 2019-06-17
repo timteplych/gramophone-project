@@ -1,0 +1,141 @@
+.player {
+  background: #f7fbfd;
+  box-shadow: none !important;
+
+  .inner {
+    padding: 0 !important;
+
+    .track-info {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      img {
+        height: 70px !important;
+        margin: 10px;
+      }
+
+      div {
+        font-family: Avenir, 'Helvetica Neue', Arial, Helvetica, sans-serif;
+        font-size: 18px;
+        color: #919192;
+        padding-right: 20px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+
+        span {
+          font-size: 14px;
+          line-height: 21px;
+          width: 100%;
+          color: #d5d7dd;
+        }
+      }
+    }
+
+
+    button {
+      color: #a0a1a1;
+      background: transparent;
+      border: none;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      #play {
+        padding-left: 24px;
+        padding-right: 23px;
+        height: 70px;
+
+        border: 1px solid #d7d7dd !important;
+
+        fa-icon {
+          font-size: 22px;
+        }
+      }
+    }
+
+
+    .progressBar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+
+
+      .mat-slider.mat-primary.mat-slider-horizontal {
+        width: 85%;
+
+
+
+        //.mat-slider-wrapper .mat-slider-track-background {
+        //  background-color: green !important;
+        //}
+
+        //.mat-slider-wrapper {
+        //  .mat-slider-track-wrapper {
+        //    .mat-slider-track-background {
+        //      background-color: #e0e2e8 !important;
+        //    }
+        //  }
+        //}
+      }
+
+
+
+      .trackTime {
+        font-family: Avenir, 'Helvetica Neue', Arial, Helvetica, sans-serif;
+        font-size: 14px;
+        color: #a9a8aa;
+      }
+
+      //progress[value] {
+      //  appearance: none;
+      //  width: 85%;
+      //  background-color: transparent;
+      //  height: 3px !important;
+      //  border-radius: 15px;
+      //  margin-right: 20px;
+      //  position: relative;
+      //}
+      //
+      //progress[value]::-webkit-progress-bar {
+      //  height: 3px !important;
+      //  background-color: #e0e2e8;
+      //}
+      //
+      //progress[value]::-webkit-progress-value {
+      //  background-color: #eceffd;
+      //}
+    }
+
+    .volumeControls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      button {
+        color: #a1a1a1;
+
+        &:focus {
+          outline: none;
+          box-shadow: none;
+        }
+      }
+    }
+  }
+}
+
+
+.ui.bottom.sidebar {
+  height: 140px !important;
+  padding: 10px;
+}
+
+
+

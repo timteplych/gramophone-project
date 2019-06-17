@@ -6,13 +6,27 @@ import {AppComponent} from './app.component';
 import {SidebarComponent} from './sidebar/sidebar.component';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {library} from '@fortawesome/fontawesome-svg-core';
-import {fas} from "@fortawesome/free-solid-svg-icons";
+import {fas} from '@fortawesome/free-solid-svg-icons';
 import { far } from '@fortawesome/free-regular-svg-icons';
-import {faPlayCircle} from "@fortawesome/free-solid-svg-icons/faPlayCircle";
-import {fab} from "@fortawesome/free-brands-svg-icons";
+import {faPlayCircle} from '@fortawesome/free-solid-svg-icons/faPlayCircle';
+import {fab} from '@fortawesome/free-brands-svg-icons';
 import { NavbarComponent } from './navbar/navbar.component';
 import { LoginComponent } from './login/login.component';
 import { MainPageComponent } from './main-page/main-page.component';
+import {HttpClientModule} from '@angular/common/http';
+import { TrackPageComponent } from './track-page/track-page.component';
+import { MusicPlayerComponent } from './music-player/music-player.component';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {
+  MatProgressBarModule,
+  MatRadioModule,
+  MatSliderModule,
+  MatFormFieldModule, MatInputModule
+} from '@angular/material';
+import { RegisterComponent } from './register/register.component';
+import { UserAccountComponent } from './user-account/user-account.component';
+import {ScrollToModule} from '@nicky-lenaers/ngx-scroll-to';
 
 
 
@@ -22,12 +36,22 @@ import { MainPageComponent } from './main-page/main-page.component';
     SidebarComponent,
     NavbarComponent,
     LoginComponent,
-    MainPageComponent
+    MainPageComponent,
+    TrackPageComponent,
+    MusicPlayerComponent,
+    RegisterComponent,
+    UserAccountComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FontAwesomeModule
+    HttpClientModule,
+    ScrollToModule.forRoot(),
+    FontAwesomeModule,
+    BrowserAnimationsModule,
+    MatProgressBarModule, MatRadioModule, MatSliderModule,
+    FormsModule,
+    ReactiveFormsModule, MatFormFieldModule, MatInputModule
   ],
   providers: [],
   bootstrap: [AppComponent],
@@ -37,7 +61,7 @@ import { MainPageComponent } from './main-page/main-page.component';
 })
 export class AppModule {
   constructor() {
-    library.add(fas, far, fab, faPlayCircle)
+    library.add(fas, far, fab, faPlayCircle);
 
   }
 }
