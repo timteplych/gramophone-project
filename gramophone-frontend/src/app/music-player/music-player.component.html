@@ -1,10 +1,10 @@
-<div class="ui bottom  visible centered grid sidebar player">
+<div class="ui bottom centered grid sidebar player">
   <div class="ui row  inner">
     <div class="track-info four wide column">
       <img src="../../assets/images/example.png" alt="">
       <div>
-        Зелёные волны<br>
-        <span>Zivert</span>
+        {{trackTitle}}<br>
+        <span>{{trackPerformer}}</span>
       </div>
 
     </div>
@@ -21,12 +21,6 @@
       </button>
     </div>
     <div class="five wide column progressBar">
-<!--      <progress [max]="durationTime" value="" (click)="progress($event)">-->
-<!--      </progress>-->
-<!--      <mat-progress-bar-->
-<!--        class="example-margin"-->
-<!--        [value]="audio.currentTime / durationTime * 100">-->
-<!--      </mat-progress-bar>-->
       <mat-slider color="primary" min="0" [max]="durationTime" [(ngModel)]="trackTime" value="{{ trackTime }}" (change)="setTime()"></mat-slider>
       <div class="trackTime">{{ trackDuration | date: '- m:ss' }}</div>
     </div>

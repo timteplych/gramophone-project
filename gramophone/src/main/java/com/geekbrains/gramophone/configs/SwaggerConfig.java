@@ -3,6 +3,7 @@ package com.geekbrains.gramophone.configs;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
@@ -24,24 +25,25 @@ public class SwaggerConfig {
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
+                .apiInfo(apiInfo())
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.geekbrains.gramophone.rest"))
-                .build()
-                .apiInfo(apiInfo());
+                .paths(PathSelectors.any())
+                .build();
     }
 
     private ApiInfo apiInfo() {
 
-        Contact contact = new Contact("Имя", "", "почта");
+        Contact contact = new Contact("Admin", "https://ya.ru", "admin@mail.ru");
         Collection<VendorExtension> vendorExtensions = Collections.emptyList();
 
         return new ApiInfo(
-                "REST API project Gramophone",
-                "Some information",
+                "Gramophone API",
+                "It's a simple REST API for the GramoPhone project",
                 "1.0",
                 "com.geekbrains.gramophone.rest",
                 contact,
-                "no",
+                "MIT",
                 "",
                 vendorExtensions
                 );

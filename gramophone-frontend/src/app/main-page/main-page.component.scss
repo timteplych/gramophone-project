@@ -1,22 +1,25 @@
 .list {
   padding: 40px 135px 130px 25px !important;
+  transition: all .5s ease;
 
 
   .item {
     cursor: pointer;
-    padding: 25px 40px 0 35px;
+    padding: 25px 20px 0 20px;
+    transition: all .5s ease;
 
     .song {
        text-overflow: ellipsis;
        overflow: hidden;
-       width: 95%;
-       padding: 30px 0 10px;
+       width: 100%;
+       padding: 15px 0 10px;
        margin: 0 !important;
-       font-size: 18px;
+       font-size: 16px;
        font-family: Avenir, sans-serif;
        font-weight: 500;
        color: #848384;
        white-space: nowrap;
+      transition: all 1s ease !important;
      }
 
     .singer {
@@ -27,10 +30,58 @@
       font-weight: 500;
       color: #848384;
       white-space: nowrap;
+      transition: all 1s ease !important;
     }
     img {
-      width: 100%;
+      width: 125px;
       min-height: 120px;
     }
+  }
+}
+
+.inner {
+  height: 100%;
+  border: none;
+  padding-top: 10px;
+  padding-left: 30px;
+  background-color: transparent !important;
+  box-shadow: none;
+  transition: all .2s ease;
+  position: absolute;
+  z-index: 50;
+  right: 0;
+
+
+  &.ui.vertical.menu {
+    box-shadow: none;
+  }
+
+  .item {
+    border: none;
+    box-shadow: none;
+    font-family: Avenir, 'Helvetica Neue', Arial, Helvetica, sans-serif;
+    font-size: 14px !important;
+    color: #9a9da2;
+    padding: 17px 10px 17px 30px;
+    font-weight: 400;
+
+    &:hover {
+      background: #fbfcfe;
+      color: #9a9da2;
+    }
+
+    &:before {
+      height: 0;
+    }
+
+
+
+  }
+
+  &.slide {
+    transition: all .2s ease;
+    transform: translateX(100%);
+    //left: -100%;
+    overflow: hidden;
   }
 }

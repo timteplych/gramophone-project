@@ -10,6 +10,7 @@ import {map} from 'rxjs/operators';
 export class AuthenticationService {
   private currentUserSubject: BehaviorSubject<User>;
   public currentUser: Observable<User>;
+  public isUserLoggedIn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   constructor(private http: HttpClient) {
     this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
@@ -21,14 +22,16 @@ export class AuthenticationService {
   }
 
   login(email: string, password: string) {
-    return this.http.post<any>(API_URL + '/accounts/login', {email, password})
+    // @ts-ignore
+    return this.http.get<any>(`${API_URL}/users/login?email=${email}&password=${password}`)
       .pipe(map(user => {
-        console.log(user);
+        // console.log(user);
         // login successful if there's a jwt token in the response
-        if (user && user.token) {
+        if (user) {
           // store user details and jwt token in local storage to keep user logged in between page refreshes
           localStorage.setItem('currentUser', JSON.stringify(user));
           this.currentUserSubject.next(user);
+          this.isUserLoggedIn.next(true);
         }
         return user;
       }));
@@ -38,5 +41,6 @@ export class AuthenticationService {
     // remove user from local storage to log user out
     localStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
+    this.isUserLoggedIn.next(false);
   }
 }
