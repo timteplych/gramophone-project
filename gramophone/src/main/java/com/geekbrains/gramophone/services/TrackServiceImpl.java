@@ -96,8 +96,10 @@ public class TrackServiceImpl implements TrackService {
         Track track = findTrackById(id);
         if (trackRepository.trackLikedBy(track.getId(), user.getId()) > 0) //(track.getLikes().contains(user))
             removeLike(id, user);
-        else
+        else {
             setLike(id, user);
+            removeDislike(id, user);
+        }
     }
 
     public void setLike(Long id, User user) {
@@ -109,6 +111,28 @@ public class TrackServiceImpl implements TrackService {
     public void removeLike(Long id, User user) {
         Track track = findTrackById(id);
         track.getLikes().remove(user);
+        trackRepository.save(track);
+    }
+
+    public void changeDislike(Long id, User user) {
+        Track track = findTrackById(id);
+        if (trackRepository.trackDislikedBy(track.getId(), user.getId()) > 0) //(track.getLikes().contains(user))
+            removeDislike(id, user);
+        else {
+            setDislike(id, user);
+            removeLike(id, user);
+        }
+    }
+
+    public void setDislike(Long id, User user) {
+        Track track = findTrackById(id);
+        track.getDislikes().add(user);
+        trackRepository.save(track);
+    }
+
+    public void removeDislike(Long id, User user) {
+        Track track = findTrackById(id);
+        track.getDislikes().remove(user);
         trackRepository.save(track);
     }
 

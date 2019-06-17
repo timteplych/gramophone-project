@@ -17,5 +17,8 @@ public interface CommentService {
     void changeLike(Long id, User user);
     void setLike(Long id, User user);
     void removeLike(Long id, User user);
+    void changeDislike(Long id, User user);
+    void setDislike(Long id, User user);
+    void removeDislike(Long id, User user);
     void remove(Comment comment);
 }

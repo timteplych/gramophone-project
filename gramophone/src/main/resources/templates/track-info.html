@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 
-<html xmlns:th="http://www.thymeleaf.org">
-<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -25,6 +24,14 @@
 
 <main>
     <div class="container">
+
+        <div th:if="${error}" class="alert alert-warning alert-dismissible fade show" role="alert">
+            <span  th:text="${error}"></span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+
         <div class="track-info">
             <div class="row">
                 <div class="col-12"><h2 th:text="${track.title}"></h2></div>
@@ -41,14 +48,24 @@
             </div>
             <div class="row">
                 <span class="col-1">
-                    <form class="like-form" sec:authorize="isAuthenticated()" th:action="@{'/like-track/'+${track.id}}"
-                          method="get">
+                    <form class="like-form" sec:authorize="isAuthenticated()" th:action="@{'/track/'+${track.id}+'/like'}"
+                          method="post">
                         <button class="like-button" type="submit">
-                            <i th:class="${track.getLikes().contains(user)}? 'fas fa-heart liked': 'far fa-heart not-liked'"></i>
+                            <i th:class="${track.getLikes().contains(user)}? 'fas fa-thumbs-up liked': 'far fa-thumbs-up not-liked'"></i>
                         </button>
                     </form>
-                    <i th:unless="${user}" class="far fa-heart not-liked"></i>
+                    <i th:unless="${user}" class="far fa-thumbs-up not-liked"></i>
                     <span th:text="${track.getLikes().size()}"></span>
+                </span>
+                <span class="col-1">
+                    <form class="like-form" sec:authorize="isAuthenticated()" th:action="@{'/track/'+${track.id}+'/dislike'}"
+                          method="post">
+                        <button class="dislike-button" type="submit">
+                            <i th:class="${track.getDislikes().contains(user)}? 'fas fa-thumbs-down': 'far fa-thumbs-down'"></i>
+                        </button>
+                    </form>
+                    <i th:unless="${user}" class="far fa-thumbs-up"></i>
+                    <span th:text="${track.getDislikes().size()}"></span>
                 </span>
                 <span class="col-1">
                     <i class="far fa-comment"></i>
@@ -56,8 +73,7 @@
                 </span>
             </div>
 
-
-            <form class="row" sec:authorize="isAuthenticated()" th:if="${allowComment}" th:action="@{'/add-comment'}"
+            <form class="row" sec:authorize="isAuthenticated()" th:if="${allowComment}" th:action="@{'/comment/add'}"
                   th:object="${comment}" method="post">
                 <input hidden th:field="*{user}" th:value="${user}" th:name="user">
                 <input hidden th:field="*{track}" th:value="${track}" th:name="track">
@@ -72,9 +88,10 @@
             <div class="card mb-1 mt-1" th:each="comment : ${comments}" th:object="${comment}">
                 <div class="card-header">
                     <h5 class="d-inline" th:text="*{user.username}"></h5>
-                    <form class="like-form" sec:authorize="isAuthenticated()"
-                          th:action="@{'/remove-comment/'+${comment.id}}"
-                          method="get">
+                    <form th:if="${user.id == comment.user.id}" class="like-form" sec:authorize="isAuthenticated()"
+                          th:action="@{'/comment/'+${comment.id}+'/remove'}"
+                          method="post">
+                        <input hidden th:value="${track.id}" th:name="trackId">
                         <button type="submit" class="close" aria-label="Remove">
                             <div aria-hidden="true">&times;</div>
                         </button>
@@ -86,14 +103,25 @@
                 <div class="card-footer">
                     <span class="col-1">
                         <form class="like-form" sec:authorize="isAuthenticated()"
-                              th:action="@{'/like-comment/'+${comment.id}}"
-                              method="get">
+                              th:action="@{'/comment/'+${comment.id}+'/like'}"
+                              method="post">
                             <button class="like-button" type="submit">
-                                <i th:class="${comment.getLikes().contains(user)}? 'fas fa-heart liked': 'far fa-heart not-liked'"></i>
+                                <i th:class="${comment.getLikes().contains(user)}? 'fas fa-thumbs-up liked': 'far fa-thumbs-up not-liked'"></i>
                             </button>
                         </form>
-                        <i th:unless="${user}" class="far fa-heart not-liked"></i>
+                        <i th:unless="${user}" class="far fa-thumbs-up not-liked"></i>
                         <span th:text="${comment.getLikes().size()}"></span>
+                    </span>
+                    <span class="col-1">
+                        <form class="like-form" sec:authorize="isAuthenticated()"
+                              th:action="@{'/comment/'+${comment.id}+'/dislike'}"
+                              method="post">
+                            <button class="dislike-button" type="submit">
+                                <i th:class="${comment.getDislikes().contains(user)}? 'fas fa-thumbs-down': 'far fa-thumbs-down'"></i>
+                            </button>
+                        </form>
+                        <i th:unless="${user}" class="far fa-thumbs-up"></i>
+                        <span th:text="${comment.getDislikes().size()}"></span>
                     </span>
                 </div>
             </div>

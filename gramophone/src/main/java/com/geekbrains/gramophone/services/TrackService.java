@@ -20,6 +20,9 @@ public interface TrackService {
     void changeLike(Long id, User user);
     void setLike(Long id, User user);
     void removeLike(Long id, User user);
+    void changeDislike(Long id, User user);
+    void setDislike(Long id, User user);
+    void removeDislike(Long id, User user);
     List<Track> findAllSingerUserTracks(User user);
     void deleteTrack(Long id);
 }
