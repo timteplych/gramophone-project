@@ -19,6 +19,12 @@ public interface TrackRepository extends PagingAndSortingRepository<Track, Long>
     List<Track> findAllByGenre(Genre genre);
     List<Track> findAllByPerformer(User user);
 
+    @Query(value = "select count(*) from tracks_likes tl where track_id = ?1 and user_id = ?2", nativeQuery = true)
+    int trackLikedBy(Long trackId, Long userId);
+
+    @Query(value = "select count(*) from tracks_dislikes tl where track_id = ?1 and user_id = ?2", nativeQuery = true)
+    int trackDislikedBy(Long trackId, Long userId);
+
     @Modifying
     @Query(value = "DELETE FROM playlist_tracks WHERE track_id = :id", nativeQuery = true)
     void deleteTrackFromAllPlaylists(@Param("id") Long id);
