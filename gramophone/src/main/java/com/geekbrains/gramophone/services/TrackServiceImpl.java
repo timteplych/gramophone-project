@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.transaction.Transactional;
+import java.io.File;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -52,7 +53,7 @@ public class TrackServiceImpl implements TrackService {
 
     @Override
     public List<Track> findByTitle(String title) {
-        if ("" .equals(title)) {
+        if ("".equals(title)) {
             return Collections.emptyList();
         }
         return trackRepository.findAllByTitleContaining(title);
@@ -60,7 +61,7 @@ public class TrackServiceImpl implements TrackService {
 
     @Override
     public List<Track> findByAuthor(String author) {
-        if ("" .equals(author)) {
+        if ("".equals(author)) {
             return Collections.emptyList();
         }
         return trackRepository.findAllByMusicAuthorContaining(author);
@@ -68,7 +69,7 @@ public class TrackServiceImpl implements TrackService {
 
     @Override
     public List<Track> findByGenreTitle(String title) {
-        if ("" .equals(title)) {
+        if ("".equals(title)) {
             return Collections.emptyList();
         }
         Genre genre = genreRepository.findByTitle(title);
@@ -149,12 +150,10 @@ public class TrackServiceImpl implements TrackService {
     }
 
     private void deleteTrackFromServer(String locationOnServer) {
-        // НЕ ПОЛУЧАЕТСЯ УДАЛИТЬ
-//        try {
-//            Files.delete(Paths.get(locationOnServer));
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        // НЕ ПОЛУЧАЕТСЯ, Файл не удаляется
+        File file = new File(locationOnServer);
+        if (file.exists())
+            file.delete();
     }
 
     public Track updateTrack(Long id, Track trackFromForm, String fileName) {
