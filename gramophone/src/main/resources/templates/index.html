@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 
-<html xmlns:th="http://www.thymeleaf.org">
-<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
@@ -52,7 +51,7 @@
         <tr th:each="track : ${tracks}">
             <td th:text="${track.id}"/>
             <td>
-                <a th:text="${track.title}" th:href="@{'/track-info/' + ${track.id}}"/>
+                <a th:text="${track.title}" th:href="@{'/track/' + ${track.id} + '/info'}"/>
             </td>
             <td th:text="${track.wordAuthor}"/>
             <td th:text="${track.musicAuthor}"/>

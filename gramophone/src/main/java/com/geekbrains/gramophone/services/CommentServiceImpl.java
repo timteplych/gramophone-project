@@ -50,10 +50,12 @@ public class CommentServiceImpl implements CommentService {
 
     public void changeLike(Long id, User user) {
         Comment comment = findCommentById(id);
-        if (comment.getLikes().contains(user))
+        if (commentRepository.commentLikedBy(comment.getId(), user.getId()) > 0)
             removeLike(id, user);
-        else
+        else {
             setLike(id, user);
+            removeDislike(id, user);
+        }
     }
 
     public Comment findCommentById(Long id) {
@@ -69,6 +71,29 @@ public class CommentServiceImpl implements CommentService {
     public void removeLike(Long id, User user) {
         Comment comment = findCommentById(id);
         comment.getLikes().remove(user);
+        commentRepository.save(comment);
+    }
+
+    public void changeDislike(Long id, User user) {
+        Comment comment = findCommentById(id);
+        if (commentRepository.commentDislikedBy(comment.getId(), user.getId()) > 0)
+            removeDislike(id, user);
+        else {
+            setDislike(id, user);
+            removeLike(id, user);
+        }
+
+    }
+
+    public void setDislike(Long id, User user) {
+        Comment comment = findCommentById(id);
+        comment.getDislikes().add(user);
+        commentRepository.save(comment);
+    }
+
+    public void removeDislike(Long id, User user) {
+        Comment comment = findCommentById(id);
+        comment.getDislikes().remove(user);
         commentRepository.save(comment);
     }
 
