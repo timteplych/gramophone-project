@@ -88,10 +88,10 @@ export class MusicUploadDialogComponent implements OnInit {
   }
 
 
-  public dropped(file: NgxFileDropEntry) {
-    this.file = file[0];
-    if (file[0].fileEntry.isFile) {
-      const fileEntry = file[0].fileEntry as FileSystemFileEntry;
+  public dropped(files: NgxFileDropEntry[]) {
+    this.file = files[0];
+    if (files[0].fileEntry.isFile) {
+      const fileEntry = files[0].fileEntry as FileSystemFileEntry;
       fileEntry.file((innerFile: File) => {
         // console.log(file[0].relativePath, innerFile);
         if (innerFile.type === 'audio/mp3') {
