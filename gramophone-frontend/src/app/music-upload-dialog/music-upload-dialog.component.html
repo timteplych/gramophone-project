@@ -43,7 +43,7 @@
   </div>
   <div class="field">
     <label>Жанр</label>
-    <select class="ui fluid dropdown" formControlName="genre">
+    <select class="ui fluid dropdown" formControlName="genreId">
       <option value="" selected>Выберите жанр...</option>
       <option *ngFor="let genre of genreList" [value]="genre.id">
         {{genre.title}}
