@@ -31,14 +31,11 @@ import java.util.stream.Collectors;
 @Api(tags = "Tracks")
 public class TrackRestController {
 
-    @Autowired
     private UserService userService;
 
     private TrackService trackService;
 
     private GenreService genreService;
-
-    private UserService userService;
 
     private UploadService uploadService;
 
