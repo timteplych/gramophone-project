@@ -7,18 +7,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CommentService {
     boolean save(Comment comment);
     Page<Comment> getCommentsWithPagingAndFiltering(int pageNumber, int pageSize); //TODO добавить критерии отбора
     List<Comment> findByUserAndTrack(User user, Track track);
     List<Comment> findByTrack(Track track);
-    Comment findCommentById(Long id);
-    void changeLike(Long id, User user);
-    void setLike(Long id, User user);
-    void removeLike(Long id, User user);
-    void changeDislike(Long id, User user);
-    void setDislike(Long id, User user);
-    void removeDislike(Long id, User user);
+    Comment findById(Long id);
+    void changeLike(Long id, Long userId);
+    void changeDislike(Long id, Long userId);
     void remove(Comment comment);
 }

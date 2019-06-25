@@ -129,26 +129,12 @@ public class TrackRestController {
     @PutMapping("/{id}/like")
     public void likeTrack(@PathVariable(value = "id") Long id,
                           @RequestParam(value = "userId") Long userId) {
-        User user = userService.findById(userId);
-        if (user == null) {
-            throw new NotFoundException("User", userId);
-        }
-        if (trackService.findTrackById(id) == null) {
-            throw new NotFoundException("Track", id);
-        }
-        trackService.changeLike(id, user);
+        trackService.changeLike(id, userId);
     }
 
     @PutMapping("/{id}/dislike")
     public void dislikeTrack(@PathVariable(value = "id") Long id,
                              @RequestParam(value = "userId") Long userId) {
-        User user = userService.findById(userId);
-        if (user == null) {
-            throw new NotFoundException("User", userId);
-        }
-        if (trackService.findTrackById(id) == null) {
-            throw new NotFoundException("Track", id);
-        }
-        trackService.changeDislike(id, user);
+        trackService.changeDislike(id, userId);
     }
 }
