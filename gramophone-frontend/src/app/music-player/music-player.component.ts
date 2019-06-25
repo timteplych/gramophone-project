@@ -28,6 +28,7 @@ export class MusicPlayerComponent implements OnInit {
   trackPerformer;
   currentTrack: Track;
   currentTrackSub: Subscription;
+  isClosed = false;
 
   constructor(
     private trackService: TracksService
@@ -37,6 +38,7 @@ export class MusicPlayerComponent implements OnInit {
   ngOnInit() {
     this.audio = new Audio();
     this.currentTrackSub = this.trackService.currentTrack.subscribe(res => {
+      this.isClosed = false;
       this.currentTrack = res;
       this.audio.src = this.currentTrack.downloadUrl;
       this.trackPerformer = this.currentTrack.wordAuthor;

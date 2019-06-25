@@ -1,12 +1,13 @@
 .ui.text.menu {
-  padding:30px 150px 20px 350px;
-  background: #fff;
+  padding:30px 150px 30px 350px;
+  background: rgba(255,255,255,.9);
+  backdrop-filter: blur(10px);
 
   button.round {
     border-radius: 20px;
     width: 90px;
     color: #d1d0d3;
-    font-family: Avenir, sans-serif;
+    font-family: Avenir, Avenir Next, sans-serif;
     border: 1px solid #d1d0d3;
     cursor: pointer;
     transition: all .5s ease-in-out;

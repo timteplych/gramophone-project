@@ -1,4 +1,4 @@
-<div class="ui bottom visible centered grid sidebar player">
+<div class="ui bottom centered grid sidebar player" [ngClass]="isClosed ? '' : 'visible'">
   <div class="ui row inner">
     <div class="track-info four wide column">
       <img src="../../assets/images/example.png" alt="">
@@ -32,7 +32,7 @@
       </button>
       <mat-slider min="0" max="1" step="0.001" [(ngModel)]="volumeValue" (change)="volumeChange()"></mat-slider>
     </div>
-    <button class="close">
+    <button class="close" (click)="isClosed=true">
       <fa-icon [icon]="['fas', 'times']"></fa-icon>
     </button>
   </div>

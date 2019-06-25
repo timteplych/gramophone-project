@@ -53,19 +53,20 @@
   .header {
     padding-left: 20px;
 
+
     .song-info {
       padding-top: 0 !important;
 
       h3 {
-        font-family: Avenir, sans-serif;
-        font-weight: 600;
+        font-family: Avenir, Avenir Next, sans-serif;
+        font-weight: 500;
         font-size: 24px;
         color: #767676;
       }
 
       span {
-        font-family: Avenir, sans-serif;
-        font-weight: 400;
+        font-family: Avenir, Avenir Next, sans-serif;
+        font-weight: 300;
         font-size: 16px;
         color: #767676;
       }
@@ -76,7 +77,7 @@
 
       .label {
         background: transparent !important;
-        font-family: Avenir, sans-serif;
+        font-family: Avenir, Avenir Next, sans-serif;
         font-weight: 500;
         color: #767676;
       }
@@ -111,13 +112,13 @@
 
         .username {
           font-size: 16px;
-          font-family: Avenir, sans-serif;
+          font-family: Avenir, Avenir Next, sans-serif;
           padding: 5px 0;
           font-weight: 600;
         }
 
         .createAt {
-          font-family: Avenir, sans-serif;
+          font-family: Avenir, Avenir Next, sans-serif;
           color: #767676;
           font-weight: 400;
           font-size: 14px;
@@ -130,7 +131,7 @@
 
     .subs {
       button {
-        font-family: Avenir, sans-serif;
+        font-family: Avenir, Avenir Next, sans-serif;
         font-size: 15px;
         height: 42px;
         padding-top: 13px;
@@ -147,7 +148,7 @@
 
     div {
       padding: 5px 0;
-      font-family: Avenir, sans-serif;
+      font-family: Avenir, Avenir Next, sans-serif;
       font-size: 14px;
       color: #767676;
       font-weight: 600;
@@ -163,7 +164,7 @@
     padding: 20px 0 20px 30px;
 
     h3 {
-      font-family: Avenir, sans-serif;
+      font-family: Avenir, Avenir Next, sans-serif;
       font-weight: 500;
       color: #767676;
     }
@@ -194,7 +195,7 @@
 
     button {
       background: transparent;
-      font-family: Avenir, sans-serif;
+      font-family: Avenir, Avenir Next, sans-serif;
       font-size: 14px;
       text-transform: uppercase;
       padding-top: 15px;
@@ -223,7 +224,7 @@
       }
 
       .who {
-        font-family: Avenir, sans-serif;
+        font-family: Avenir, Avenir Next, sans-serif;
         font-size: 16px;
         font-weight: 600;
         width: 80%;
@@ -243,7 +244,7 @@
       .comment-text {
         padding-left: 50px;
         padding-right: 10px;
-        font-family: Avenir, sans-serif;
+        font-family: Avenir, Avenir Next, sans-serif;
         font-size: 14px;
       }
     }
@@ -271,7 +272,7 @@
 
       div.bandAndSong {
         padding-top: 5px;
-        font-family: Avenir, sans-serif;
+        font-family: Avenir, Avenir Next, sans-serif;
         font-size: 14px;
         color: #a7a6a9;
         padding-left: 30px;
