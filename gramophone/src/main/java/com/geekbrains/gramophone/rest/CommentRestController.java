@@ -37,7 +37,7 @@ public class CommentRestController {
         if (commentService.findCommentById(commentId) == null) {
             throw new NotFoundException("Comment", commentId);
         }
-        commentService.changeLike(commentId, user); 
+        commentService.changeLike(commentId, user);
     }
 
     @PutMapping("/{id}/comments/{commentId}/dislike")
