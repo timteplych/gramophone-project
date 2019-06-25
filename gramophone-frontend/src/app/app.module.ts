@@ -22,7 +22,7 @@ import {
   MatProgressBarModule,
   MatRadioModule,
   MatSliderModule,
-  MatFormFieldModule, MatInputModule, MatDialogModule, MAT_DATE_LOCALE, DateAdapter, MAT_DATE_FORMATS
+  MatFormFieldModule, MatInputModule, MatDialogModule, MAT_DATE_LOCALE, DateAdapter, MAT_DATE_FORMATS, MatTabsModule
 } from '@angular/material';
 import {MomentDateAdapter} from '@angular/material-moment-adapter';
 import {RegisterComponent} from './register/register.component';
@@ -35,7 +35,7 @@ import {NgxFileDropModule} from 'ngx-file-drop';
 import {DATE_FORMAT} from '../environments/environment';
 import { registerLocaleData } from '@angular/common';
 import localeRu from '@angular/common/locales/ru';
-import {ListeningAmountPipe} from "./_utils/listeningAmount.pipe";
+import {ListeningAmountPipe} from './_utils/listeningAmount.pipe';
 
 registerLocaleData(localeRu);
 
@@ -60,6 +60,7 @@ registerLocaleData(localeRu);
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
+    MatTabsModule,
     NgxFileDropModule,
     ScrollToModule.forRoot(),
     FontAwesomeModule,
