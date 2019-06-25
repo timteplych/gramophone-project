@@ -18,4 +18,5 @@ public interface UserService extends UserDetailsService {
     void unsubscribeOnUser(User currentUser, Long subscribeUserId);
     List<Track> allUserTracksFromPlaylists(Long userId);
     boolean activateUser(String code);
+    void changeAvatar(User currentUser, String originalFilename);
 }

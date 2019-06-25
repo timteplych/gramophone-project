@@ -35,6 +35,11 @@ h1 {
     background: none;
 }
 
+.dislike-button {
+    border: none;
+    background: none;
+}
+
 .like-form {
     display: inline;
 }

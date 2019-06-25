@@ -87,7 +87,7 @@
 </div>
 <br>
 <div class="container" th:if="${isCurrentUser}">
-    <form th:action="@{download/avatar}" method="post" enctype="multipart/form-data">
+    <form th:action="@{/download/avatar}" method="post" enctype="multipart/form-data">
         <input type="file" style="width: 100%;" class="btn btn-outline-primary" id="file"
                name="file"
                accept="image/*">

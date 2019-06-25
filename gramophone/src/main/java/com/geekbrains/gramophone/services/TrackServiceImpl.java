@@ -13,6 +13,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.transaction.Transactional;
+
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -104,10 +106,12 @@ public class TrackServiceImpl implements TrackService {
 
     public void changeLike(Long id, User user) {
         Track track = findTrackById(id);
-        if (track.getLikes().contains(user))
+        if (trackRepository.trackLikedBy(track.getId(), user.getId()) > 0) //(track.getLikes().contains(user))
             removeLike(id, user);
-        else
+        else {
             setLike(id, user);
+            removeDislike(id, user);
+        }
     }
 
     public void setLike(Long id, User user) {
@@ -119,6 +123,28 @@ public class TrackServiceImpl implements TrackService {
     public void removeLike(Long id, User user) {
         Track track = findTrackById(id);
         track.getLikes().remove(user);
+        trackRepository.save(track);
+    }
+
+    public void changeDislike(Long id, User user) {
+        Track track = findTrackById(id);
+        if (trackRepository.trackDislikedBy(track.getId(), user.getId()) > 0) //(track.getLikes().contains(user))
+            removeDislike(id, user);
+        else {
+            setDislike(id, user);
+            removeLike(id, user);
+        }
+    }
+
+    public void setDislike(Long id, User user) {
+        Track track = findTrackById(id);
+        track.getDislikes().add(user);
+        trackRepository.save(track);
+    }
+
+    public void removeDislike(Long id, User user) {
+        Track track = findTrackById(id);
+        track.getDislikes().remove(user);
         trackRepository.save(track);
     }
 
@@ -157,12 +183,25 @@ public class TrackServiceImpl implements TrackService {
 
     @Override
     public List<Track> findAllSingerUserTracks(User user) {
-        return null;
+        return trackRepository.findAllByPerformer(user);
     }
 
     @Override
+    @Transactional
     public void deleteTrack(Long id) {
+        Track track = trackRepository.findById(id).get();
+        deleteTrackFromServer(track.getLocationOnServer());
+        trackRepository.deleteTrackFromAllPlaylists(id);
+        trackRepository.deleteById(id);
+    }
 
+    private void deleteTrackFromServer(String locationOnServer) {
+        // НЕ ПОЛУЧАЕТСЯ УДАЛИТЬ
+//        try {
+//            Files.delete(Paths.get(locationOnServer));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     public Track updateTrack(Long id, Track trackFromForm, String fileName) {
@@ -185,13 +224,14 @@ public class TrackServiceImpl implements TrackService {
             }
         });
         return trackFromForm;
-
     }
+
 
     @Override
     public boolean isThere(Track track, String searchStr) {
         return searchStr.equals(track.getTitle()) || searchStr.equals(track.getMusicAuthor()) ||
                 searchStr.equals(track.getWordAuthor()) || searchStr.equals(track.getPerformer().getUsername());
     }
+
 
 }

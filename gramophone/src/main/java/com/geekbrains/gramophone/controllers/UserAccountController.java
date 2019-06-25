@@ -160,13 +160,14 @@ public class UserAccountController {
 
         if (!file.isEmpty()) {
             if (uploadService.upload(principal.getName(), file, "images/")) {
-                currentUser.setAvatar("images/" + currentUser.getUsername() + "/" + file.getOriginalFilename());
-                userService.save(currentUser);
+                userService.changeAvatar(currentUser, file.getOriginalFilename());
             } else {
                 model.addAttribute("imgDownloadError", "Произошел сбой во время загрузки фото");
             }
         }
 
-        return "redirect:/users/" + currentUser.getId(); // сообщить, что файл пустой аватар не загружен
+        model.addAttribute("imgDownloadError", "Файл с изображением не был загружен");
+
+        return "redirect:/users/" + currentUser.getId();
     }
 }

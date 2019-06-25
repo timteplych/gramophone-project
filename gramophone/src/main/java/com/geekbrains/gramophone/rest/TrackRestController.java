@@ -2,6 +2,8 @@ package com.geekbrains.gramophone.rest;
 
 import com.geekbrains.gramophone.entities.Genre;
 import com.geekbrains.gramophone.entities.Track;
+import com.geekbrains.gramophone.entities.User;
+import com.geekbrains.gramophone.exceptions.NotFoundException;
 import com.geekbrains.gramophone.services.GenreService;
 import com.geekbrains.gramophone.services.TrackService;
 import com.geekbrains.gramophone.services.UploadService;
@@ -12,8 +14,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.security.Principal;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 
@@ -22,6 +30,9 @@ import java.util.stream.Collectors;
 @RequestMapping("api/v1/tracks")
 @Api(tags = "Tracks")
 public class TrackRestController {
+
+    @Autowired
+    private UserService userService;
 
     private TrackService trackService;
 
@@ -140,4 +151,35 @@ public class TrackRestController {
         return genreService.findAll();
     }
 
+
+    private boolean isThere(Track track, String searchStr) {
+        return searchStr.equals(track.getTitle()) || searchStr.equals(track.getMusicAuthor()) ||
+                searchStr.equals(track.getWordAuthor()) || searchStr.equals(track.getPerformer().getUsername());
+    }
+
+    @PutMapping("/{id}/like")
+    public void likeTrack(@PathVariable(value = "id") Long id,
+                          @RequestParam(value = "userId") Long userId) {
+        User user = userService.findById(userId);
+        if (user == null) {
+            throw new NotFoundException("User", userId);
+        }
+        if (trackService.findTrackById(id) == null) {
+            throw new NotFoundException("Track", id);
+        }
+        trackService.changeLike(id, user);
+    }
+
+    @PutMapping("/{id}/dislike")
+    public void dislikeTrack(@PathVariable(value = "id") Long id,
+                             @RequestParam(value = "userId") Long userId) {
+        User user = userService.findById(userId);
+        if (user == null) {
+            throw new NotFoundException("User", userId);
+        }
+        if (trackService.findTrackById(id) == null) {
+            throw new NotFoundException("Track", id);
+        }
+        trackService.changeDislike(id, user);
+    }
 }

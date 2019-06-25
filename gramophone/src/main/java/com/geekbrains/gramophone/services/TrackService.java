@@ -19,6 +19,9 @@ public interface TrackService {
     void changeLike(Long id, User user);
     void setLike(Long id, User user);
     void removeLike(Long id, User user);
+    void changeDislike(Long id, User user);
+    void setDislike(Long id, User user);
+    void removeDislike(Long id, User user);
     void deleteById(Long id);
     Track updateTrack(Long id, Track trackFromForm, String fileName);
     Track buildTrack(String title, String wordAuthor, String musicAuthor, String genreId, String performerId, String fileName);

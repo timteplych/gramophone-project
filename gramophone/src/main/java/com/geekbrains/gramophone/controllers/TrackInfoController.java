@@ -8,18 +8,24 @@ import com.geekbrains.gramophone.services.TrackService;
 import com.geekbrains.gramophone.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Locale;
 
 @Controller
 public class TrackInfoController {
 
     @Value("${comment.min.length}")
     private Integer MIN_COMMENT;
+
+    @Autowired
+    private MessageSource messageSource;
 
     private TrackService trackService;
     private UserService userService;
@@ -38,62 +44,111 @@ public class TrackInfoController {
     @Autowired
     public void setCommentService(CommentService commentService) {this.commentService = commentService;}
 
-    @GetMapping("/track-info/{id}")
-    public String trackInfo(Model model, Principal principal, @PathVariable(value = "id") Long id)
+    @GetMapping("/track/{id}/info")
+    public String trackInfo(Model model, Principal principal,@PathVariable(value = "id") Long id)
     {
+        String error = (String) model.asMap().get("error");
         Track track = trackService.findTrackById(id);
-        model.addAttribute("track",track);
-        User user;
+        List<Comment> comments = commentService.findByTrack(track);
         if (principal != null) {
-            user = userService.findByUsername(principal.getName());
+            User user = userService.findByUsername(principal.getName());
             model.addAttribute("user",user);
-            boolean allowComment = commentService.findByUserAndTrack(user, track).isEmpty();
-            model.addAttribute("allowComment", allowComment);
+            model.addAttribute("allowComment", true);
             model.addAttribute("comment", new Comment(user, track));
         }
-        List<Comment> comments = commentService.findByTrack(track);
+        model.addAttribute("error", error);
+        model.addAttribute("track",track);
         model.addAttribute("comments", comments);
         return "track-info";
 
     }
 
-    @GetMapping("/like-track/{id}")
-    public String likeTrack(Principal principal,  @PathVariable(value = "id") Long id) {
+    @PostMapping("/track/{id}/like")
+    public String likeTrack(Principal principal,  Locale locale,  RedirectAttributes redir,
+                            @PathVariable(value = "id") Long id) {
         if (principal != null) {
             User user = userService.findByUsername(principal.getName());
             trackService.changeLike(id, user);
+        } else {
+            redir.addFlashAttribute("error", messageSource.getMessage("error.notAuthorized", null, locale));
         }
-        return "redirect:/track-info/"+id.toString();
+        return "redirect:/track/" + id + "/info";
     }
 
-    @GetMapping("/like-comment/{id}")
-    public String likeComment(Principal principal,  @PathVariable(value = "id") Long id) {
+    @PostMapping("/comment/{id}/dislike")
+    public String dislikeComment(Principal principal,  Locale locale,  RedirectAttributes redir,
+                              @PathVariable(value = "id") Long id) {
+        if (principal != null) {
+            User user = userService.findByUsername(principal.getName());
+            commentService.changeDislike(id, user);
+        } else {
+            redir.addFlashAttribute("error", messageSource.getMessage("error.notAuthorized", null, locale));
+        }
+        return "redirect:/track/" + commentService.findCommentById(id).getTrack().getId() + "/info";
+    }
+
+    @PostMapping("/track/{id}/dislike")
+    public String dislikeTrack(Principal principal,  Locale locale,  RedirectAttributes redir,
+                            @PathVariable(value = "id") Long id) {
+        if (principal != null) {
+            User user = userService.findByUsername(principal.getName());
+            trackService.changeDislike(id, user);
+        } else {
+            redir.addFlashAttribute("error", messageSource.getMessage("error.notAuthorized", null, locale));
+        }
+        return "redirect:/track/" + id + "/info";
+    }
+
+    @PostMapping("/comment/{id}/like")
+    public String likeComment(Principal principal,  Locale locale,  RedirectAttributes redir,
+                              @PathVariable(value = "id") Long id) {
         if (principal != null) {
             User user = userService.findByUsername(principal.getName());
             commentService.changeLike(id, user);
+        } else {
+            redir.addFlashAttribute("error", messageSource.getMessage("error.notAuthorized", null, locale));
         }
-        return "redirect:/track-info/"+commentService.findCommentById(id).getTrack().getId().toString();
+        return "redirect:/track/" + commentService.findCommentById(id).getTrack().getId() + "/info";
     }
 
-    @PostMapping("/add-comment")
-    public String commentSubmit(@ModelAttribute Comment comment) {
+    @PostMapping("/comment/add")
+    public String commentSubmit(Locale locale,  RedirectAttributes redir,
+                                @ModelAttribute Comment comment) {
+        String errorCode = null;
         if (comment.getContent().length() > MIN_COMMENT) {
             commentService.save(comment);
+        } else {
+            errorCode = "error.comment.minLength";
         }
-        return "redirect:/track-info/"+comment.getTrack().getId().toString();
+        if (errorCode != null)
+            redir.addFlashAttribute("error", messageSource.getMessage(errorCode, null, locale));
+        return "redirect:/track/" + comment.getTrack().getId() + "/info";
     }
 
-    @GetMapping("/remove-comment/{id}")
-    public String removeComment(Principal principal,  @PathVariable(value = "id") Long id) {
+    @PostMapping("/comment/{id}/remove")
+    public String removeComment(Principal principal, Locale locale,  RedirectAttributes redir,
+                                @PathVariable(value = "id") Long id,
+                                Long trackId) {
+        String errorCode = null;
         Comment comment = commentService.findCommentById(id);
-        if (comment == null) return "redirect:/";
-        Long trackId = comment.getTrack().getId();
+        if (comment == null) {
+            errorCode = "error.accessDenied";
+        }
+        if (comment.getTrack().getId() != trackId) {
+            errorCode = "error.internal";
+        }
         if (principal != null) {
             User user = userService.findByUsername(principal.getName());
             if (comment !=null && comment.getUser().equals(user)) {
                 commentService.remove(comment);
+            } else {
+                errorCode = "error.accessDenied";
             }
+        } else {
+            errorCode = "error.notAuthorized";
         }
-        return "redirect:/track-info/" + trackId.toString();
+        if (errorCode != null)
+            redir.addFlashAttribute("error", messageSource.getMessage(errorCode, null, locale));
+        return "redirect:/track/" + trackId + "/info";
     }
 }
