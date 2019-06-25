@@ -66,16 +66,16 @@ public class UploadTrackController {
             Principal principal
     ) {
 
-        Track track = trackService.buildTrack(
-                trackFromForm,
-                userService.findByUsername(principal.getName()),
-                file.getOriginalFilename()
-        );
+//        Track track = trackService.buildTrack(
+//                trackFromForm,
+//                userService.findByUsername(principal.getName()),
+//                file.getOriginalFilename()
+//        );
 
         if (!file.isEmpty()) {
 
             if (uploadService.upload(principal.getName(), file, "uploads/")) {
-                trackService.save(track);
+//                trackService.save(track);
                 return "upload-success";
             } else {
                 return "upload-fail";
