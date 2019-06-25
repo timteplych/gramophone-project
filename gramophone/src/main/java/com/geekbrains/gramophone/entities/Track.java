@@ -45,9 +45,9 @@ public class Track {
     @Column(name = "listening_amount")
     private Long listeningAmount;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "user_id")
-    @JsonBackReference
+//    @JsonBackReference
     private User performer;
 
     @Column(name = "cover")
