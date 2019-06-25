@@ -189,7 +189,7 @@ public class TrackServiceImpl implements TrackService {
     @Override
     @Transactional
     public void deleteTrack(Long id) {
-        Track track = trackRepository.findById(id).get();
+        Track track = trackRepository.findById(id).orElse(null);
         deleteTrackFromServer(track.getLocationOnServer());
         trackRepository.deleteTrackFromAllPlaylists(id);
         trackRepository.deleteById(id);
@@ -204,26 +204,28 @@ public class TrackServiceImpl implements TrackService {
 //        }
     }
 
-    public Track updateTrack(Long id, Track trackFromForm, String fileName) {
-        trackRepository.findById(id).ifPresent(updatedTrack -> {
-            updatedTrack.setListeningAmount(trackFromForm.getListeningAmount());
-            updatedTrack.setWordAuthor(trackFromForm.getWordAuthor());
-            updatedTrack.setMusicAuthor(trackFromForm.getWordAuthor());
-            updatedTrack.setTitle(trackFromForm.getTitle());
-            updatedTrack.setCover(trackFromForm.getCover());
-            updatedTrack.setGenre(trackFromForm.getGenre());
+    public Track updateTrack(Long id,
+                             String title,
+                             String wordAuthor,
+                             String musicAuthor,
+                             String genreId,
+                             String fileName) {
+        Track updatedTrack = trackRepository.findById(id).orElse(null);
+        if (updatedTrack != null) {
+            updatedTrack.setTitle(title);
+            updatedTrack.setMusicAuthor(musicAuthor);
+            updatedTrack.setWordAuthor(wordAuthor);
+            updatedTrack.setGenre(genreRepository.findById(Long.parseLong(genreId)).orElse(null));
 
-            if (!updatedTrack.getLocationOnServer().equals(trackFromForm.getLocationOnServer())) {
-                trackFromForm.setLocationOnServer("uploads/" + trackFromForm.getPerformer().getUsername() + "/" + fileName);
-                updatedTrack.setLocationOnServer(trackFromForm.getLocationOnServer());
-                trackFromForm.setDownloadUrl(ServletUriComponentsBuilder.fromCurrentContextPath()
+            if (!updatedTrack.getLocationOnServer().equals("uploads/" + updatedTrack.getPerformer().getUsername() + "/" + fileName)) {
+                updatedTrack.setLocationOnServer("uploads/" + updatedTrack.getPerformer().getUsername() + "/" + fileName);
+                updatedTrack.setDownloadUrl(ServletUriComponentsBuilder.fromCurrentContextPath()
                         .path("/uploads/")
-                        .path(trackFromForm.getPerformer().getUsername() + "/" + fileName)
+                        .path(updatedTrack.getPerformer().getUsername() + "/" + fileName)
                         .toUriString());
-                updatedTrack.setDownloadUrl(trackFromForm.getDownloadUrl());
             }
-        });
-        return trackFromForm;
+        }
+        return updatedTrack;
     }
 
 
