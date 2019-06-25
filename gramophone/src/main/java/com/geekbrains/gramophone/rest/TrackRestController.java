@@ -126,13 +126,12 @@ public class TrackRestController {
     }
 
     @PatchMapping("/{id}")
-    public String updateListenAmountOfTrack(@PathVariable("id") Long id,
+    public void updateListenAmountOfTrack(@PathVariable("id") Long id,
                                                     @RequestParam(value = "listeningAmount") String listeningAmount) {
         Track track = trackService.findTrackById(id);
         track.setListeningAmount(Long.parseLong(listeningAmount));
         System.out.println(track.getListeningAmount());
         trackService.save(track);
-        return "success";
     }
 
 
