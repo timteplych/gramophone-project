@@ -5,6 +5,12 @@
   .inner {
     padding: 0 !important;
 
+    .close {
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+
     .track-info {
       height: 100%;
       display: flex;
