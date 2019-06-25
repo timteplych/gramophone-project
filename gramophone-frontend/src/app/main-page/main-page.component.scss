@@ -63,6 +63,7 @@
   right: 0;
 
 
+
   &.ui.vertical.menu {
     box-shadow: none;
   }
@@ -92,12 +93,12 @@
   &.slide {
     transition: all .2s ease;
     transform: translateX(100%);
-    //left: -100%;
-    overflow: hidden;
+    //right: -100%;
+    display: none;
   }
 }
 
 
 .main-page {
-  overflow-x: hidden;
+  box-sizing: border-box;
 }
