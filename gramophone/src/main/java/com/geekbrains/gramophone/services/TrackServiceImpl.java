@@ -5,12 +5,14 @@ import com.geekbrains.gramophone.entities.Track;
 import com.geekbrains.gramophone.entities.User;
 import com.geekbrains.gramophone.repositories.GenreRepository;
 import com.geekbrains.gramophone.repositories.TrackRepository;
+import com.geekbrains.gramophone.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -22,6 +24,8 @@ public class TrackServiceImpl implements TrackService {
 
     private GenreRepository genreRepository;
 
+    private UserRepository userRepository;
+
     @Autowired
     public void setTrackService(TrackRepository trackRepository) {
         this.trackRepository = trackRepository;
@@ -32,6 +36,13 @@ public class TrackServiceImpl implements TrackService {
     public void setGenreRepository(GenreRepository genreRepository) {
         this.genreRepository = genreRepository;
     }
+
+
+    @Autowired
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
 
     @Override
     public List<Track> findAll() {
@@ -50,7 +61,7 @@ public class TrackServiceImpl implements TrackService {
 
     @Override
     public List<Track> findByTitle(String title) {
-        if ("" .equals(title)) {
+        if ("".equals(title)) {
             return Collections.emptyList();
         }
         return trackRepository.findAllByTitleContaining(title);
@@ -58,7 +69,7 @@ public class TrackServiceImpl implements TrackService {
 
     @Override
     public List<Track> findByAuthor(String author) {
-        if ("" .equals(author)) {
+        if ("".equals(author)) {
             return Collections.emptyList();
         }
         return trackRepository.findAllByMusicAuthorContaining(author);
@@ -66,7 +77,7 @@ public class TrackServiceImpl implements TrackService {
 
     @Override
     public List<Track> findByGenreTitle(String title) {
-        if ("" .equals(title)) {
+        if ("".equals(title)) {
             return Collections.emptyList();
         }
         Genre genre = genreRepository.findByTitle(title);
@@ -116,20 +127,32 @@ public class TrackServiceImpl implements TrackService {
         trackRepository.deleteById(id);
     }
 
-    public Track buildTrack(Track trackFromForm, User user, String fileName) {
-        trackFromForm.setPerformer(user);
-        trackFromForm.setCreateAt(new Date());
-        trackFromForm.setListeningAmount(0L);
-        trackFromForm.setGenre(trackFromForm.getGenre());
+    public Track buildTrack(String title,
+                            String wordAuthor,
+                            String musicAuthor,
+                            String genreId,
+                            String performerId,
+                            String fileName) {
 
-        trackFromForm.setLocationOnServer("uploads/" + user.getUsername() + "/" + fileName);
-        trackFromForm.setDownloadUrl(ServletUriComponentsBuilder.fromCurrentContextPath()
+        Genre genre = genreRepository.findById(Long.parseLong(genreId)).orElse(null);
+        User performer = userRepository.findById(Long.parseLong(performerId)).orElse(null);
+
+        Track newTrack = new Track();
+        newTrack.setTitle(title);
+        newTrack.setWordAuthor(wordAuthor);
+        newTrack.setMusicAuthor(musicAuthor);
+        newTrack.setGenre(genre);
+        newTrack.setPerformer(performer);
+        newTrack.setCreateAt(new Date());
+        newTrack.setListeningAmount(0L);
+
+        newTrack.setLocationOnServer("uploads/" + newTrack.getPerformer().getUsername() + "/" + fileName);
+        newTrack.setDownloadUrl(ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/uploads/")
-                .path(user.getUsername() + "/" + fileName)
+                .path(newTrack.getPerformer().getUsername() + "/" + fileName)
                 .toUriString());
 
-
-        return trackFromForm;
+        return newTrack;
     }
 
     @Override
@@ -163,6 +186,12 @@ public class TrackServiceImpl implements TrackService {
         });
         return trackFromForm;
 
+    }
+
+    @Override
+    public boolean isThere(Track track, String searchStr) {
+        return searchStr.equals(track.getTitle()) || searchStr.equals(track.getMusicAuthor()) ||
+                searchStr.equals(track.getWordAuthor()) || searchStr.equals(track.getPerformer().getUsername());
     }
 
 }
