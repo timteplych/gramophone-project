@@ -87,4 +87,6 @@ public class CommentServiceImpl implements CommentService {
     public void remove(Comment comment) {
         commentRepository.delete(comment);
     }
+
+    public void deleteById(Long id) {commentRepository.deleteById(id);}
 }

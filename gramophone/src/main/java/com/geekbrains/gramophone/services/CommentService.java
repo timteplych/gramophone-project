@@ -18,4 +18,5 @@ public interface CommentService {
     void changeLike(Long id, Long userId);
     void changeDislike(Long id, Long userId);
     void remove(Comment comment);
+    public void deleteById(Long id);
 }
