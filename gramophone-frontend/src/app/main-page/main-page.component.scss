@@ -1,5 +1,5 @@
 .list {
-  padding: 40px 135px 130px 25px !important;
+  padding: 100px 135px 130px 45px !important;
   transition: all .5s ease;
 
 
@@ -12,10 +12,10 @@
        text-overflow: ellipsis;
        overflow: hidden;
        width: 100%;
-       padding: 15px 0 10px;
+       padding: 15px 0 10px 5px;
        margin: 0 !important;
        font-size: 16px;
-       font-family: Avenir, sans-serif;
+       font-family: Avenir, Avenir Next, sans-serif;
        font-weight: 500;
        color: #848384;
        white-space: nowrap;
@@ -26,7 +26,8 @@
       width: 95%;
       margin: 0 !important;
       font-size: 12px;
-      font-family: Avenir, sans-serif;
+      padding-left: 5px;
+      font-family: Avenir, Avenir Next, sans-serif;
       font-weight: 500;
       color: #848384;
       white-space: nowrap;
@@ -35,7 +36,17 @@
     img {
       width: 125px;
       min-height: 120px;
+      border: 1px solid #848384;
+      transition: all .5s ease;
+
+
     }
+
+    &:hover img {
+      transform: scale(1.05);
+    }
+
+
   }
 }
 
@@ -52,6 +63,7 @@
   right: 0;
 
 
+
   &.ui.vertical.menu {
     box-shadow: none;
   }
@@ -59,14 +71,14 @@
   .item {
     border: none;
     box-shadow: none;
-    font-family: Avenir, 'Helvetica Neue', Arial, Helvetica, sans-serif;
+    font-family: Avenir, "Avenir Next", 'Helvetica Neue', Arial, Helvetica, sans-serif;
     font-size: 14px !important;
     color: #9a9da2;
     padding: 17px 10px 17px 30px;
     font-weight: 400;
 
     &:hover {
-      background: #fbfcfe;
+      background: #f2f3f8;
       color: #9a9da2;
     }
 
@@ -81,7 +93,12 @@
   &.slide {
     transition: all .2s ease;
     transform: translateX(100%);
-    //left: -100%;
-    overflow: hidden;
+    //right: -100%;
+    display: none;
   }
+}
+
+
+.main-page {
+  box-sizing: border-box;
 }

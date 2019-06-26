@@ -22,7 +22,6 @@ export class AuthenticationService {
   }
 
   login(email: string, password: string) {
-    // @ts-ignore
     return this.http.get<any>(`${API_URL}/users/login?email=${email}&password=${password}`)
       .pipe(map(user => {
         // console.log(user);

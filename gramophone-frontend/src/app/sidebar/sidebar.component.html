@@ -7,29 +7,29 @@
     <fa-icon [icon]="['fas', 'play-circle']"></fa-icon>
     Главная
   </a>
-  <a class="item">
-    <fa-icon [icon]="['fab', 'itunes-note']"></fa-icon>
-    Треки
-  </a>
-  
-  <a class="item">
-    <fa-icon [icon]="['fas', 'compact-disc']"></fa-icon>
-    Альбомы
-  </a>
-  <a class="item">
-    <fa-icon [icon]="['fas', 'star']"></fa-icon>
-    Избранное
-  </a>
-  <a class="item like">
-    Треки
-  </a>
-  <a class="item like">
-    Альбомы
-  </a>
-  <a class="item like">
-    Исполнители
-  </a>
-  <a routerLink="/account" class="item">
+<!--  <a class="item">-->
+<!--    <fa-icon [icon]="['fab', 'itunes-note']"></fa-icon>-->
+<!--    Треки-->
+<!--  </a>-->
+<!--  -->
+<!--  <a class="item">-->
+<!--    <fa-icon [icon]="['fas', 'compact-disc']"></fa-icon>-->
+<!--    Альбомы-->
+<!--  </a>-->
+<!--  <a class="item">-->
+<!--    <fa-icon [icon]="['fas', 'star']"></fa-icon>-->
+<!--    Избранное-->
+<!--  </a>-->
+<!--  <a class="item like">-->
+<!--    Треки-->
+<!--  </a>-->
+<!--  <a class="item like">-->
+<!--    Альбомы-->
+<!--  </a>-->
+<!--  <a class="item like">-->
+<!--    Исполнители-->
+<!--  </a>-->
+  <a routerLink="/account" class="item" *ngIf="currentUser">
     <fa-icon [icon]="['fas', 'user-alt']"></fa-icon>
     Аккаунт
   </a>

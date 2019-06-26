@@ -10,6 +10,8 @@ import com.geekbrains.gramophone.services.UploadService;
 import com.geekbrains.gramophone.services.UserService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -17,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.Principal;
+
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -24,11 +27,10 @@ import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = {"http://localhost:4200"})
-@RequestMapping("api/tracks")
+@RequestMapping("api/v1/tracks")
 @Api(tags = "Tracks")
 public class TrackRestController {
 
-    @Autowired
     private UserService userService;
 
     private TrackService trackService;
@@ -47,6 +49,11 @@ public class TrackRestController {
         this.genreService = genreService;
     }
 
+    @Autowired
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
 
     @Autowired
     public void setUploadService(UploadService uploadService) {
@@ -54,14 +61,14 @@ public class TrackRestController {
     }
 
     @GetMapping("")
-    public Iterable<Track> getAllTracks(@RequestParam(name = "search", required = false) String byAutorOrByTrack,
+    public Iterable<Track> getAllTracks(@RequestParam(name = "search", required = false) String byAuthorOrByTrack,
                                         @RequestParam(name = "genre", required = false) String genre) {
 
         List<Track> trackList = trackService.findAll();
 
-        if (byAutorOrByTrack != null) {
+        if (byAuthorOrByTrack != null) {
             trackList = trackList.stream()
-                    .filter(track -> isThere(track, byAutorOrByTrack))
+                    .filter(track -> trackService.isThere(track, byAuthorOrByTrack))
                     .collect(Collectors.toList());
         }
 
@@ -75,8 +82,10 @@ public class TrackRestController {
     }
 
     @GetMapping("/{id}")
-    public Track getTrackById(@PathVariable("id") Long id) {
-        return trackService.findTrackById(id);
+    public ResponseEntity<?> getTrackById(@PathVariable("id") Long id) {
+        Track track = trackService.findTrackById(id);
+        System.out.println(track.getPerformer().getUsername());
+        return new ResponseEntity<>(track, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
@@ -84,35 +93,61 @@ public class TrackRestController {
         trackService.deleteById(id);
     }
 
-    @PostMapping("/")
-    public void setTrack(@RequestPart("track") Track track, @RequestPart(value = "file", required = false) MultipartFile file) {
-        Track updatedTrack = trackService.buildTrack(
-                track,
-                track.getPerformer(),
+    @PostMapping("")
+    public void setTrack(@RequestPart("title") String title,
+                         @RequestPart("wordAuthor") String wordAuthor,
+                         @RequestPart("musicAuthor") String musicAuthor,
+                         @RequestPart("genreId") String genreId,
+                         @RequestPart("performerId") String performerId,
+                         @RequestPart(value = "file") MultipartFile file) {
+
+        Track createdTrack = trackService.buildTrack(
+                title,
+                wordAuthor,
+                musicAuthor,
+                genreId,
+                performerId,
                 file.getOriginalFilename()
         );
-
+        System.out.println(createdTrack.getPerformer().getUsername());
         if (!file.isEmpty()) {
-            if (uploadService.upload(track.getPerformer().getUsername(), file, "uploads/")) {
-                trackService.save(updatedTrack);
+            if (uploadService.upload(createdTrack.getPerformer().getUsername(), file, "uploads/")) {
+                trackService.save(createdTrack);
             }
         }
     }
 
     @PutMapping("/{id}")
-    public void updateTrackById(@PathVariable("id") Long id, @RequestPart("track") Track track, @RequestParam(value = "file", required = false) MultipartFile file) {
+    public void updateTrackById(@PathVariable("id") Long id,
+                                @RequestPart("title") String title,
+                                @RequestPart("wordAuthor") String wordAuthor,
+                                @RequestPart("musicAuthor") String musicAuthor,
+                                @RequestPart("genreId") String genreId,
+                                @RequestParam(value = "file", required = false) MultipartFile file) {
         Track updatedTrack = trackService.updateTrack(
                 id,
-                track,
+                title,
+                wordAuthor,
+                musicAuthor,
+                genreId,
                 file.getOriginalFilename()
         );
 
         if (!file.isEmpty()) {
-            if (uploadService.remove(track.getPerformer().getUsername(), file, "uploads/") &&
-                    uploadService.upload(track.getPerformer().getUsername(), file, "uploads/")) {
+            if (uploadService.remove(updatedTrack.getPerformer().getUsername(), file, "uploads/") &&
+                    uploadService.upload(updatedTrack.getPerformer().getUsername(), file, "uploads/")) {
                 trackService.save(updatedTrack);
             }
         }
+    }
+
+    @PatchMapping("/{id}")
+    public void updateListenAmountOfTrack(@PathVariable("id") Long id,
+                                                    @RequestParam(value = "listeningAmount") String listeningAmount) {
+        Track track = trackService.findTrackById(id);
+        track.setListeningAmount(Long.parseLong(listeningAmount));
+        System.out.println(track.getListeningAmount());
+        trackService.save(track);
     }
 
 
@@ -121,12 +156,9 @@ public class TrackRestController {
         return genreService.findAll();
     }
 
-    private boolean isThere(Track track, String searchStr) {
-        return searchStr.equals(track.getTitle()) || searchStr.equals(track.getMusicAuthor()) ||
-                searchStr.equals(track.getWordAuthor()) || searchStr.equals(track.getPerformer().getUsername());
-    }
 
-    @PutMapping("/{id}/like")
+
+    @PatchMapping("/{id}/like")
     public void likeTrack(@PathVariable(value = "id") Long id,
                           @RequestParam(value = "userId") Long userId) {
         User user = userService.findById(userId);
@@ -139,7 +171,7 @@ public class TrackRestController {
         trackService.changeLike(id, user);
     }
 
-    @PutMapping("/{id}/dislike")
+    @PatchMapping("/{id}/dislike")
     public void dislikeTrack(@PathVariable(value = "id") Long id,
                              @RequestParam(value = "userId") Long userId) {
         User user = userService.findById(userId);

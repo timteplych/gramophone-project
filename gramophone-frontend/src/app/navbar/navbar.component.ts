@@ -2,6 +2,9 @@ import {Component, OnInit} from '@angular/core';
 import {User} from '../_models';
 import {AuthenticationService} from '../_services';
 import {RoleEnum} from '../_models';
+import {ActivatedRoute, Router} from '@angular/router';
+import {MusicUploadDialogComponent} from '../music-upload-dialog/music-upload-dialog.component';
+import {MatDialog} from '@angular/material';
 
 declare var $: any;
 
@@ -19,7 +22,11 @@ export class NavbarComponent implements OnInit {
   isFilterOn = true;
 
 
-  constructor(private authenticationService: AuthenticationService
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    public dialog: MatDialog,
+    private authenticationService: AuthenticationService
   ) {
     this.currentUser = this.authenticationService.currentUserValue;
     this.authenticationService.currentUser.subscribe(value => {
@@ -81,5 +88,13 @@ export class NavbarComponent implements OnInit {
   logout() {
     this.authenticationService.logout();
 
+  }
+
+
+  uploadMusic(): void {
+    const dialogRef = this.dialog.open(MusicUploadDialogComponent, {
+      width: '800px',
+      height: '745px'
+    });
   }
 }

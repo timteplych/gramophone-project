@@ -1,5 +1,8 @@
 import {Component} from '@angular/core';
-import {animate, group, query, state, style, transition, trigger} from '@angular/animations';
+import {animate, group, query, style, transition, trigger} from '@angular/animations';
+import {Router} from '@angular/router';
+import {AuthenticationService} from './_services';
+import {RoleEnum, User} from './_models';
 
 @Component({
   selector: 'app-root',
@@ -26,7 +29,7 @@ import {animate, group, query, state, style, transition, trigger} from '@angular
     ]),
     transition('Home => *', [
       query(':enter, :leave',
-        style({opacity: 1}),
+        style({opacity: 0}),
         {optional: true}),
       group([
         query(':enter', [
@@ -37,7 +40,7 @@ import {animate, group, query, state, style, transition, trigger} from '@angular
         query(':leave', [
           style({opacity: 0}),
           animate('1s ease-in-out',
-            style({opacity: 1}))
+            style({opacity: 0}))
         ], {optional: true}),
       ])
     ]),
@@ -82,4 +85,24 @@ import {animate, group, query, state, style, transition, trigger} from '@angular
 
 export class AppComponent {
   title = 'gramophone-frontend';
+  currentUser: User;
+
+  constructor(private router: Router,
+              private authenticationService: AuthenticationService) {
+    this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
+
+  }
+
+  get isAdmin() {
+    let variant = false;
+    if (this.currentUser) {
+      this.currentUser.roles.forEach(obg => {
+        if (obg.name === RoleEnum.Admin) {
+          variant = true;
+        }
+      });
+    }
+    return variant;
+  }
+
 }
