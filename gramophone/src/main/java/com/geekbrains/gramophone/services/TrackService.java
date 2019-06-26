@@ -16,12 +16,8 @@ public interface TrackService {
     List<Track> findByGenreTitle(String title);
     List<Track> findByGenreId(Long id);
     Track findTrackById(Long id);
-    void changeLike(Long id, User user);
-    void setLike(Long id, User user);
-    void removeLike(Long id, User user);
-    void changeDislike(Long id, User user);
-    void setDislike(Long id, User user);
-    void removeDislike(Long id, User user);
+    void changeLike(Long id, Long userId);
+    void changeDislike(Long id, Long userId);
     void deleteById(Long id);
     Track updateTrack(Long id, String title, String wordAuthor, String musicAuthor, String genreId, String fileName);
     Track buildTrack(String title, String wordAuthor, String musicAuthor, String genreId, String performerId, String fileName);
