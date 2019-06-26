@@ -1,9 +1,10 @@
+
 .user-form {
-  padding: 0 20px 160px 80px !important;
+  padding: 80px 20px 160px 80px !important;
 
 
   .header {
-    font-family: Avenir, sans-serif;
+    font-family: Avenir, Avenir Next, sans-serif;
     color: #545153;
   }
 
@@ -12,15 +13,15 @@
     margin-bottom: 30px;
 
     .list {
-      font-family: Avenir, sans-serif;
+      font-family: Avenir, Avenir Next, sans-serif;
       font-size: 14px;
       color: #b3b4b3;
       font-weight: 600;
-      padding-right: 40px;
+      padding-right: 20px;
       margin-top: 0;
 
       .subsc {
-        font-family: Avenir, sans-serif;
+        font-family: Avenir, Avenir Next, sans-serif;
         font-size: 40px;
         color: #545153;
         padding-bottom: 40px;
@@ -99,7 +100,7 @@
     label {
       color: #9a9da2;
       font-size: 14px;
-      font-family: Avenir, sans-serif;
+      font-family: Avenir, Avenir Next, sans-serif;
     }
 
     input {
@@ -118,7 +119,7 @@
       background-image: linear-gradient(to right, #e0ddf8, #dde2fa, #dde7fa, #deebf9, #e2eff8);
       color: #fff;
       font-size: 16px;
-      font-family: Avenir, sans-serif;
+      font-family: Avenir, Avenir Next, sans-serif;
       transition: all .5s ease-in-out;
 
       &:hover {
@@ -133,10 +134,10 @@
 
 
 .tabs-menu {
-  padding: 0 160px 0 20px !important;
+  padding: 80px 160px 0 20px !important;
 
   .header {
-    font-family: Avenir, sans-serif;
+    font-family: Avenir, Avenir Next, sans-serif;
     color: #545153;
     margin-bottom: 40px;
   }
@@ -144,7 +145,7 @@
   .tabular.menu {
 
     .item {
-      font-family: Avenir, sans-serif;
+      font-family: Avenir, Avenir Next, sans-serif;
       color: #b3b4b3;
     }
 

@@ -15,7 +15,8 @@ export class Track {
     public performer: User,
     public cover: string,
     public likes: User[],
-    public comments: CommentModel,
+    public dislikes: User[],
+    public comments: CommentModel[],
     public createAt?: Date,
   ) {}
 }

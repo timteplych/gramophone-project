@@ -68,7 +68,7 @@ public class TrackInfoController {
                             @PathVariable(value = "id") Long id) {
         if (principal != null) {
             User user = userService.findByUsername(principal.getName());
-            trackService.changeLike(id, user);
+            trackService.changeLike(id, user.getId());
         } else {
             redir.addFlashAttribute("error", messageSource.getMessage("error.notAuthorized", null, locale));
         }
@@ -80,11 +80,11 @@ public class TrackInfoController {
                               @PathVariable(value = "id") Long id) {
         if (principal != null) {
             User user = userService.findByUsername(principal.getName());
-            commentService.changeDislike(id, user);
+            commentService.changeDislike(id, user.getId());
         } else {
             redir.addFlashAttribute("error", messageSource.getMessage("error.notAuthorized", null, locale));
         }
-        return "redirect:/track/" + commentService.findCommentById(id).getTrack().getId() + "/info";
+        return "redirect:/track/" + commentService.findById(id).getTrack().getId() + "/info";
     }
 
     @PostMapping("/track/{id}/dislike")
@@ -92,7 +92,7 @@ public class TrackInfoController {
                             @PathVariable(value = "id") Long id) {
         if (principal != null) {
             User user = userService.findByUsername(principal.getName());
-            trackService.changeDislike(id, user);
+            trackService.changeDislike(id, user.getId());
         } else {
             redir.addFlashAttribute("error", messageSource.getMessage("error.notAuthorized", null, locale));
         }
@@ -104,11 +104,11 @@ public class TrackInfoController {
                               @PathVariable(value = "id") Long id) {
         if (principal != null) {
             User user = userService.findByUsername(principal.getName());
-            commentService.changeLike(id, user);
+            commentService.changeLike(id, user.getId());
         } else {
             redir.addFlashAttribute("error", messageSource.getMessage("error.notAuthorized", null, locale));
         }
-        return "redirect:/track/" + commentService.findCommentById(id).getTrack().getId() + "/info";
+        return "redirect:/track/" + commentService.findById(id).getTrack().getId() + "/info";
     }
 
     @PostMapping("/comment/add")
@@ -130,7 +130,7 @@ public class TrackInfoController {
                                 @PathVariable(value = "id") Long id,
                                 Long trackId) {
         String errorCode = null;
-        Comment comment = commentService.findCommentById(id);
+        Comment comment = commentService.findById(id);
         if (comment == null) {
             errorCode = "error.accessDenied";
         }

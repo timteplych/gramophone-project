@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {TracksService} from '../_services';
-import {Track} from '../_models';
-import {Subscription} from 'rxjs';
+import {AuthenticationService, TracksService} from '../_services';
+import {Track, User} from '../_models';
+import {BehaviorSubject, Subscription} from 'rxjs';
 import {FormBuilder, FormGroup} from '@angular/forms';
 
 @Component({
@@ -14,23 +14,30 @@ export class TrackPageComponent implements OnInit {
 
   track: Track;
   trackSub: Subscription;
+  userSub: Subscription;
   commentForm: FormGroup;
   myFocusVar;
+  currentUser: User;
 
   constructor(
     private formBuilder: FormBuilder,
     private route: ActivatedRoute,
-    private trackService: TracksService
+    private trackService: TracksService,
+    private authenticationService: AuthenticationService
   ) {
-  }
-
-  ngOnInit() {
     this.trackSub = this.trackService.getTrackById(this.route.snapshot.params.id).subscribe(res => {
       this.track = res;
+      localStorage.removeItem('track');
       localStorage.setItem('track', JSON.stringify(this.track));
-      console.log(this.track);
+      this.trackService.currentTrackSubj.next(res);
     });
+    this.userSub = this.authenticationService.currentUser.subscribe(res => {
+      this.currentUser = res;
+    });
+  }
 
+
+  ngOnInit() {
     this.commentForm = this.formBuilder.group({
       comment: ['']
     });

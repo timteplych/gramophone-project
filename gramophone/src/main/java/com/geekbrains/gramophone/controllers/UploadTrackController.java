@@ -66,11 +66,24 @@ public class UploadTrackController {
             Principal principal
     ) {
 
+        // временно пришлось реализовать загрузку файла таким плохим способом, поскольку
+        // метод buildTrack() в TrackService полностью был изменен
+        // решил оставить так, поскольку всё-равно этот контроллер нужно будет переделывать в RestController
+
         Track track = trackService.buildTrack(
-                trackFromForm,
-                userService.findByUsername(principal.getName()),
+                trackFromForm.getTitle(),
+                trackFromForm.getWordAuthor(),
+                trackFromForm.getMusicAuthor(),
+                genreService.findById(genreId).getId().toString(),
+                userService.findByUsername(principal.getName()).getId().toString(),
                 file.getOriginalFilename()
         );
+
+//        Track track = trackService.buildTrack(
+//                trackFromForm,
+//                userService.findByUsername(principal.getName()),
+//                file.getOriginalFilename()
+//        );
 
         if (!file.isEmpty()) {
 
