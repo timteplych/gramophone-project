@@ -19,18 +19,6 @@ public class Comment {
     @Column(name = "content")
     private String content;
 
-    @OneToMany
-    @JoinTable(name = "comments_likes",
-            joinColumns = @JoinColumn(name = "comment_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Set<User> likes  = new HashSet<>();
-
-    @OneToMany
-    @JoinTable(name = "comments_dislikes",
-            joinColumns = @JoinColumn(name = "comment_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Set<User> dislikes = new HashSet<>();
-
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

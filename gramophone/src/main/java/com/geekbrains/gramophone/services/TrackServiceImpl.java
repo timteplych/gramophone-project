@@ -170,16 +170,12 @@ public class TrackServiceImpl implements TrackService {
     @Transactional
     public void deleteTrack(Long id) {
         Track track = trackRepository.findById(id).orElse(null);
-        deleteTrackFromServer(track.getLocationOnServer());
-        trackRepository.deleteTrackFromAllPlaylists(id);
-        trackRepository.deleteById(id);
-    }
-
-    private void deleteTrackFromServer(String locationOnServer) {
-        // НЕ ПОЛУЧАЕТСЯ, Файл не удаляется
-        File file = new File(locationOnServer);
-        if (file.exists())
-            file.delete();
+        if (track != null) {
+            track.setDeleted(true);
+            track.setDeleteAt(new Date());
+            trackRepository.deleteTrackFromAllPlaylists(id); // оставить сообщение, что трек был удален(название исполнителя и трека)
+            trackRepository.deleteById(id);
+        }
     }
 
     public Track updateTrack(Long id,
