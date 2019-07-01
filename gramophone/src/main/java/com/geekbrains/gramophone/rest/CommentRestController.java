@@ -29,13 +29,16 @@ public class CommentRestController {
     @Autowired
     private CommentService commentService;
 
+    @Autowired
+    private LikeService likeService;
+
     @GetMapping("/{id}/comments")
     public Iterable<CommentDTO> getAllComments(@PathVariable(value = "id") Long id) {
         Track track = trackService.findTrackById(id);
         if (track == null) {
             throw new NotFoundException("Track", id);
         }
-        return commentService.findByTrack(track).stream().map(CommentDTO::new).collect(Collectors.toList());
+        return commentService.findByTrack(track).stream().map((element) -> new CommentDTO(element, likeService)).collect(Collectors.toList());
     }
 
     @GetMapping("{id}/comments/{commentId}")
@@ -45,19 +48,20 @@ public class CommentRestController {
             throw new NotFoundException("Track", id);
         }
         Comment comment = commentService.findById(commentId);
-        return new CommentDTO(comment);
+        return new CommentDTO(comment, likeService);
     }
 
     @PostMapping("/{id}/comments")
     @ResponseStatus(HttpStatus.CREATED)
     public void postNewComment(@PathVariable(value = "id") Long id,
-                               @RequestBody CommentDTO commentDTO) {
+                               @RequestParam(value = "userId") Long userId,
+                               @RequestParam(value = "content") String content) {
         if (trackService.findTrackById(id) == null) {
             throw new NotFoundException("Track", id);
         }
         Comment comment = new Comment();
-        comment.setContent(commentDTO.getContent());
-        comment.setUser(userService.findById(commentDTO.getUser().getId()));
+        comment.setContent(content);
+        comment.setUser(userService.findById(userId));
         comment.setTrack(trackService.findTrackById(id));
         commentService.save(comment);
     }

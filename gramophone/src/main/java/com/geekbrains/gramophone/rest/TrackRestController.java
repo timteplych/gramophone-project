@@ -4,10 +4,7 @@ import com.geekbrains.gramophone.entities.Genre;
 import com.geekbrains.gramophone.entities.Track;
 import com.geekbrains.gramophone.entities.User;
 import com.geekbrains.gramophone.exceptions.NotFoundException;
-import com.geekbrains.gramophone.services.GenreService;
-import com.geekbrains.gramophone.services.TrackService;
-import com.geekbrains.gramophone.services.UploadService;
-import com.geekbrains.gramophone.services.UserService;
+import com.geekbrains.gramophone.services.*;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,6 +35,9 @@ public class TrackRestController {
     private GenreService genreService;
 
     private UploadService uploadService;
+
+    @Autowired
+    private LikeService likeService;
 
     @Autowired
     public void setTrackService(TrackService trackService) {
