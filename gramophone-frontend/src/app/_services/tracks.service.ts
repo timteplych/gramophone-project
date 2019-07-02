@@ -25,13 +25,25 @@ export class TracksService {
   }
 
 
-  getTrackList(): Observable<Track[]> {
-    return this.http.get<Track[]>(`${API_URL}/tracks`).pipe(map(tracks => {
-      if (tracks) {
-        this.currentTrackListSubj.next(tracks);
-      }
-      return tracks;
-    }));
+  getTrackList(page = 1): Observable<Track[]> {
+    return this.http.get<Track[]>(`${API_URL}/tracks`, {params: new HttpParams().set('page', page.toString())})
+      .pipe(map(tracks => {
+        if (tracks) {
+          this.currentTrackListSubj.next(tracks);
+        }
+        return tracks;
+      }));
+  }
+
+  getTrackListWithSearchAndFilter(page = 1, searchTerm, genre): Observable<Track[]> {
+    return this.http.get<Track[]>(`${API_URL}/tracks`,
+      {params: new HttpParams().set('page', page.toString()).set('search', searchTerm).set('genre', genre)})
+      .pipe(map(tracks => {
+        if (tracks) {
+          this.currentTrackListSubj.next(tracks);
+        }
+        return tracks;
+      }));
   }
 
   getTrackById(id: number): Observable<Track> {
@@ -51,5 +63,9 @@ export class TracksService {
 
   updateTrackListeningAmount(id, amount): Observable<any> {
     return this.http.patch(`${API_URL}/tracks/${id}`, new HttpParams().set('listeningAmount', amount));
+  }
+
+  getUserTracks(id): Observable<Track[]> {
+    return this.http.get<Track[]>(`${API_URL}/tracks/${id}/tracks`);
   }
 }
