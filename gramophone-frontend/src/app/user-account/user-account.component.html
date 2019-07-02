@@ -24,7 +24,7 @@
       </div>
       <div class="field">
         <label>Логин</label>
-        <input type="text" formControlName="username" >
+        <input type="text" formControlName="username">
       </div>
       <div class="field">
         <label>Имя</label>
@@ -60,24 +60,32 @@
   <div class="ten wide column tabs-menu">
     <div class="ui huge header">Панель управления аккаунтом</div>
     <mat-tab-group>
-      <mat-tab label="Треки"> Content 1 </mat-tab>
-      <mat-tab label="Плейлисты"> Content 2 </mat-tab>
-      <mat-tab label="Подписки"> Content 3 </mat-tab>
-      <mat-tab label="О исполнителе"> Content 4 </mat-tab>
+      <mat-tab label="Треки">
+        <div class="ui four columns right aligned grid tracks">
+          <a [routerLink]="['/tracks',track.id]" class="ui column track" *ngFor="let track of trackList">
+            <img src="../../assets/images/note.png" alt="">
+            <div class="song text-left">{{track.title}}</div>
+            <div class="singer text-left">{{track.wordAuthor}}</div>
+          </a>
+        </div>
+      </mat-tab>
+      <mat-tab label="Плейлисты"> Content 2</mat-tab>
+      <mat-tab label="Подписки"> Content 3</mat-tab>
+      <mat-tab label="О исполнителе"> Content 4</mat-tab>
     </mat-tab-group>
-<!--    <div class="ui top attached tabular menu">-->
-<!--      <div class="active item" data-tab="first">Треки</div>-->
-<!--      <div class="item" data-tab="second">Подписки</div>-->
-<!--      <div class="item" data-tab="third">Плейлисты</div>-->
-<!--      <div class="item" data-tab="fourth">О исполнителе</div>-->
-<!--    </div>-->
-<!--    <div class="ui bottom attached active tab segment content" data-tab="first" style="height: 800px">-->
-<!--    </div>-->
-<!--    <div class="ui bottom attached tab segment content" data-tab="second" style="height: 800px">-->
-<!--    </div>-->
-<!--    <div class="ui bottom attached tab segment content" data-tab="third" style="height: 800px">-->
-<!--    </div>-->
-<!--    <div class="ui bottom attached tab segment content" data-tab="fourth" style="height: 800px">-->
-<!--    </div>-->
+    <!--    <div class="ui top attached tabular menu">-->
+    <!--      <div class="active item" data-tab="first">Треки</div>-->
+    <!--      <div class="item" data-tab="second">Подписки</div>-->
+    <!--      <div class="item" data-tab="third">Плейлисты</div>-->
+    <!--      <div class="item" data-tab="fourth">О исполнителе</div>-->
+    <!--    </div>-->
+    <!--    <div class="ui bottom attached active tab segment content" data-tab="first" style="height: 800px">-->
+    <!--    </div>-->
+    <!--    <div class="ui bottom attached tab segment content" data-tab="second" style="height: 800px">-->
+    <!--    </div>-->
+    <!--    <div class="ui bottom attached tab segment content" data-tab="third" style="height: 800px">-->
+    <!--    </div>-->
+    <!--    <div class="ui bottom attached tab segment content" data-tab="fourth" style="height: 800px">-->
+    <!--    </div>-->
   </div>
 </div>
