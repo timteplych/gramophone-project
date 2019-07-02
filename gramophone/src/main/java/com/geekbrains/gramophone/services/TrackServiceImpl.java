@@ -1,9 +1,6 @@
 package com.geekbrains.gramophone.services;
 
-import com.geekbrains.gramophone.entities.Comment;
-import com.geekbrains.gramophone.entities.Genre;
-import com.geekbrains.gramophone.entities.Track;
-import com.geekbrains.gramophone.entities.User;
+import com.geekbrains.gramophone.entities.*;
 import com.geekbrains.gramophone.exceptions.NotFoundException;
 import com.geekbrains.gramophone.repositories.GenreRepository;
 import com.geekbrains.gramophone.repositories.TrackRepository;
@@ -27,6 +24,8 @@ public class TrackServiceImpl implements TrackService {
     private UserRepository userRepository;
     private TrackRepository trackRepository;
     private GenreRepository genreRepository;
+    @Autowired
+    private LikeService likeService;
 
     @Autowired
     public void setTrackService(TrackRepository trackRepository) {
@@ -104,28 +103,15 @@ public class TrackServiceImpl implements TrackService {
 
     @Override
     public void changeLike(Long id, Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User", userId));
-        Track track = trackRepository.findById(id).orElseThrow(() -> new NotFoundException("Track", id));
-        if (trackRepository.trackLikedBy(track.getId(), user.getId()) > 0) //(track.getLikes().contains(user))
-            track.getLikes().remove(user);
-        else {
-            track.getLikes().add(user);
-            track.getDislikes().remove(user);
-        }
-        trackRepository.save(track);
+        trackRepository.findById(id).orElseThrow(() -> new NotFoundException("Track", id));
+        likeService.changeDislike(userId, id, LikeType.SONG);
     }
 
     @Override
     public void changeDislike(Long id, Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User", userId));
-        Track track = trackRepository.findById(id).orElseThrow(() -> new NotFoundException("Track", id));
-        if (trackRepository.trackDislikedBy(track.getId(), user.getId()) > 0) //(track.getLikes().contains(user))
-            track.getDislikes().remove(user);
-        else {
-            track.getDislikes().add(user);
-            track.getLikes().remove(user);
-        }
-        trackRepository.save(track);
+        trackRepository.findById(id).orElseThrow(() -> new NotFoundException("Track", id));
+        likeService.changeDislike(userId, id, LikeType.SONG);
+
     }
 
     @Override
