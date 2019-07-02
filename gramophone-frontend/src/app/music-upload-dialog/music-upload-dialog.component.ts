@@ -38,6 +38,7 @@ export class MusicUploadDialogComponent implements OnInit {
   audio;
   trackTime;
   currentUser: User;
+  fileTypes = ['audio/mp3', 'audio/mpeg', 'audio/wav'];
 
   public circumference: number;
   public strokeDashoffset = 0;
@@ -87,14 +88,13 @@ export class MusicUploadDialogComponent implements OnInit {
     });
   }
 
-
   public dropped(files: NgxFileDropEntry[]) {
     this.file = files[0];
     if (files[0].fileEntry.isFile) {
       const fileEntry = files[0].fileEntry as FileSystemFileEntry;
       fileEntry.file((innerFile: File) => {
-        // console.log(file[0].relativePath, innerFile);
-        if (innerFile.type === 'audio/mp3') {
+        console.log(files[0].relativePath, innerFile);
+        if (this.fileTypes.includes(innerFile.type)) {
           this.trackForm.controls.file.setValue(innerFile);
         } else {
           console.log(innerFile.type);
