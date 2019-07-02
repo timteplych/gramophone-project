@@ -31,7 +31,7 @@ export class MainPageComponent implements OnInit {
       this.usersList = res;
     });
 
-    this.tracksService.getTrackList().subscribe(res => {
+    this.tracksService.getTrackList(1).subscribe(res => {
       this.trackList = res;
     });
     this.trackListSub = this.tracksService.currentTrackList.subscribe(res => {
