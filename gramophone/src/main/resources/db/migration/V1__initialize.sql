@@ -142,7 +142,7 @@ create TABLE likes
     like_type        VARCHAR(50) NOT NULL,
     user_id          INTEGER     NOT NULL,
     target_id        INTEGER     NOT NULL,
-    like_or_dislike  SMALLINT    NOT NULL,
+    mark  SMALLINT    NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT FK_USER_ID_LIKE FOREIGN KEY (user_id)
         REFERENCES users (id)
