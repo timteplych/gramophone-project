@@ -43,6 +43,9 @@ public class TrackRestController {
     private UploadService uploadService;
 
     @Autowired
+    private LikeService likeService;
+
+    @Autowired
     public void setTrackService(TrackService trackService) {
         this.trackService = trackService;
     }

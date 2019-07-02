@@ -1,7 +1,7 @@
 package com.geekbrains.gramophone.services;
 
 import com.geekbrains.gramophone.entities.Comment;
-import com.geekbrains.gramophone.entities.Genre;
+import com.geekbrains.gramophone.entities.LikeType;
 import com.geekbrains.gramophone.entities.Track;
 import com.geekbrains.gramophone.entities.User;
 import com.geekbrains.gramophone.exceptions.NotFoundException;
@@ -15,15 +15,16 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CommentServiceImpl implements CommentService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private LikeService likeService;
 
     private CommentRepository commentRepository;
 
@@ -54,35 +55,25 @@ public class CommentServiceImpl implements CommentService {
         return commentRepository.findByTrack(track);
     }
 
-//    @Override
-//    public void changeLike(Long id, Long userId) {
-//        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User", userId));
-//        Comment comment = findById(id);
-//        if (commentRepository.commentLikedBy(comment.getId(), user.getId()) > 0)
-//            comment.getLikes().remove(user);
-//        else {
-//            comment.getLikes().add(user);
-//            comment.getDislikes().remove(user);
-//        }
-//        commentRepository.save(comment);
-//    }
+
+    @Override
+    public void changeLike(Long id, Long userId) {
+        Comment comment = findById(id);
+        likeService.changeLike(userId, id, LikeType.COMMENT);
+    }
+
 
     public Comment findById(Long id) {
         return commentRepository.findById(id).orElseThrow(() -> new NotFoundException("Comment", id));
     }
 
-//    @Override
-//    public void changeDislike(Long id, Long userId) {
-//        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User", userId));
-//        Comment comment = findById(id);
-//        if (commentRepository.commentDislikedBy(comment.getId(), user.getId()) > 0)
-//            comment.getDislikes().remove(user);
-//        else {
-//            comment.getDislikes().add(user);
-//            comment.getLikes().remove(user);
-//        }
-//        commentRepository.save(comment);
-//    }
+
+    @Override
+    public void changeDislike(Long id, Long userId) {
+        Comment comment = findById(id);
+        likeService.changeDislike(userId, id, LikeType.COMMENT);
+    }
+
 
     public void remove(Comment comment) {
         commentRepository.delete(comment);

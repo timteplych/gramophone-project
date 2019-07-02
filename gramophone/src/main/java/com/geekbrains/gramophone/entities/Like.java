@@ -9,6 +9,10 @@ import javax.persistence.*;
 @Data
 public class Like {
 
+    public static final byte LIKE = 1;
+    public static final byte DISLIKE = -1;
+    public static final byte EMPTY = 0;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -25,7 +29,16 @@ public class Like {
     @Column(name = "target_id")
     private Long targetId;
 
-    @Column(name = "like_or_dislike")
-    private byte likeOrDislike;
+    @Column(name = "mark")
+    private byte mark;
 
+
+    public Like(LikeType likeType, User user, Long targetId, byte mark) {
+        this.likeType = likeType;
+        this.user = user;
+        this.targetId = targetId;
+        this.mark = mark;
+    }
+
+    public Like() {};
 }

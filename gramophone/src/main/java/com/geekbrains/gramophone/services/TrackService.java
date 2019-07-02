@@ -19,8 +19,8 @@ public interface TrackService {
     List<Track> findByGenreId(Long id);
     Page<Track> getTracksWithPaging(int pageNumber, int pageSize);
     Track findTrackById(Long id);
-//    void changeLike(Long id, Long userId);
-//    void changeDislike(Long id, Long userId);
+    void changeLike(Long id, Long userId);
+    void changeDislike(Long id, Long userId);
     void deleteById(Long id);
     Track updateTrack(Long id, String title, String wordAuthor, String musicAuthor, String genreId, String fileName);
     Track buildTrack(String title, String wordAuthor, String musicAuthor, String genreId, String performerId, MultipartFile file);

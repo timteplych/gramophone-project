@@ -15,8 +15,8 @@ public interface CommentService {
     List<Comment> findByUserAndTrack(User user, Track track);
     List<Comment> findByTrack(Track track);
     Comment findById(Long id);
-//    void changeLike(Long id, Long userId);
-//    void changeDislike(Long id, Long userId);
+    void changeLike(Long id, Long userId);
+    void changeDislike(Long id, Long userId);
     void remove(Comment comment);
     void deleteById(Long id);
 }
