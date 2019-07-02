@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.transaction.Transactional;
@@ -27,6 +28,7 @@ public class TrackServiceImpl implements TrackService {
     private UserRepository userRepository;
     private TrackRepository trackRepository;
     private GenreRepository genreRepository;
+    private UploadService uploadService;
 
     @Autowired
     public void setTrackService(TrackRepository trackRepository) {
@@ -43,6 +45,11 @@ public class TrackServiceImpl implements TrackService {
         this.userRepository = userRepository;
     }
 
+    @Autowired
+    public void setUploadService(UploadService uploadService) {
+        this.uploadService = uploadService;
+    }
+
 
     @Override
     public List<Track> findAll() {
@@ -56,7 +63,11 @@ public class TrackServiceImpl implements TrackService {
     }
 
     public Page<Track> getTracksWithPagingAndFiltering(int pageNumber, int pageSize, Specification<Track> trackSpecification) {
-        return trackRepository.findAll(trackSpecification, PageRequest.of(pageNumber, pageSize));
+        return trackRepository.findAll(PageRequest.of(pageNumber, pageSize));
+    }
+
+    public Page<Track> getTracksWithPaging(int pageNumber, int pageSize) {
+        return trackRepository.findAll(PageRequest.of(pageNumber, pageSize));
     }
 
     @Override
@@ -64,7 +75,7 @@ public class TrackServiceImpl implements TrackService {
         if ("".equals(title)) {
             return Collections.emptyList();
         }
-        return trackRepository.findAllByTitleContaining(title);
+        return null;
     }
 
     @Override
@@ -102,31 +113,31 @@ public class TrackServiceImpl implements TrackService {
         return trackRepository.findById(id).orElse(null);
     }
 
-    @Override
-    public void changeLike(Long id, Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User", userId));
-        Track track = trackRepository.findById(id).orElseThrow(() -> new NotFoundException("Track", id));
-        if (trackRepository.trackLikedBy(track.getId(), user.getId()) > 0) //(track.getLikes().contains(user))
-            track.getLikes().remove(user);
-        else {
-            track.getLikes().add(user);
-            track.getDislikes().remove(user);
-        }
-        trackRepository.save(track);
-    }
+//    @Override
+//    public void changeLike(Long id, Long userId) {
+//        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User", userId));
+//        Track track = trackRepository.findById(id).orElseThrow(() -> new NotFoundException("Track", id));
+//        if (trackRepository.trackLikedBy(track.getId(), user.getId()) > 0) //(track.getLikes().contains(user))
+//            track.getLikes().remove(user);
+//        else {
+//            track.getLikes().add(user);
+//            track.getDislikes().remove(user);
+//        }
+//        trackRepository.save(track);
+//    }
 
-    @Override
-    public void changeDislike(Long id, Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User", userId));
-        Track track = trackRepository.findById(id).orElseThrow(() -> new NotFoundException("Track", id));
-        if (trackRepository.trackDislikedBy(track.getId(), user.getId()) > 0) //(track.getLikes().contains(user))
-            track.getDislikes().remove(user);
-        else {
-            track.getDislikes().add(user);
-            track.getLikes().remove(user);
-        }
-        trackRepository.save(track);
-    }
+//    @Override
+//    public void changeDislike(Long id, Long userId) {
+//        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User", userId));
+//        Track track = trackRepository.findById(id).orElseThrow(() -> new NotFoundException("Track", id));
+//        if (trackRepository.trackDislikedBy(track.getId(), user.getId()) > 0) //(track.getLikes().contains(user))
+//            track.getDislikes().remove(user);
+//        else {
+//            track.getDislikes().add(user);
+//            track.getLikes().remove(user);
+//        }
+//        trackRepository.save(track);
+//    }
 
     @Override
     public void deleteById(Long id) {
@@ -138,7 +149,7 @@ public class TrackServiceImpl implements TrackService {
                             String musicAuthor,
                             String genreId,
                             String performerId,
-                            String fileName) {
+                            MultipartFile file) {
 
         Genre genre = genreRepository.findById(Long.parseLong(genreId)).orElse(null);
         User performer = userRepository.findById(Long.parseLong(performerId)).orElse(null);
@@ -152,11 +163,20 @@ public class TrackServiceImpl implements TrackService {
         newTrack.setCreateAt(new Date());
         newTrack.setListeningAmount(0L);
 
-        newTrack.setLocationOnServer("uploads/" + newTrack.getPerformer().getUsername() + "/" + fileName);
+
+        newTrack.setLocationOnServer("uploads/" + performer.getUsername() + "/" + file.getOriginalFilename());
         newTrack.setDownloadUrl(ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/uploads/")
-                .path(newTrack.getPerformer().getUsername() + "/" + fileName)
+                .path(performer.getUsername() + "/" + file.getOriginalFilename())
                 .toUriString());
+
+
+        if (!file.isEmpty()) {
+            if (uploadService.upload(performer.getUsername(), file, "uploads/")) {
+                trackRepository.save(newTrack);
+            }
+        }
+
 
         return newTrack;
     }

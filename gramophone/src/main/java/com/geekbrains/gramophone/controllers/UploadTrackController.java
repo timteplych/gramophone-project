@@ -76,7 +76,7 @@ public class UploadTrackController {
                 trackFromForm.getMusicAuthor(),
                 genreService.findById(genreId).getId().toString(),
                 userService.findByUsername(principal.getName()).getId().toString(),
-                file.getOriginalFilename()
+                file
         );
 
 //        Track track = trackService.buildTrack(

@@ -54,35 +54,35 @@ public class CommentServiceImpl implements CommentService {
         return commentRepository.findByTrack(track);
     }
 
-    @Override
-    public void changeLike(Long id, Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User", userId));
-        Comment comment = findById(id);
-        if (commentRepository.commentLikedBy(comment.getId(), user.getId()) > 0)
-            comment.getLikes().remove(user);
-        else {
-            comment.getLikes().add(user);
-            comment.getDislikes().remove(user);
-        }
-        commentRepository.save(comment);
-    }
+//    @Override
+//    public void changeLike(Long id, Long userId) {
+//        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User", userId));
+//        Comment comment = findById(id);
+//        if (commentRepository.commentLikedBy(comment.getId(), user.getId()) > 0)
+//            comment.getLikes().remove(user);
+//        else {
+//            comment.getLikes().add(user);
+//            comment.getDislikes().remove(user);
+//        }
+//        commentRepository.save(comment);
+//    }
 
     public Comment findById(Long id) {
         return commentRepository.findById(id).orElseThrow(() -> new NotFoundException("Comment", id));
     }
 
-    @Override
-    public void changeDislike(Long id, Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User", userId));
-        Comment comment = findById(id);
-        if (commentRepository.commentDislikedBy(comment.getId(), user.getId()) > 0)
-            comment.getDislikes().remove(user);
-        else {
-            comment.getDislikes().add(user);
-            comment.getLikes().remove(user);
-        }
-        commentRepository.save(comment);
-    }
+//    @Override
+//    public void changeDislike(Long id, Long userId) {
+//        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User", userId));
+//        Comment comment = findById(id);
+//        if (commentRepository.commentDislikedBy(comment.getId(), user.getId()) > 0)
+//            comment.getDislikes().remove(user);
+//        else {
+//            comment.getDislikes().add(user);
+//            comment.getLikes().remove(user);
+//        }
+//        commentRepository.save(comment);
+//    }
 
     public void remove(Comment comment) {
         commentRepository.delete(comment);

@@ -88,24 +88,24 @@ public class CommentRestController {
     }
 
 
-    @PutMapping("/{id}/comments/{commentId}/like")
-    public void likeComment(@PathVariable(value = "id") Long id,
-                            @PathVariable(value = "commentId") Long commentId,
-                            @RequestParam(value = "userId") Long userId) {
-        if (trackService.findTrackById(id) == null) {
-            throw new NotFoundException("Track", id);
-        }
-        commentService.changeLike(commentId, userId);
-    }
-
-    @PutMapping("/{id}/comments/{commentId}/dislike")
-    public void dislikeComment(@PathVariable(value = "id") Long id,
-                               @PathVariable(value = "commentId") Long commentId,
-                               @RequestParam(value = "userId") Long userId) {
-        if (trackService.findTrackById(id) == null) {
-            throw new NotFoundException("Track", id);
-        }
-        commentService.changeDislike(commentId, userId);
-    }
+//    @PutMapping("/{id}/comments/{commentId}/like")
+//    public void likeComment(@PathVariable(value = "id") Long id,
+//                            @PathVariable(value = "commentId") Long commentId,
+//                            @RequestParam(value = "userId") Long userId) {
+//        if (trackService.findTrackById(id) == null) {
+//            throw new NotFoundException("Track", id);
+//        }
+//        commentService.changeLike(commentId, userId);
+//    }
+//
+//    @PutMapping("/{id}/comments/{commentId}/dislike")
+//    public void dislikeComment(@PathVariable(value = "id") Long id,
+//                               @PathVariable(value = "commentId") Long commentId,
+//                               @RequestParam(value = "userId") Long userId) {
+//        if (trackService.findTrackById(id) == null) {
+//            throw new NotFoundException("Track", id);
+//        }
+//        commentService.changeDislike(commentId, userId);
+//    }
 
 }

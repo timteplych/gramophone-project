@@ -22,8 +22,8 @@ public class CommentDTO {
         this.id = comment.getId();
         this.content = comment.getContent();
         this.user = new UserDTO(comment.getUser());
-        this.likes = comment.getLikes().stream().map(UserDTO::new).collect(Collectors.toSet());
-        this.dislikes = comment.getDislikes().stream().map(UserDTO::new).collect(Collectors.toSet());
+//        this.likes = comment.getLikes().stream().map(UserDTO::new).collect(Collectors.toSet());
+//        this.dislikes = comment.getDislikes().stream().map(UserDTO::new).collect(Collectors.toSet());
         this.track = new TrackDTO(comment.getTrack().getId());
     }
 
