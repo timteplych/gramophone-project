@@ -1,11 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AuthenticationService} from '../_services';
-import {ScrollToEvent} from '@nicky-lenaers/ngx-scroll-to/lib/scroll-to-event.interface';
 import {
-  ScrollToAnimationEasing,
   ScrollToConfigOptions,
-  ScrollToOffsetMap,
   ScrollToService
 } from '@nicky-lenaers/ngx-scroll-to';
 
@@ -17,12 +14,6 @@ import {
 export class RegisterComponent implements OnInit {
 
   registerForm: FormGroup;
-  public ngxScrollToDestination: string;
-  public ngxScrollToEvent: ScrollToEvent;
-  public ngxScrollToDuration: number;
-  public ngxScrollToEasing: ScrollToAnimationEasing;
-  public ngxScrollToOffset: number;
-  public ngxScrollToOffsetMap: ScrollToOffsetMap;
 
   constructor(
     private formBuilder: FormBuilder,
