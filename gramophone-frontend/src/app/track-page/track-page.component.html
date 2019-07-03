@@ -12,11 +12,11 @@
         </a>
         <a class="ui label">
           <i class="thumbs up icon"></i>
-          {{ track.likes.length | buttonSubFormatPipe }}
+          {{ 0 | buttonSubFormatPipe }}
         </a>
         <a class="ui label">
           <i class="thumbs down icon"></i>
-          {{ track.dislikes.length | buttonSubFormatPipe }}
+          {{ 0 | buttonSubFormatPipe }}
         </a>
         <a class="ui label">
           <i class="share icon"></i>
@@ -35,7 +35,7 @@
         </a>
       </div>
       <div class="six wide column text-center subs">
-        <button class="ui red button">Подписаться {{ track.performer.subscribers.length | buttonSubFormatPipe }}</button>
+        <button class="ui red button">Подписаться {{ track.performer.subscribers.length > 0 ? track.performer.subscribers.length : '' | buttonSubFormatPipe }}</button>
       </div>
     </div>
     <div class="authors-info">
@@ -52,23 +52,23 @@
     <div class="comments">
       <h3 class="comment-count">{{ track.comments.length }} коментария</h3>
       <form action="" [formGroup]="commentForm">
-        <img src="../../assets/images/ava.png">
+        <img [src]="currentUser.avatar ? currentUser.avatar : '../../assets/images/ava.png'">
         <mat-form-field class="example-full-width" [floatLabel]="'never'">
           <textarea matInput placeholder="Оставить комментарий" (focus)="myFocusVar = true" (blur)="myFocusVar = false"
                     formControlName="comment" mat-autosize matTextareaAutosize></textarea>
         </mat-form-field>
-        <button class="ui button right floated confirm-comment" [hidden]="!myFocusVar"
+        <button class="ui button right floated confirm-comment" [hidden]="!f.comment.value && !myFocusVar" (click)="sendComment()"
                 [ngStyle]="f.comment.value ? { backgroundColor: '#4285f4' } : { backgroundColor: '#767676' }">Оставить
           комментарий
         </button>
-        <button class="ui button right floated" [hidden]="!myFocusVar">Отменить</button>
+        <button class="ui button right floated" [hidden]="!f.comment.value && !myFocusVar">Отменить</button>
       </form>
     </div>
     <div class="comments-list">
       <div class="comments-list-item" *ngFor="let comment of track.comments">
-        <img src="../../assets/images/ava.png">
+        <img [src]="comment.user.avatar ? comment.user.avatar : '../../assets/images/ava.png'">
         <div class="who">{{ comment.user.username }} <span>2 часа назад</span></div>
-        <div class="comment-text">{{ comment.conetent }}
+        <div class="comment-text">{{ comment.content }}
         </div>
       </div>
     </div>

@@ -36,6 +36,10 @@ export class AuthenticationService {
       }));
   }
 
+  register(username, email, password, matchingPassword): Observable<any> {
+    return this.http.post<any>(`${API_URL}/users/register`, {username, email, password, matchingPassword});
+  }
+
   logout() {
     // remove user from local storage to log user out
     localStorage.removeItem('currentUser');

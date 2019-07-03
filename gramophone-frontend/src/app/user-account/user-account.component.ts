@@ -33,7 +33,7 @@ export class UserAccountComponent implements OnInit {
       this.currentUser = value;
     });
 
-    this.trackListSub = this.tracksService.currentTrackList.subscribe(res => {
+    this.trackListSub = this.tracksService.getUserTracks(this.currentUser.id).subscribe(res => {
       this.trackList = res;
     });
 

@@ -36,6 +36,7 @@ import {DATE_FORMAT} from '../environments/environment';
 import { registerLocaleData } from '@angular/common';
 import localeRu from '@angular/common/locales/ru';
 import {ListeningAmountPipe} from './_utils/listeningAmount.pipe';
+import { PlaylistComponent } from './playlist/playlist.component';
 
 registerLocaleData(localeRu);
 
@@ -54,7 +55,8 @@ registerLocaleData(localeRu);
     RegisterComponent,
     UserAccountComponent,
     MusicUploadDialogComponent,
-    ButtonSubFormatPipe
+    ButtonSubFormatPipe,
+    PlaylistComponent
   ],
   imports: [
     BrowserModule,

@@ -14,10 +14,12 @@ import java.util.List;
 
 @Repository
 public interface TrackRepository extends PagingAndSortingRepository<Track, Long>, JpaSpecificationExecutor<Track> {
-    List<Track> findAllByTitleContaining(String title);
+    List<Track> findAllByTitleContainingOrMusicAuthorContaining(String search, String author);
+    List<Track> findAllByTitleContaining(String search);
     List<Track> findAllByMusicAuthorContaining(String author);
     List<Track> findAllByGenre(Genre genre);
     List<Track> findAllByPerformer(User user);
+    List<Track> findAllByTitleContainingOrMusicAuthorContainingAndGenre(String search, String author, Genre genre);
 
     @Query(value = "select count(*) from tracks_likes tl where track_id = ?1 and user_id = ?2", nativeQuery = true)
     int trackLikedBy(Long trackId, Long userId);

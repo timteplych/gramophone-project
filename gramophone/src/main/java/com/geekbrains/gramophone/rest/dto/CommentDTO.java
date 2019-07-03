@@ -24,10 +24,12 @@ public class CommentDTO {
         this.id = comment.getId();
         this.content = comment.getContent();
         this.user = new UserDTO(comment.getUser());
+
         List<User> likes = likeService.getLikes(id, LikeType.COMMENT);
         if (likes != null) this.likes = likes.stream().map(UserDTO::new).collect(Collectors.toSet());
         List<User> dislikes = likeService.getDislikes(id, LikeType.COMMENT);
         if (dislikes != null) this.dislikes = dislikes.stream().map(UserDTO::new).collect(Collectors.toSet());
+
         this.track = new TrackDTO(comment.getTrack().getId());
     }
 

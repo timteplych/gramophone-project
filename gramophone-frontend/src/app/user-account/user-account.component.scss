@@ -1,154 +1,211 @@
+.acc {
+  margin-left: 18%;
+  .user-form {
+    padding: 80px 20px 160px 40px !important;
 
-.user-form {
-  padding: 80px 20px 160px 80px !important;
 
-
-  .header {
-    font-family: Avenir, Avenir Next, sans-serif;
-    color: #545153;
-  }
-
-  .info {
-    margin-top: 20px;
-    margin-bottom: 30px;
-
-    .list {
+    .header {
       font-family: Avenir, Avenir Next, sans-serif;
-      font-size: 14px;
-      color: #b3b4b3;
-      font-weight: 600;
-      padding-right: 20px;
-      margin-top: 0;
+      color: #545153;
+    }
 
-      .subsc {
+    .info {
+      margin-top: 20px;
+      margin-bottom: 30px;
+
+      .list {
         font-family: Avenir, Avenir Next, sans-serif;
-        font-size: 40px;
-        color: #545153;
-        padding-bottom: 40px;
+        font-size: 14px;
+        color: #b3b4b3;
+        font-weight: 600;
+        padding-right: 20px;
+        margin-top: 0;
+
+        .subsc {
+          font-family: Avenir, Avenir Next, sans-serif;
+          font-size: 40px;
+          color: #545153;
+          padding-bottom: 40px;
+        }
       }
     }
-  }
 
-  .avatar {
-    position: relative;
-    transition: all .5s ease-in-out;
-    cursor: pointer;
+    .avatar {
+      position: relative;
+      transition: all .5s ease-in-out;
+      cursor: pointer;
 
-    .img {
-      width: 140px;
-      height: 140px;
-      border-radius: 50%;
-
-
-      img {
-        width: 100%;
-        height: 100%;
+      .img {
+        width: 140px;
+        height: 140px;
         border-radius: 50%;
+
+
+        img {
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+        }
+
+        //&:before {
+        //  content: '';
+        //  position: absolute;
+        //  background: rgba(0,0,0,.5);
+        //  width: 80%;
+        //  height: 84%;
+        //  opacity: 0;
+        //  left: 15px;
+        //  top: 14px;
+        //  border-radius: 50%;
+        //  transition: all .5s ease-in-out;
+        //}
+
       }
 
-      //&:before {
-      //  content: '';
-      //  position: absolute;
-      //  background: rgba(0,0,0,.5);
-      //  width: 80%;
-      //  height: 84%;
-      //  opacity: 0;
-      //  left: 15px;
-      //  top: 14px;
-      //  border-radius: 50%;
-      //  transition: all .5s ease-in-out;
+      .photo-overlay {
+        position: absolute;
+        top: 31%;
+        left: 28%;
+        border-radius: 50%;
+        width: 40%;
+        opacity: 0;
+        height: 40%;
+        background: rgba(0,0,0,.4);
+        border: none;
+        transition: all .5s ease-in-out;
+
+        fa-icon {
+          font-size: 28px;
+          color: #fff;
+        }
+
+        &:focus {
+          border: none;
+          outline: none;
+        }
+      }
+
+      &:hover .photo-overlay {
+        opacity: 1;
+      }
+
+      //&:hover .img:before {
+      //  opacity: 1;
       //}
 
     }
 
-    .photo-overlay {
-      position: absolute;
-      top: 32%;
-      left: 31%;
-      border-radius: 50%;
-      width: 40%;
-      opacity: 0;
-      height: 40%;
-      background: rgba(0,0,0,.4);
-      border: none;
-      transition: all .5s ease-in-out;
+    form {
 
-      fa-icon {
-        font-size: 28px;
-        color: #fff;
+
+      label {
+        color: #9a9da2;
+        font-size: 14px;
+        font-family: Avenir, Avenir Next, sans-serif;
       }
 
-      &:focus {
+      input {
+        background: #e6e6e6;
         border: none;
-        outline: none;
+        height: 50px;
+        color: #b3b4b3;
+        margin-top: 10px;
+        border-radius: 0 !important;
+      }
+
+      button[type='submit'] {
+        margin-top: 25px;
+        width: 100%;
+        height: 50px;
+        background-image: linear-gradient(to right, #e0ddf8, #dde2fa, #dde7fa, #deebf9, #e2eff8);
+        color: #fff;
+        font-size: 16px;
+        font-family: Avenir, Avenir Next, sans-serif;
+        transition: all .5s ease-in-out;
+
+        &:hover {
+          color: #fafafa;
+        }
       }
     }
 
-    &:hover .photo-overlay {
-      opacity: 1;
-    }
 
-    //&:hover .img:before {
-    //  opacity: 1;
-    //}
 
   }
 
-  form {
 
+  .tabs-menu {
+    padding: 80px 160px 0 20px !important;
 
-    label {
-      color: #9a9da2;
-      font-size: 14px;
+    .header {
       font-family: Avenir, Avenir Next, sans-serif;
+      color: #545153;
+      margin-bottom: 40px;
     }
 
-    input {
-      background: #e6e6e6;
-      border: none;
-      height: 50px;
-      color: #b3b4b3;
-      margin-top: 10px;
-      border-radius: 0 !important;
-    }
+    .tabular.menu {
 
-    button[type='submit'] {
-      margin-top: 25px;
-      width: 100%;
-      height: 50px;
-      background-image: linear-gradient(to right, #e0ddf8, #dde2fa, #dde7fa, #deebf9, #e2eff8);
-      color: #fff;
-      font-size: 16px;
-      font-family: Avenir, Avenir Next, sans-serif;
-      transition: all .5s ease-in-out;
-
-      &:hover {
-        color: #fafafa;
+      .item {
+        font-family: Avenir, Avenir Next, sans-serif;
+        color: #b3b4b3;
       }
+
     }
   }
 
 
+  .tracks {
+    padding: 20px 10px !important;
+    width: 100%;
+    margin: 0 !important;
+    transition: all .5s ease;
 
-}
+
+    .track {
+      cursor: pointer;
+      padding: 25px 20px 0 20px;
+      transition: all .5s ease;
+
+      .song {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        width: 100%;
+        padding: 15px 0 10px 5px;
+        margin: 0 !important;
+        font-size: 16px;
+        font-family: Avenir, Avenir Next, sans-serif;
+        font-weight: 500;
+        color: #848384;
+        white-space: nowrap;
+        transition: all 1s ease !important;
+      }
+
+      .singer {
+        width: 95%;
+        margin: 0 !important;
+        font-size: 12px;
+        padding-left: 5px;
+        font-family: Avenir, Avenir Next, sans-serif;
+        font-weight: 500;
+        color: #848384;
+        white-space: nowrap;
+        transition: all 1s ease !important;
+      }
+      img {
+        width: 125px;
+        min-height: 120px;
+        border: 1px solid #848384;
+        transition: all .5s ease;
 
 
-.tabs-menu {
-  padding: 80px 160px 0 20px !important;
+      }
 
-  .header {
-    font-family: Avenir, Avenir Next, sans-serif;
-    color: #545153;
-    margin-bottom: 40px;
-  }
+      &:hover img {
+        transform: scale(1.05);
+      }
 
-  .tabular.menu {
 
-    .item {
-      font-family: Avenir, Avenir Next, sans-serif;
-      color: #b3b4b3;
     }
-
   }
-}
 
+}

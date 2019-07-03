@@ -1,6 +1,5 @@
 package com.geekbrains.gramophone.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -52,7 +51,7 @@ public class Track {
     @Column(name = "listening_amount")
     private Long listeningAmount;
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User performer;
 
