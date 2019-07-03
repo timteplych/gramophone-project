@@ -175,15 +175,15 @@ public class TrackRestController {
     }
 
 
-//    @PatchMapping("/{id}/like")
-//    public void likeTrack(@PathVariable(value = "id") Long id,
-//                          @RequestParam(value = "userId") Long userId) {
-//        trackService.changeLike(id, userId);
-//    }
-//
-//    @PatchMapping("/{id}/dislike")
-//    public void dislikeTrack(@PathVariable(value = "id") Long id,
-//                             @RequestParam(value = "userId") Long userId) {
-//        trackService.changeDislike(id, userId);
-//    }
+    @PatchMapping("/{id}/like")
+    public void likeTrack(@PathVariable(value = "id") Long id,
+                          @RequestParam(value = "userId") Long userId) {
+        trackService.changeLike(id, userId);
+    }
+
+    @PatchMapping("/{id}/dislike")
+    public void dislikeTrack(@PathVariable(value = "id") Long id,
+                             @RequestParam(value = "userId") Long userId) {
+        trackService.changeDislike(id, userId);
+    }
 }

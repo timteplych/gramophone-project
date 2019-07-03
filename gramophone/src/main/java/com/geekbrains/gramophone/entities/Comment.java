@@ -1,10 +1,9 @@
 package com.geekbrains.gramophone.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "comments")
@@ -25,6 +24,7 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name = "track_id")
+    @JsonIgnore
     private Track track;
 
     public Comment() {}

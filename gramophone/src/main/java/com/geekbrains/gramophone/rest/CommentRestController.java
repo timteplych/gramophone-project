@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = {"http://localhost:4200"})
-@RequestMapping("api/tracks")
+@RequestMapping("api/v1/tracks")
 @Api(tags = "Tracks")
 public class CommentRestController {
 
@@ -54,33 +54,35 @@ public class CommentRestController {
     @PostMapping("/{id}/comments")
     @ResponseStatus(HttpStatus.CREATED)
     public void postNewComment(@PathVariable(value = "id") Long id,
-                               @RequestParam(value = "userId") Long userId,
+                               @RequestParam(value = "userId") String userId,
                                @RequestParam(value = "content") String content) {
+        System.out.println(userId + content + id);
         if (trackService.findTrackById(id) == null) {
             throw new NotFoundException("Track", id);
         }
+
         Comment comment = new Comment();
         comment.setContent(content);
-        comment.setUser(userService.findById(userId));
+        comment.setUser(userService.findById(Long.parseLong(userId)));
         comment.setTrack(trackService.findTrackById(id));
         commentService.save(comment);
     }
 
-    @PutMapping("/{id}/comments/{commentId}")
-    public void changeComment(@PathVariable(value = "id") Long id,
-                              @PathVariable(value = "commentId") Long commentId,
-                              @RequestBody CommentDTO comment) {
-        if (trackService.findTrackById(id) == null) {
-            throw new NotFoundException("Track", id);
-        }
-        Comment oldComment = commentService.findById(commentId);
-        if (comment.getUser().getId() == oldComment.getUser().getId()
-                && oldComment.getTrack().getId() == id) {
-            //единственное, что можно поменять
-            oldComment.setContent(comment.getContent());
-            commentService.save(oldComment);
-        }
-    }
+//    @PutMapping("/{id}/comments/{commentId}")
+//    public void changeComment(@PathVariable(value = "id") Long id,
+//                              @PathVariable(value = "commentId") Long commentId,
+//                              @RequestBody CommentDTO comment) {
+//        if (trackService.findTrackById(id) == null) {
+//            throw new NotFoundException("Track", id);
+//        }
+//        Comment oldComment = commentService.findById(commentId);
+//        if (comment.getUser().getId() == oldComment.getUser().getId()
+//                && oldComment.getTrack().getId() == id) {
+//            //единственное, что можно поменять
+//            oldComment.setContent(comment.getContent());
+//            commentService.save(oldComment);
+//        }
+//    }
 
     @DeleteMapping("/{id}/comments/{commentId}")
     public void deleteComment(@PathVariable(value = "id") Long id,
@@ -91,25 +93,5 @@ public class CommentRestController {
         commentService.deleteById(commentId);
     }
 
-
-//    @PutMapping("/{id}/comments/{commentId}/like")
-//    public void likeComment(@PathVariable(value = "id") Long id,
-//                            @PathVariable(value = "commentId") Long commentId,
-//                            @RequestParam(value = "userId") Long userId) {
-//        if (trackService.findTrackById(id) == null) {
-//            throw new NotFoundException("Track", id);
-//        }
-//        commentService.changeLike(commentId, userId);
-//    }
-//
-//    @PutMapping("/{id}/comments/{commentId}/dislike")
-//    public void dislikeComment(@PathVariable(value = "id") Long id,
-//                               @PathVariable(value = "commentId") Long commentId,
-//                               @RequestParam(value = "userId") Long userId) {
-//        if (trackService.findTrackById(id) == null) {
-//            throw new NotFoundException("Track", id);
-//        }
-//        commentService.changeDislike(commentId, userId);
-//    }
 
 }
