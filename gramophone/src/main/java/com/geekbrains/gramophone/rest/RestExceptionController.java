@@ -1,4 +1,4 @@
-package com.geekbrains.gramophone.controllers;
+package com.geekbrains.gramophone.rest;
 
 import com.geekbrains.gramophone.entities.RestException;
 import com.geekbrains.gramophone.exceptions.NotFoundException;

@@ -143,8 +143,6 @@ public class UserAccountController {
             Principal principal
     ) {
         User currentUser = userService.findByUsername(principal.getName());
-
-        //добавить валидацию данных
         infoSingerService.saveUserAsSinger(currentUser, firstName, lastName, phone);
 
         return "redirect:/users/" + currentUser.getId();
