@@ -1,17 +1,15 @@
-<div class="ui two column grid">
-  <div class="stretched row">
-    <div class="three wide column">
-      <app-sidebar></app-sidebar>
-    </div>
-    <div [@routeAnimations]="o && o.activatedRouteData
-      && o.activatedRouteData['animation']" class="thirteen wide column">
-      <app-navbar></app-navbar>
-      <router-outlet #o="outlet" class="ui route attached pushable"></router-outlet>
-    </div>
-  </div>
+<app-sidebar></app-sidebar>
+<app-navbar></app-navbar>
+
+<div [@routeAnimations]="o && o.activatedRouteData
+      && o.activatedRouteData['animation']" class="main">
+  <app-playlist></app-playlist>
+  <router-outlet #o="outlet"></router-outlet>
 </div>
+
 <app-music-player></app-music-player>
 <app-login></app-login>
+
 
 
 

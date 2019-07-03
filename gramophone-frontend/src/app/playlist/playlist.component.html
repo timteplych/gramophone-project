@@ -1,0 +1,67 @@
+<div class="ui right playlist vertical overlay sidebar">
+  <div class="ui center aligned huge header">Плейлисты</div>
+  <div class="ui accordion playlist-item">
+    <div class="ui title eight columns grid head-content">
+      <div class="img center aligned eight wide column">
+        <img src="../../assets/images/books.jpg" alt="">
+      </div>
+      <div class="ui desc-container text-left eight wide column">
+        <div class="ui header">Романтический</div>
+        <button class="ui button" (click)="play()">
+          <fa-icon [hidden]="isPlaying" [icon]="['fas', 'play']"></fa-icon>
+          <span>Воспроизвести</span>
+          <fa-icon [hidden]="!isPlaying" [icon]="['fas', 'pause']"></fa-icon>
+          <span [hidden]="!isPlaying">Пауза</span>
+        </button>
+      </div>
+    </div>
+    <div class="ui relaxed divided vertical list content">
+      <div class="item track">
+        <button>
+          <fa-icon [icon]="['fas', 'play-circle']"></fa-icon>
+          <fa-icon [icon]="['fas', 'pause-circle']" [hidden]="true"></fa-icon>
+        </button>
+        <div class="bandAndSong">Весело живем - Вася Пупкин <span class="time">3:15</span></div>
+      </div>
+      <div class="item track">
+        <button>
+          <fa-icon [icon]="['fas', 'play-circle']"></fa-icon>
+          <fa-icon [icon]="['fas', 'pause-circle']" [hidden]="true"></fa-icon>
+        </button>
+        <div class="bandAndSong">Весело живем - Вася Пупкин <span class="time">3:15</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="ui accordion playlist-item">
+    <div class="ui title eight columns grid head-content">
+      <div class="img center aligned eight wide column">
+        <img src="../../assets/images/books.jpg" alt="">
+      </div>
+      <div class="ui desc-container text-left eight wide column">
+        <div class="ui header">Депрессивный</div>
+        <button id="play" class="ui button" (click)="play()">
+          <fa-icon [hidden]="isPlaying" [icon]="['fas', 'play']"></fa-icon>
+          <span>Воспроизвести</span>
+          <fa-icon [hidden]="!isPlaying" [icon]="['fas', 'pause']"></fa-icon>
+          <span [hidden]="!isPlaying">Пауза</span>
+        </button>
+      </div>
+    </div>
+    <div class="ui relaxed divided vertical list content">
+      <div class="item track">
+        <button>
+          <fa-icon [icon]="['fas', 'play-circle']"></fa-icon>
+          <fa-icon [icon]="['fas', 'pause-circle']" [hidden]="true"></fa-icon>
+        </button>
+        <div class="bandAndSong">Весело живем - Вася Пупкин <span class="time">3:15</span></div>
+      </div>
+      <div class="item track">
+        <button>
+          <fa-icon [icon]="['fas', 'play-circle']"></fa-icon>
+          <fa-icon [icon]="['fas', 'pause-circle']" [hidden]="true"></fa-icon>
+        </button>
+        <div class="bandAndSong">Весело живем - Вася Пупкин <span class="time">3:15</span></div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -63,53 +63,53 @@ public class TrackInfoController {
 
     }
 
-    @PostMapping("/track/{id}/like")
-    public String likeTrack(Principal principal,  Locale locale,  RedirectAttributes redir,
-                            @PathVariable(value = "id") Long id) {
-        if (principal != null) {
-            User user = userService.findByUsername(principal.getName());
-            trackService.changeLike(id, user.getId());
-        } else {
-            redir.addFlashAttribute("error", messageSource.getMessage("error.notAuthorized", null, locale));
-        }
-        return "redirect:/track/" + id + "/info";
-    }
+//    @PostMapping("/track/{id}/like")
+//    public String likeTrack(Principal principal,  Locale locale,  RedirectAttributes redir,
+//                            @PathVariable(value = "id") Long id) {
+//        if (principal != null) {
+//            User user = userService.findByUsername(principal.getName());
+//            trackService.changeLike(id, user.getId());
+//        } else {
+//            redir.addFlashAttribute("error", messageSource.getMessage("error.notAuthorized", null, locale));
+//        }
+//        return "redirect:/track/" + id + "/info";
+//    }
 
-    @PostMapping("/comment/{id}/dislike")
-    public String dislikeComment(Principal principal,  Locale locale,  RedirectAttributes redir,
-                              @PathVariable(value = "id") Long id) {
-        if (principal != null) {
-            User user = userService.findByUsername(principal.getName());
-            commentService.changeDislike(id, user.getId());
-        } else {
-            redir.addFlashAttribute("error", messageSource.getMessage("error.notAuthorized", null, locale));
-        }
-        return "redirect:/track/" + commentService.findById(id).getTrack().getId() + "/info";
-    }
+//    @PostMapping("/comment/{id}/dislike")
+//    public String dislikeComment(Principal principal,  Locale locale,  RedirectAttributes redir,
+//                              @PathVariable(value = "id") Long id) {
+//        if (principal != null) {
+//            User user = userService.findByUsername(principal.getName());
+//            commentService.changeDislike(id, user.getId());
+//        } else {
+//            redir.addFlashAttribute("error", messageSource.getMessage("error.notAuthorized", null, locale));
+//        }
+//        return "redirect:/track/" + commentService.findById(id).getTrack().getId() + "/info";
+//    }
 
-    @PostMapping("/track/{id}/dislike")
-    public String dislikeTrack(Principal principal,  Locale locale,  RedirectAttributes redir,
-                            @PathVariable(value = "id") Long id) {
-        if (principal != null) {
-            User user = userService.findByUsername(principal.getName());
-            trackService.changeDislike(id, user.getId());
-        } else {
-            redir.addFlashAttribute("error", messageSource.getMessage("error.notAuthorized", null, locale));
-        }
-        return "redirect:/track/" + id + "/info";
-    }
+//    @PostMapping("/track/{id}/dislike")
+//    public String dislikeTrack(Principal principal,  Locale locale,  RedirectAttributes redir,
+//                            @PathVariable(value = "id") Long id) {
+//        if (principal != null) {
+//            User user = userService.findByUsername(principal.getName());
+//            trackService.changeDislike(id, user.getId());
+//        } else {
+//            redir.addFlashAttribute("error", messageSource.getMessage("error.notAuthorized", null, locale));
+//        }
+//        return "redirect:/track/" + id + "/info";
+//    }
 
-    @PostMapping("/comment/{id}/like")
-    public String likeComment(Principal principal,  Locale locale,  RedirectAttributes redir,
-                              @PathVariable(value = "id") Long id) {
-        if (principal != null) {
-            User user = userService.findByUsername(principal.getName());
-            commentService.changeLike(id, user.getId());
-        } else {
-            redir.addFlashAttribute("error", messageSource.getMessage("error.notAuthorized", null, locale));
-        }
-        return "redirect:/track/" + commentService.findById(id).getTrack().getId() + "/info";
-    }
+//    @PostMapping("/comment/{id}/like")
+//    public String likeComment(Principal principal,  Locale locale,  RedirectAttributes redir,
+//                              @PathVariable(value = "id") Long id) {
+//        if (principal != null) {
+//            User user = userService.findByUsername(principal.getName());
+//            commentService.changeLike(id, user.getId());
+//        } else {
+//            redir.addFlashAttribute("error", messageSource.getMessage("error.notAuthorized", null, locale));
+//        }
+//        return "redirect:/track/" + commentService.findById(id).getTrack().getId() + "/info";
+//    }
 
     @PostMapping("/comment/add")
     public String commentSubmit(Locale locale,  RedirectAttributes redir,

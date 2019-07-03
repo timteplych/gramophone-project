@@ -55,21 +55,25 @@ public class CommentServiceImpl implements CommentService {
         return commentRepository.findByTrack(track);
     }
 
+
     @Override
     public void changeLike(Long id, Long userId) {
         Comment comment = findById(id);
         likeService.changeLike(userId, id, LikeType.COMMENT);
     }
 
+
     public Comment findById(Long id) {
         return commentRepository.findById(id).orElseThrow(() -> new NotFoundException("Comment", id));
     }
+
 
     @Override
     public void changeDislike(Long id, Long userId) {
         Comment comment = findById(id);
         likeService.changeDislike(userId, id, LikeType.COMMENT);
     }
+
 
     public void remove(Comment comment) {
         commentRepository.delete(comment);

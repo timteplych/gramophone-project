@@ -2,6 +2,7 @@ package com.geekbrains.gramophone.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
+import org.hibernate.search.annotations.Field;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -19,9 +20,11 @@ public class Track {
     @Column(name = "id")
     private Long id;
 
+    @Field
     @Column(name = "title")
     private String title;
 
+    @Field
     @Column(name = "word_author")
     private String wordAuthor;
 
@@ -52,7 +55,7 @@ public class Track {
     @Column(name = "listening_amount")
     private Long listeningAmount;
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User performer;
 
