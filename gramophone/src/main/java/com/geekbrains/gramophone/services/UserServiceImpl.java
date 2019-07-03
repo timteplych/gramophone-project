@@ -89,7 +89,7 @@ public class UserServiceImpl implements UserService {
             String message = String.format(
                     "Привет, %s! \n" +
                             "Рады видеть вас на нашей музыкальной площадке Gramophone! \n" +
-                            "Пожалуйста перейдите по ссылке \nhttp://localhost:8189/gramophone/activate/%s\n" +
+                            "Пожалуйста перейдите по ссылке \nhttp://localhost:4200/api/v1/users/activate/%s\n" +
                             "для подтверждения вашего почтового ящика.",
                     user.getUsername(), user.getActivationCode()
             );
