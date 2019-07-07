@@ -6,6 +6,8 @@ import com.geekbrains.gramophone.entities.User;
 import com.geekbrains.gramophone.repositories.PlaylistRepository;
 import com.geekbrains.gramophone.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -56,8 +58,18 @@ public class PlaylistServiceImpl implements PlaylistService {
     }
 
     @Override
+    public Playlist findPlaylistById(Long id) {
+        return playlistRepository.findById(id).orElse(null);
+    }
+
+    @Override
     public List<Playlist> findAllPlaylistsByUser(User user) {
         return playlistRepository.findAllByUser(user);
+    }
+
+    @Override
+    public Page<Playlist> getPlaylistsWithPaging(int pageNumber, int pageSize) {
+        return playlistRepository.findAll(PageRequest.of(pageNumber, pageSize));
     }
 
     @Override
@@ -78,6 +90,27 @@ public class PlaylistServiceImpl implements PlaylistService {
     @Override
     public void removePlaylist(Long playlistId) {
         playlistRepository.deleteById(playlistId);
+    }
+
+    @Override
+    public Playlist buildPlaylist(String name, String userId) {
+
+        User user = userRepository.findById(Long.parseLong(userId)).orElse(null);
+
+        Playlist newPlaylist = new Playlist();
+        newPlaylist.setName(name);
+        newPlaylist.setUser(user);
+        return newPlaylist;
+    }
+
+    @Override
+    public Playlist updatePlaylist(Long id, String name, String userId) {
+        Playlist updatePlaylist = playlistRepository.findById(id).orElse(null);
+        if (updatePlaylist != null) {
+            updatePlaylist.setName(name);
+            updatePlaylist.setUser(userRepository.findById(Long.valueOf(userId)).orElse(null));
+        }
+        return updatePlaylist;
     }
 
 }
