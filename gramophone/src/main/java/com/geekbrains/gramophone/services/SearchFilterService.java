@@ -2,7 +2,9 @@ package com.geekbrains.gramophone.services;
 
 
 import com.geekbrains.gramophone.entities.Genre;
+import com.geekbrains.gramophone.entities.Playlist;
 import com.geekbrains.gramophone.entities.Track;
+import com.geekbrains.gramophone.entities.User;
 import com.geekbrains.gramophone.repositories.PlaylistRepository;
 import com.geekbrains.gramophone.repositories.TrackRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +25,19 @@ public class SearchFilterService {
 
     private TrackRepository trackRepository;
 
+    private PlaylistRepository playlistRepository;
+
     @Autowired
     public void setTrackRepository(TrackRepository trackRepository) {
         this.trackRepository = trackRepository;
     }
 
+    @Autowired
+    public void setPlaylistRepository(PlaylistRepository playlistRepository) {
+        this.playlistRepository = playlistRepository;
+    }
 
-    public List<Track> searchByWordAuthorAndSongTitle(@Nullable String searchTerm,@Nullable Genre genre) {
+    public List<Track> searchByWordAuthorAndSongTitle(@Nullable String searchTerm, @Nullable Genre genre) {
 
         List<Track> trackList = new ArrayList<>();
 
@@ -46,5 +54,19 @@ public class SearchFilterService {
 
         }
         return trackList;
+    }
+
+    public List<Playlist> searchByTitleContainingUser(@Nullable String searchTerm, @Nullable User user) {
+
+        List<Playlist> playlistList = new ArrayList<>();
+
+        if (user != null && searchTerm != null) {
+            return playlistRepository.findAllByTitleContainingUser(searchTerm, user);
+        }
+
+        if (user != null) {
+            playlistList = playlistRepository.findAllByUser(user);
+        }
+        return playlistList;
     }
 }
