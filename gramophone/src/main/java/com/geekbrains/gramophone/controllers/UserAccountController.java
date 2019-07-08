@@ -42,38 +42,7 @@ public class UserAccountController {
     public void setTrackService(TrackService trackService) {
         this.trackService = trackService;
     }
-
-    @GetMapping("/users/list")
-    public String showAllUserPage(Model model) {
-        model.addAttribute("users", userService.findAll());
-        return "all-users";
-    }
-
-
-    @RequestMapping("/users/{user_id}")
-    public String showUserPage(
-            Principal principal,
-            @PathVariable("user_id") Long userId,
-            Model model
-    ) {
-
-        User user = userService.findById(userId);
-        User currentUser = userService.findByUsername(principal.getName());
-        List<Track> allCurrentUserTracks = userService.allUserTracksFromPlaylists(currentUser.getId());
-
-        if (user.getInfoSinger() != null) {
-            List<Track> singerTracks = trackService.findAllSingerUserTracks(user);
-            model.addAttribute("singerTracks", singerTracks);
-        }
-
-        model.addAttribute("user", user);
-        model.addAttribute("currentUser", currentUser);
-        model.addAttribute("isSubscriber", user.getSubscribers().contains(currentUser));
-        model.addAttribute("isCurrentUser", currentUser.getId().equals(user.getId()));
-        model.addAttribute("allCurrentUserTracks", allCurrentUserTracks);
-
-        return "user-page";
-    }
+    
 
     //подписаться
     @GetMapping("/users/{user_id}/subscribe")

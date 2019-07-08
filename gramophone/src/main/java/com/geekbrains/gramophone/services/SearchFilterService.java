@@ -60,9 +60,9 @@ public class SearchFilterService {
 
         List<Playlist> playlistList = new ArrayList<>();
 
-        if (user != null && searchTerm != null) {
-            return playlistRepository.findAllByTitleContainingUser(searchTerm, user);
-        }
+//        if (user != null && searchTerm != null) {
+//            return playlistRepository.findAllByTitleContainingUser(searchTerm, user);
+//        }
 
         if (user != null) {
             playlistList = playlistRepository.findAllByUser(user);
