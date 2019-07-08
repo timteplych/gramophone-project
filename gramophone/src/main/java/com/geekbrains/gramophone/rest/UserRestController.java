@@ -5,6 +5,9 @@ import com.geekbrains.gramophone.entities.User;
 import com.geekbrains.gramophone.services.UserService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -42,5 +45,14 @@ public class UserRestController {
     @PostMapping("/register")
     public User registration(@RequestBody SystemUser newUser) {
         return userService.save(newUser);
+    }
+
+    @GetMapping("/activate/{code}")
+    public ResponseEntity<String> activate(@PathVariable("code") String code) {
+        boolean isActivated = userService.activateUser(code);
+        if (isActivated) {
+            return new ResponseEntity<>("активация прошла успешно", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("активация не удалась, код активации был выслан на почту", HttpStatus.BAD_REQUEST);
     }
 }
