@@ -14,10 +14,18 @@ import java.util.List;
 
 @Repository
 public interface TrackRepository extends PagingAndSortingRepository<Track, Long>, JpaSpecificationExecutor<Track> {
-    List<Track> findAllByTitleContaining(String title);
+    List<Track> findAllByTitleContainingOrMusicAuthorContaining(String search, String author);
+    List<Track> findAllByTitleContaining(String search);
     List<Track> findAllByMusicAuthorContaining(String author);
     List<Track> findAllByGenre(Genre genre);
     List<Track> findAllByPerformer(User user);
+    List<Track> findAllByTitleContainingOrMusicAuthorContainingAndGenre(String search, String author, Genre genre);
+
+    @Query(value = "select count(*) from tracks_likes tl where track_id = ?1 and user_id = ?2", nativeQuery = true)
+    int trackLikedBy(Long trackId, Long userId);
+
+    @Query(value = "select count(*) from tracks_dislikes tl where track_id = ?1 and user_id = ?2", nativeQuery = true)
+    int trackDislikedBy(Long trackId, Long userId);
 
     @Modifying
     @Query(value = "DELETE FROM playlist_tracks WHERE track_id = :id", nativeQuery = true)

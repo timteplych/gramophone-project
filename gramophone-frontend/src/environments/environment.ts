@@ -8,7 +8,22 @@ export const environment = {
 
 
 
-export const API_URL = 'http://localhost:8189/gramophone/api';
+export const API_URL = 'http://localhost:8189/gramophone/api/v1';
+
+
+
+export const DATE_FORMAT = {
+  parse: {
+    dateInput: 'LL',
+  },
+  display: {
+    dateInput: 'LL',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
+
 /*
  * For easier debugging in development mode, you can import the following file
  * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.

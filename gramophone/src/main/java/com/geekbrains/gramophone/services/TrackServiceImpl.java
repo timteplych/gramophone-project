@@ -1,18 +1,20 @@
 package com.geekbrains.gramophone.services;
 
-import com.geekbrains.gramophone.entities.Genre;
-import com.geekbrains.gramophone.entities.Track;
-import com.geekbrains.gramophone.entities.User;
+import com.geekbrains.gramophone.entities.*;
+import com.geekbrains.gramophone.exceptions.NotFoundException;
 import com.geekbrains.gramophone.repositories.GenreRepository;
 import com.geekbrains.gramophone.repositories.TrackRepository;
+import com.geekbrains.gramophone.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.transaction.Transactional;
+import java.io.File;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -20,20 +22,36 @@ import java.util.List;
 @Service
 public class TrackServiceImpl implements TrackService {
 
+    private UserRepository userRepository;
     private TrackRepository trackRepository;
-
     private GenreRepository genreRepository;
+
+    private UploadService uploadService;
+
+    @Autowired
+    private LikeService likeService;
+
 
     @Autowired
     public void setTrackService(TrackRepository trackRepository) {
         this.trackRepository = trackRepository;
     }
 
-
     @Autowired
     public void setGenreRepository(GenreRepository genreRepository) {
         this.genreRepository = genreRepository;
     }
+
+    @Autowired
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    @Autowired
+    public void setUploadService(UploadService uploadService) {
+        this.uploadService = uploadService;
+    }
+
 
     @Override
     public List<Track> findAll() {
@@ -47,20 +65,24 @@ public class TrackServiceImpl implements TrackService {
     }
 
     public Page<Track> getTracksWithPagingAndFiltering(int pageNumber, int pageSize, Specification<Track> trackSpecification) {
-        return trackRepository.findAll(trackSpecification, PageRequest.of(pageNumber, pageSize));
+        return trackRepository.findAll(PageRequest.of(pageNumber, pageSize));
+    }
+
+    public Page<Track> getTracksWithPaging(int pageNumber, int pageSize) {
+        return trackRepository.findAll(PageRequest.of(pageNumber, pageSize));
     }
 
     @Override
     public List<Track> findByTitle(String title) {
-        if ("" .equals(title)) {
+        if ("".equals(title)) {
             return Collections.emptyList();
         }
-        return trackRepository.findAllByTitleContaining(title);
+        return null;
     }
 
     @Override
     public List<Track> findByAuthor(String author) {
-        if ("" .equals(author)) {
+        if ("".equals(author)) {
             return Collections.emptyList();
         }
         return trackRepository.findAllByMusicAuthorContaining(author);
@@ -68,7 +90,7 @@ public class TrackServiceImpl implements TrackService {
 
     @Override
     public List<Track> findByGenreTitle(String title) {
-        if ("" .equals(title)) {
+        if ("".equals(title)) {
             return Collections.emptyList();
         }
         Genre genre = genreRepository.findByTitle(title);
@@ -93,24 +115,18 @@ public class TrackServiceImpl implements TrackService {
         return trackRepository.findById(id).orElse(null);
     }
 
-    public void changeLike(Long id, User user) {
-        Track track = findTrackById(id);
-        if (track.getLikes().contains(user))
-            removeLike(id, user);
-        else
-            setLike(id, user);
+
+    @Override
+    public void changeLike(Long id, Long userId) {
+        trackRepository.findById(id).orElseThrow(() -> new NotFoundException("Track", id));
+        likeService.changeDislike(userId, id, LikeType.SONG);
     }
 
-    public void setLike(Long id, User user) {
-        Track track = findTrackById(id);
-        track.getLikes().add(user);
-        trackRepository.save(track);
-    }
+    @Override
+    public void changeDislike(Long id, Long userId) {
+        trackRepository.findById(id).orElseThrow(() -> new NotFoundException("Track", id));
+        likeService.changeDislike(userId, id, LikeType.SONG);
 
-    public void removeLike(Long id, User user) {
-        Track track = findTrackById(id);
-        track.getLikes().remove(user);
-        trackRepository.save(track);
     }
 
     @Override
@@ -118,20 +134,41 @@ public class TrackServiceImpl implements TrackService {
         trackRepository.deleteById(id);
     }
 
-    public Track buildTrack(Track trackFromForm, User user, String fileName) {
-        trackFromForm.setPerformer(user);
-        trackFromForm.setCreateAt(new Date());
-        trackFromForm.setListeningAmount(0L);
-        trackFromForm.setGenre(trackFromForm.getGenre());
+    public Track buildTrack(String title,
+                            String wordAuthor,
+                            String musicAuthor,
+                            String genreId,
+                            String performerId,
+                            MultipartFile file) {
 
-        trackFromForm.setLocationOnServer("uploads/" + user.getUsername() + "/" + fileName);
-        trackFromForm.setDownloadUrl(ServletUriComponentsBuilder.fromCurrentContextPath()
+        Genre genre = genreRepository.findById(Long.parseLong(genreId)).orElse(null);
+        User performer = userRepository.findById(Long.parseLong(performerId)).orElse(null);
+
+        Track newTrack = new Track();
+        newTrack.setTitle(title);
+        newTrack.setWordAuthor(wordAuthor);
+        newTrack.setMusicAuthor(musicAuthor);
+        newTrack.setGenre(genre);
+        newTrack.setPerformer(performer);
+        newTrack.setCreateAt(new Date());
+        newTrack.setListeningAmount(0L);
+
+
+        newTrack.setLocationOnServer("uploads/" + performer.getUsername() + "/" + file.getOriginalFilename());
+        newTrack.setDownloadUrl(ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/uploads/")
-                .path(user.getUsername() + "/" + fileName)
+                .path(performer.getUsername() + "/" + file.getOriginalFilename())
                 .toUriString());
 
 
-        return trackFromForm;
+        if (!file.isEmpty()) {
+            if (uploadService.upload(performer.getUsername(), file, "uploads/")) {
+                trackRepository.save(newTrack);
+            }
+        }
+
+
+        return newTrack;
     }
 
     @Override
@@ -142,40 +179,45 @@ public class TrackServiceImpl implements TrackService {
     @Override
     @Transactional
     public void deleteTrack(Long id) {
-        Track track = trackRepository.findById(id).get();
-        deleteTrackFromServer(track.getLocationOnServer());
-        trackRepository.deleteTrackFromAllPlaylists(id);
-        trackRepository.deleteById(id);
+        Track track = trackRepository.findById(id).orElse(null);
+        if (track != null) {
+            track.setDeleted(true);
+            track.setDeleteAt(new Date());
+            trackRepository.deleteTrackFromAllPlaylists(id); // оставить сообщение, что трек был удален(название исполнителя и трека)
+            trackRepository.deleteById(id);
+        }
     }
 
-    private void deleteTrackFromServer(String locationOnServer) {
-        // НЕ ПОЛУЧАЕТСЯ УДАЛИТЬ
-//        try {
-//            Files.delete(Paths.get(locationOnServer));
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-    }
+    public Track updateTrack(Long id,
+                             String title,
+                             String wordAuthor,
+                             String musicAuthor,
+                             String genreId,
+                             String fileName) {
+        Track updatedTrack = trackRepository.findById(id).orElse(null);
+        if (updatedTrack != null) {
+            updatedTrack.setTitle(title);
+            updatedTrack.setMusicAuthor(musicAuthor);
+            updatedTrack.setWordAuthor(wordAuthor);
+            updatedTrack.setGenre(genreRepository.findById(Long.parseLong(genreId)).orElse(null));
 
-    public Track updateTrack(Long id, Track trackFromForm, String fileName) {
-        trackRepository.findById(id).ifPresent(updatedTrack -> {
-            updatedTrack.setListeningAmount(trackFromForm.getListeningAmount());
-            updatedTrack.setWordAuthor(trackFromForm.getWordAuthor());
-            updatedTrack.setMusicAuthor(trackFromForm.getWordAuthor());
-            updatedTrack.setTitle(trackFromForm.getTitle());
-            updatedTrack.setCover(trackFromForm.getCover());
-            updatedTrack.setGenre(trackFromForm.getGenre());
-
-            if (!updatedTrack.getLocationOnServer().equals(trackFromForm.getLocationOnServer())) {
-                trackFromForm.setLocationOnServer("uploads/" + trackFromForm.getPerformer().getUsername() + "/" + fileName);
-                updatedTrack.setLocationOnServer(trackFromForm.getLocationOnServer());
-                trackFromForm.setDownloadUrl(ServletUriComponentsBuilder.fromCurrentContextPath()
+            if (!updatedTrack.getLocationOnServer().equals("uploads/" + updatedTrack.getPerformer().getUsername() + "/" + fileName)) {
+                updatedTrack.setLocationOnServer("uploads/" + updatedTrack.getPerformer().getUsername() + "/" + fileName);
+                updatedTrack.setDownloadUrl(ServletUriComponentsBuilder.fromCurrentContextPath()
                         .path("/uploads/")
-                        .path(trackFromForm.getPerformer().getUsername() + "/" + fileName)
+                        .path(updatedTrack.getPerformer().getUsername() + "/" + fileName)
                         .toUriString());
-                updatedTrack.setDownloadUrl(trackFromForm.getDownloadUrl());
             }
-        });
-        return trackFromForm;
+        }
+        return updatedTrack;
     }
+
+
+    @Override
+    public boolean isThere(Track track, String searchStr) {
+        return searchStr.equals(track.getTitle()) || searchStr.equals(track.getMusicAuthor()) ||
+                searchStr.equals(track.getWordAuthor()) || searchStr.equals(track.getPerformer().getUsername());
+    }
+
+
 }

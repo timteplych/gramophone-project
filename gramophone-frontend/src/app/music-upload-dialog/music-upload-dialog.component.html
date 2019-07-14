@@ -1,0 +1,57 @@
+<form class="ui form center" [formGroup]="trackForm">
+  <div class="ui text-center huge header">Добавить трек</div>
+  <ngx-file-drop contentClassName="upload-area"
+                 [dropZoneClassName]="f.file.value ? 'upload-music-area-success' : 'upload-music-area'"
+                 [browseBtnClassName]="f.file.value ? 'upload-button-area-success' : 'upload-button-area'"
+                 (onFileDrop)="dropped($event)"
+                 [browseBtnLabel]="f.file.value ? 'Трек успешно загружен' : 'Загрузить трек'"
+                 (onFileOver)="fileOver($event)" (onFileLeave)="fileLeave($event)"
+                 [showBrowseBtn]="true" accept="png">
+    <ng-template let-openFileSelector="openFileSelector">
+      <button type="button" (click)="openFileSelector()">Browse Files</button>
+    </ng-template>
+  </ngx-file-drop>
+
+  <div class="player" [@slideLeft]="!f.file.value ? 'in' : 'out'">
+    <svg viewBox="0, 0, 100, 100">
+      <circle
+        class="progress-circle"
+        stroke-width="3"
+        [style.strokeDasharray]="circumference"
+        [style.strokeDashoffset]="-(trackTime / audio.duration) * circumference"
+        fill="transparent"
+        stroke="#545153"
+        cx="50"
+        cy="50" r="40"></circle>
+    </svg>
+    <button id="play" class="ui circular button" (click)="play()">
+      <fa-icon [hidden]="isPlaying" [icon]="['fas', 'play']"></fa-icon>
+      <fa-icon [hidden]="!isPlaying" [icon]="['fas', 'pause']"></fa-icon>
+    </button>
+  </div>
+  <div class="field">
+    <label>Название трека</label>
+    <input type="text" formControlName="title">
+  </div>
+  <div class="field">
+    <label>Автор слов</label>
+    <input type="text" formControlName="wordAuthor">
+  </div>
+  <div class="field">
+    <label>Автор музыки</label>
+    <input type="text" formControlName="musicAuthor">
+  </div>
+  <div class="field">
+    <label>Жанр</label>
+    <select class="ui fluid dropdown" formControlName="genreId">
+      <option value="" selected>Выберите жанр...</option>
+      <option *ngFor="let genre of genreList" [value]="genre.id">
+        {{genre.title}}
+      </option>
+    </select>
+  </div>
+  <button class="ui button" type="submit" (click)="onSubmit()">Сохранить</button>
+  <button class="close" mat-dialog-close="true">
+    <fa-icon [icon]="['fas', 'times']"></fa-icon>
+  </button>
+</form>

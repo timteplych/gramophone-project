@@ -1,6 +1,5 @@
 package com.geekbrains.gramophone.entities;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -42,28 +41,22 @@ public class Track {
     @Column(name = "create_at")
     private Date createAt;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "delete_at")
+    private Date deleteAt;
+
+    @Column(name = "deleted")
+    private Boolean deleted;
+
     @Column(name = "listening_amount")
     private Long listeningAmount;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonBackReference
     private User performer;
 
     @Column(name = "cover")
     private String cover;
-
-    @OneToMany
-    @JoinTable(name = "tracks_likes",
-            joinColumns = @JoinColumn(name = "track_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Set<User> likes = new HashSet<>();
-
-    @OneToMany
-    @JoinTable(name = "tracks_dislikes",
-            joinColumns = @JoinColumn(name = "track_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Set<User> dislikes = new HashSet<>();
 
     @OneToMany(mappedBy = "track")
     private Set<Comment> comments = new HashSet<>();

@@ -8,15 +8,15 @@
       <div class="column text-right feed">
         <a class="ui label">
           <i class="play icon"></i>
-          21K
+          {{ track.listeningAmount | listeningAmountPipe }}
         </a>
         <a class="ui label">
           <i class="thumbs up icon"></i>
-          1341
+          {{ 0 | buttonSubFormatPipe }}
         </a>
         <a class="ui label">
           <i class="thumbs down icon"></i>
-          578
+          {{ 0 | buttonSubFormatPipe }}
         </a>
         <a class="ui label">
           <i class="share icon"></i>
@@ -24,64 +24,51 @@
       </div>
     </div>
     <div class="waves">
-      <img src="../../assets/images/waves.png" alt="" width="100%">
+      <img src="../../assets/images/waves.png" alt="">
     </div>
     <div class="ui two columns grid description">
       <div class="ten wide column text-left text">
         <a href="">
-          <img src="../../assets/images/ava.png" alt="">
-          <div class="username">Вася Пупкин</div>
-          <div class="createAt"><span>Опубликовано:</span> 21 июля 2019 г.</div>
+          <img [src]="track.performer.avatar ? track.performer.avatar : '../../assets/images/ava.png'" alt="">
+          <div class="username">{{ track.performer.username }}</div>
+          <div class="createAt"><span>Опубликовано:</span> {{ track.createAt | date: 'dd MMMM yyyy г.' }}</div>
         </a>
       </div>
-
       <div class="six wide column text-center subs">
-        <button class="ui red button">Подписаться 405 ТЫС.</button>
+        <button class="ui red button">Подписаться {{ track.performer.subscribers.length > 0 ? track.performer.subscribers.length : '' | buttonSubFormatPipe }}</button>
       </div>
     </div>
     <div class="authors-info">
       <div class="wordAuthor">
-        <span>Автор слов:</span> Вася Пупкин
+        <span>Автор слов:</span> {{ track.wordAuthor }}
       </div>
       <div class="singer">
-        <span>Исполнитель:</span> Вася Пупкин
+        <span>Исполнитель:</span> {{ track.performer.infoSinger.firstName + ' ' + track.performer.infoSinger.lastName }}
       </div>
       <div class="musicAuthor">
-        <span>Автор музыки:</span> Вася Пупкин
+        <span>Автор музыки:</span> {{ track.musicAuthor }}
       </div>
     </div>
     <div class="comments">
-      <h3 class="comment-count">3 564 коментария</h3>
+      <h3 class="comment-count">{{ track.comments.length }} коментария</h3>
       <form action="" [formGroup]="commentForm">
-        <img src="../../assets/images/ava.png">
+        <img [src]="currentUser.avatar ? currentUser.avatar : '../../assets/images/ava.png'">
         <mat-form-field class="example-full-width" [floatLabel]="'never'">
           <textarea matInput placeholder="Оставить комментарий" (focus)="myFocusVar = true" (blur)="myFocusVar = false"
                     formControlName="comment" mat-autosize matTextareaAutosize></textarea>
         </mat-form-field>
-        <button class="ui button right floated confirm-comment" [hidden]="!myFocusVar"
+        <button class="ui button right floated confirm-comment" [hidden]="!f.comment.value && !myFocusVar" (click)="sendComment()"
                 [ngStyle]="f.comment.value ? { backgroundColor: '#4285f4' } : { backgroundColor: '#767676' }">Оставить
           комментарий
         </button>
-        <button class="ui button right floated" [hidden]="!myFocusVar">Отменить</button>
+        <button class="ui button right floated" [hidden]="!f.comment.value && !myFocusVar">Отменить</button>
       </form>
     </div>
     <div class="comments-list">
-      <div class="comments-list-item">
-        <img src="../../assets/images/ava.png">
-        <div class="who">Username <span>2 часа назад</span></div>
-        <div class="comment-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus amet assumenda at
-          aut error est et fuga, labore mollitia nihil, nulla placeat provident qui quibusdam quisquam reiciendis
-          repellendus sint sunt suscipit unde! Asperiores consequuntur fugit incidunt ipsam laboriosam maxime molestiae
-          nemo odio placeat provident quaerat quam quas reiciendis, similique veniam!
-        </div>
-      </div>
-      <div class="comments-list-item">
-        <img src="../../assets/images/ava.png">
-        <div class="who">Username <span>2 часа назад</span></div>
-        <div class="comment-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus amet assumenda at
-          aut error est et fuga, labore mollitia nihil, nulla placeat provident qui quibusdam quisquam reiciendis
-          repellendus sint sunt suscipit unde! Asperiores consequuntur fugit incidunt ipsam laboriosam maxime molestiae
-          nemo odio placeat provident quaerat quam quas reiciendis, similique veniam!
+      <div class="comments-list-item" *ngFor="let comment of track.comments">
+        <img [src]="comment.user.avatar ? comment.user.avatar : '../../assets/images/ava.png'">
+        <div class="who">{{ comment.user.username }} <span>2 часа назад</span></div>
+        <div class="comment-text">{{ comment.content }}
         </div>
       </div>
     </div>
@@ -92,13 +79,6 @@
       <img src="../../assets/images/example.png" alt="" width="100%">
       <div class="prediction-tracks-list">
         <div class="ui relaxed divided list">
-          <div class="item prediction-track">
-            <button>
-              <fa-icon [icon]="['fas', 'play-circle']"></fa-icon>
-              <fa-icon [icon]="['fas', 'pause-circle']" [hidden]="true"></fa-icon>
-            </button>
-            <div class="bandAndSong">Весело живем - Вася Пупкин <span class="time">3:15</span></div>
-          </div>
           <div class="item prediction-track">
             <button>
               <fa-icon [icon]="['fas', 'play-circle']"></fa-icon>

@@ -1,11 +1,11 @@
-<div class="ui two columns grid" style="padding-top: 50px;">
+<div class="ui two columns grid acc" style="padding-top: 50px;" *ngIf="currentUser">
   <div class="six wide column user-form">
     <form class="ui form" [formGroup]="userForm">
       <div class="ui huge header">Личные данные</div>
       <div class="ui two columns grid info">
         <div class="ui six wide column avatar">
           <div class="img">
-            <img src="../../assets/images/ava.png" alt="">
+            <img [src]="currentUser.avatar ? currentUser.avatar : '../../assets/images/ava.png'" alt="">
           </div>
           <button class="photo-overlay">
             <fa-icon [icon]="['fas', 'camera']"></fa-icon>
@@ -13,30 +13,34 @@
         </div>
         <div class="ui ten wide column list">
           <div class="ui item subsc text-right">{{ f.username.value }}</div>
-          <div class="ui item text-right"><span>86 000</span> подписчиков</div>
-          <div class="ui item text-right"><span>1 000 000</span> прослушиваний</div>
-<!--          <div class="ui item text-right">Зрегистрирован: 12 января 2019 года</div>-->
+          <div class="ui item text-right"><span>{{ currentUser.subscribers.length | numberSpacePipe }}</span>
+            подписчиков
+          </div>
+          <div class="ui item text-right">{{ 1000 | numberSpacePipe }}<span>
+          </span> прослушиваний
+          </div>
+          <!--          <div class="ui item text-right">Зрегистрирован: 12 января 2019 года</div>-->
         </div>
       </div>
       <div class="field">
         <label>Логин</label>
-        <input type="text" formControlName="username" name="username">
+        <input type="text" formControlName="username">
       </div>
       <div class="field">
         <label>Имя</label>
-        <input type="text" formControlName="firstName" name="firstName">
+        <input type="text" formControlName="firstName">
       </div>
       <div class="field">
         <label>Фамилия</label>
-        <input type="text" formControlName="lastName" name="LastName">
+        <input type="text" formControlName="lastName">
       </div>
       <div class="field">
         <label>Email</label>
-        <input type="text" formControlName="email" name="email">
+        <input type="text" formControlName="email" autocomplete="username">
       </div>
       <div class="field">
         <label>Телефон</label>
-        <input type="text" formControlName="phone" name="phone">
+        <input type="text" formControlName="phone" autocomplete="username">
       </div>
       <div class="field">
         <label>Старый пароль</label>
@@ -55,16 +59,33 @@
   </div>
   <div class="ten wide column tabs-menu">
     <div class="ui huge header">Панель управления аккаунтом</div>
-    <div class="ui top attached tabular menu">
-      <div class="active item" data-tab="first">Подписки</div>
-      <div class="item" data-tab="second">Плейлисты</div>
-      <div class="item" data-tab="third">О исполнителе</div>
-    </div>
-    <div class="ui bottom attached active tab segment content" data-tab="first" style="height: 800px">
-  </div>
-    <div class="ui bottom attached tab segment content" data-tab="second" style="height: 800px">
-    </div>
-    <div class="ui bottom attached tab segment content" data-tab="third" style="height: 800px">
-    </div>
+    <mat-tab-group>
+      <mat-tab label="Треки">
+        <div class="ui four columns right aligned grid tracks">
+          <a [routerLink]="['/tracks',track.id]" class="ui column track" *ngFor="let track of trackList">
+            <img src="../../assets/images/note.png" alt="">
+            <div class="song text-left">{{track.title}}</div>
+            <div class="singer text-left">{{track.wordAuthor}}</div>
+          </a>
+        </div>
+      </mat-tab>
+      <mat-tab label="Плейлисты"> Content 2</mat-tab>
+      <mat-tab label="Подписки"> Content 3</mat-tab>
+      <mat-tab label="О исполнителе"> Content 4</mat-tab>
+    </mat-tab-group>
+    <!--    <div class="ui top attached tabular menu">-->
+    <!--      <div class="active item" data-tab="first">Треки</div>-->
+    <!--      <div class="item" data-tab="second">Подписки</div>-->
+    <!--      <div class="item" data-tab="third">Плейлисты</div>-->
+    <!--      <div class="item" data-tab="fourth">О исполнителе</div>-->
+    <!--    </div>-->
+    <!--    <div class="ui bottom attached active tab segment content" data-tab="first" style="height: 800px">-->
+    <!--    </div>-->
+    <!--    <div class="ui bottom attached tab segment content" data-tab="second" style="height: 800px">-->
+    <!--    </div>-->
+    <!--    <div class="ui bottom attached tab segment content" data-tab="third" style="height: 800px">-->
+    <!--    </div>-->
+    <!--    <div class="ui bottom attached tab segment content" data-tab="fourth" style="height: 800px">-->
+    <!--    </div>-->
   </div>
 </div>

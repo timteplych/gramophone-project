@@ -1,5 +1,5 @@
-<div class="ui bottom centered grid sidebar player">
-  <div class="ui row  inner">
+<div class="ui bottom centered grid sidebar player" [ngClass]="isClosed ? '' : 'visible'">
+  <div class="ui row inner">
     <div class="track-info four wide column">
       <img src="../../assets/images/example.png" alt="">
       <div>
@@ -21,17 +21,22 @@
       </button>
     </div>
     <div class="five wide column progressBar">
-      <mat-slider color="primary" min="0" [max]="durationTime" [(ngModel)]="trackTime" value="{{ trackTime }}" (change)="setTime()"></mat-slider>
+      <mat-slider color="primary" min="0" [max]="durationTime" [(ngModel)]="trackTime" value="{{ trackTime }}"
+                  (change)="setTime()"></mat-slider>
       <div class="trackTime">{{ trackDuration | date: '- m:ss' }}</div>
     </div>
     <div class="two wide column volumeControls">
       <button id="mute" (click)="mute()">
-        <fa-icon [hidden]="audio.muted"  [icon]="['fas', 'volume-up']"></fa-icon>
+        <fa-icon [hidden]="audio.muted" [icon]="['fas', 'volume-up']"></fa-icon>
         <fa-icon [hidden]="!audio.muted" [icon]="['fas', 'volume-off']"></fa-icon>
       </button>
-      <mat-slider min="0" max="1" step="0.001" [(ngModel)]="volumeValue" (change)="volumnChange()"></mat-slider>
+      <mat-slider min="0" max="1" step="0.001" [(ngModel)]="volumeValue" (change)="volumeChange()"></mat-slider>
     </div>
+    <button class="close" (click)="isClosed=true">
+      <fa-icon [icon]="['fas', 'times']"></fa-icon>
+    </button>
   </div>
+
 </div>
 
 

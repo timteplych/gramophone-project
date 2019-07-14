@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import * as moment from 'moment';
 import {Duration} from 'moment';
-import {timer} from 'rxjs';
+import {Subscription, timer} from 'rxjs';
 import {TracksService} from '../_services';
 import {Track} from '../_models';
 
@@ -27,6 +27,8 @@ export class MusicPlayerComponent implements OnInit {
   trackTitle;
   trackPerformer;
   currentTrack: Track;
+  currentTrackSub: Subscription;
+  isClosed = false;
 
   constructor(
     private trackService: TracksService
@@ -35,14 +37,17 @@ export class MusicPlayerComponent implements OnInit {
 
   ngOnInit() {
     this.audio = new Audio();
-    this.currentTrack = JSON.parse(localStorage.getItem('track'));
-    this.audio.src = this.currentTrack.downloadUrl;
-    this.trackPerformer = this.currentTrack.wordAuthor;
-    this.trackTitle = this.currentTrack.title;
-    this.audio.load();
-    this.source = timer(this.audio.duration, 1000);
-    this.audio.addEventListener('timeupdate', event => {
-      this.trackTime = this.audio.currentTime;
+    this.currentTrackSub = this.trackService.currentTrack.subscribe(res => {
+      this.isClosed = false;
+      this.currentTrack = res;
+      this.audio.src = this.currentTrack.downloadUrl;
+      this.trackPerformer = this.currentTrack.wordAuthor;
+      this.trackTitle = this.currentTrack.title;
+      this.audio.load();
+      this.source = timer(this.audio.duration, 1000);
+      this.audio.addEventListener('timeupdate', event => {
+        this.trackTime = this.audio.currentTime;
+      });
     });
   }
 
@@ -59,6 +64,10 @@ export class MusicPlayerComponent implements OnInit {
               this.subscribe.unsubscribe();
               this.isPlaying = false;
               this.audio.load();
+              this.currentTrack.listeningAmount++;
+              this.trackService.updateTrackListeningAmount(this.currentTrack.id, this.currentTrack.listeningAmount).subscribe((res) => {
+                console.log(res);
+              });
               this.trackDuration = moment.duration(0, 'seconds');
             } else {
               if (this.audio.paused) {
@@ -130,7 +139,7 @@ export class MusicPlayerComponent implements OnInit {
 
 
   // Change of music volume
-  volumnChange() {
+  volumeChange() {
     this.audio.volume = this.volumeValue;
   }
 

@@ -28,6 +28,9 @@ public class User {
     @Column(name = "avatar")
     private String avatar;
 
+
+
+
     @Column(name = "activation_code")
     private String activationCode;
 

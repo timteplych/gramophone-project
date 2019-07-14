@@ -22,7 +22,6 @@ export class AuthenticationService {
   }
 
   login(email: string, password: string) {
-    // @ts-ignore
     return this.http.get<any>(`${API_URL}/users/login?email=${email}&password=${password}`)
       .pipe(map(user => {
         // console.log(user);
@@ -35,6 +34,10 @@ export class AuthenticationService {
         }
         return user;
       }));
+  }
+
+  register(username, email, password, matchingPassword): Observable<any> {
+    return this.http.post<any>(`${API_URL}/users/register`, {username, email, password, matchingPassword});
   }
 
   logout() {
